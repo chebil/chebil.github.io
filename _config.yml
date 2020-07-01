@@ -94,7 +94,7 @@ analytics:
 # Site Author
 author:
   name             : "Khalil Chebil"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "images/bio.jpg"
   bio              : "Phd Computer Science"
   location         : "INSAT Tunisia"
   email            : "khalil.chebil@insat.u-carthage.tn"
