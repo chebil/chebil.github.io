@@ -4,10 +4,14 @@ permalink: /optimization/LinearProgramming
 title: "Linear Programming"
 author_profile: true
 ---
-# Linear Programming 
+- [I. Introduction](#i-introduction)
+- [II. Modeling a problem](#ii-modeling-a-problem)
+  - [II.1 The telephone production Problem](#ii1-the-telephone-production-problem)
+    - [Using DOcplex to formulate the mathematical model in Python](#using-docplex-to-formulate-the-mathematical-model-in-python)
+    - [Solving Graphically the model](#solving-graphically-the-model)
+  - [II.2 The Diet Problem](#ii2-the-diet-problem)
 
-
-## I. Introduction
+# I. Introduction
 
 <p>Linear programming is a mathematical method that is used to determine the best possible outcome or solution from a given set of parameters or list of requirements, which are represented in the form of linear relationships. It is most often used in computer modeling or simulation in order to find the best solution in allocating finite resources such as money, energy, manpower, machine resources, time, space and many other variables. In most cases, the "best outcome" needed from linear programming is maximum profit or lowest cost.</p>
 
@@ -25,10 +29,10 @@ The basic components of linear programming are as follows:
  <h6>from: https://www.techopedia.com/definition/20403/linear-programming-lp</h6>
  
 
- ## II. Modeling a problem
+ # II. Modeling a problem
  
 
-### II.1 The telephone production Problem
+## II.1 The telephone production Problem
  
  A telephone company produces and sells two kinds of telephones, namely desk phones and cellular phones. 
 
@@ -77,7 +81,7 @@ m.print_solution()
       cell=850.000
     
 
-## Solving Graphically the model
+### Solving Graphically the model
 
 
 ```python
@@ -118,7 +122,7 @@ plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 ![svg](/images/output_4_1.svg)
 
 
-### II.2 The Diet Problem
+## II.2 The Diet Problem
  
  <p>Assume that there are two products, cereal and milk, for breakfast and assume that a person must consume at least 60 units of iron and at least 70 units of protein to stay alive. Assume that one unit of cereal costs $20 and contains 30 units of iron and 5 units of protein and one unit of milk costs $10 and contains 17 units of iron and 9 units of protein. The goal is to nd the cheapest diet which will satisfy the minimum daily requirement.</p>
 
@@ -133,23 +137,14 @@ The cost of the diet is: 20x1 + 10x2
 
 Hence, the diet problem is:
 
-$$ minimize\ 20\ x1\ +\ 10\ x2 $$
-    
-    
-$$subject \ to$$
-
-$$30\ x1\  + \ 17\ x2\  >=\  60$$ 
-
-
-$$5\ x1\  +\ 9\ x2\  >=\  70 $$ 
+| minimize | $20\ x_1\ +\ 10\ x_2$ |
+| --- | --- |
+| subject to | |
+| | $30\ x_1\  + \ 17\ x_2\  >=\  60$ |
+| | $5\ x_1\  +\ 9\ x_2\  >=\  70$ |
+| | $x_1,\  x_2\ >=\  0$ |
 
 
-$$x1,\  x2\ >=\  0 $$
-
-
-```python
-%reset -f
-```
 
 
 ```python
@@ -175,9 +170,3 @@ m.print_solution()
      - problem type is: LP
     objective: 77.778
       X2=7.778
-    
-
-
-```python
-
-```
