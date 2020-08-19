@@ -5,4 +5,4 @@ title: "Algorithm Design and Analysis"
 author_profile: true
 ---
 
-- [Introduction](/_pages/AlgDesign/Introduction.md "Introduction")
+- [Introduction](/AlgDesign/Introduction.md "Introduction")
