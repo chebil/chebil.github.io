@@ -1,9 +1,11 @@
 # main links
 main:
-  - title: "About"
-    url: /about/
+  - title: "Algorithm Design And Analysis"
+    url: /AlgDesign/
   - title: "Optimization"
     url: /optimization/
+  - title: "About"
+    url: /about/
   #- title: "Quick-Start Guide"
   #  url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
   # - title: "About"
