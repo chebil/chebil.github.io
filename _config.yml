@@ -145,6 +145,7 @@ footer:
 include:
   - .htaccess
   - _pages
+  - _pages/AlgDesign
 exclude:
   - "*.sublime-project"
   - "*.sublime-workspace"
