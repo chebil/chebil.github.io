@@ -6,8 +6,8 @@ author_profile: true
 ---
 <style>
 .responsive-wrap iframe{ 
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
 }
 </style>
 <div class="responsive-wrap">
