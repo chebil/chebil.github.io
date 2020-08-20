@@ -3,6 +3,7 @@ layout: archive
 permalink: /optimization/LinearProgramming
 title: "Linear Programming"
 author_profile: true
+classes: wide
 ---
 - [I. Introduction](#i-introduction)
 - [II. Modeling a problem](#ii-modeling-a-problem)

@@ -3,6 +3,7 @@ layout: archive
 permalink: /AlgDesign/Introduction
 title: "Introduction to algorithm design and analysis"
 author_profile: true
+classes: wide
 ---
 <style>
 .responsive-wrap iframe{ 
