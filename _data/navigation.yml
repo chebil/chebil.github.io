@@ -4,6 +4,8 @@ main:
     url: /AlgDesign/
   - title: "Optimization"
     url: /optimization/
+  - title: "Problem Solving"
+    url: /problemsolving/
   - title: "About"
     url: /about/
   #- title: "Quick-Start Guide"
