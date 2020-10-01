@@ -56,8 +56,7 @@ Output:
 There is no need to refill the tank as the car starts with a full tank and can travel for 250 miles
 whereas the distance to the destination point is 200 miles.
 
-#Solution Code : You must find the error for the second example ;)
-
+#Solution Code : 
 ```java
 import java.util.Scanner;
 
@@ -81,18 +80,19 @@ public class Fuel {
         int i;
         if (tank >= dist)
             return 0;
+        for (i = -1; i < stops.length - 1 && stops[i + 1] <= tank; i++)
+            ;
+        if (i == -1)
+            return -1;
+        else {
+            myPosition = i;
+            lastPosition = i;
+            minRefill++;
+        }
         // We need to go from A to B
         while (myPosition < stops.length - 1) {
             lastPosition = myPosition;
-            for (i = -1; i < stops.length - 1 && stops[i + 1] <= tank; i++)
-                ;
-            if (i == -1)
-                return -1;
-            else {
-                myPosition = i;
-                lastPosition = i;
-                minRefill++;
-            }
+
             // what is the farthest reachable gas station
             while (myPosition < stops.length - 1 && stops[myPosition + 1] - stops[lastPosition] <= tank) {
                 myPosition++;
@@ -118,5 +118,6 @@ public class Fuel {
         return minRefill;
     }
 }
+
 
 ```
