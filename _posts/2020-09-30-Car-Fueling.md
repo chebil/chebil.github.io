@@ -55,3 +55,68 @@ Output:
 
 There is no need to refill the tank as the car starts with a full tank and can travel for 250 miles
 whereas the distance to the destination point is 200 miles.
+
+#Solution Code : You must find the error for the second example ;)
+
+```java
+import java.util.Scanner;
+
+public class Fuel {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int dist = scanner.nextInt();
+        int tank = scanner.nextInt();
+        int n = scanner.nextInt();
+        int stops[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            stops[i] = scanner.nextInt();
+        }
+        System.out.println("Minimimum number of refills is : " + MinRefill(dist, tank, stops));
+    }
+
+    static int MinRefill(int dist, int tank, int[] stops) {
+        int minRefill = 0;
+        int myPosition = 0;
+        int lastPosition = 0;
+        int i;
+        if (tank >= dist)
+            return 0;
+        // We need to go from A to B
+        while (myPosition < stops.length - 1) {
+            lastPosition = myPosition;
+            for (i = -1; i < stops.length - 1 && stops[i + 1] <= tank; i++)
+                ;
+            if (i == -1)
+                return -1;
+            else {
+                myPosition = i;
+                lastPosition = i;
+                minRefill++;
+            }
+            // what is the farthest reachable gas station
+            while (myPosition < stops.length - 1 && stops[myPosition + 1] - stops[lastPosition] <= tank) {
+                myPosition++;
+            }
+            if (myPosition == stops.length - 1) {
+                if (dist - stops[lastPosition] <= tank) {
+                    return minRefill;
+                } else {
+                    if (dist - stops[myPosition] <= tank)
+                        return minRefill + 1;
+                    else
+                        return -1;
+                }
+            } else {
+                if (myPosition != lastPosition && stops[myPosition] - stops[lastPosition] <= tank) {
+                    minRefill++;
+                } else
+                    return -1;
+
+            }
+
+        }
+        return minRefill;
+    }
+}
+
+```
