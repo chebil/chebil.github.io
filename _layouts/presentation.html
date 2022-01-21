@@ -1,0 +1,53 @@
+---
+layout: single
+---
+{% if page.isKeynote == true %}
+<p class="notice--info">This talk can be given as a Keynote<p>
+{% endif %}
+{% if page.isRetired == true %}
+<p class="notice--danger">This talk has been retired. It is no longer given.  If you need this talk, please contact me.<p>
+{% endif %}
+
+{{ content }}
+
+{%- if page.level -%}
+<p class="notice">This session is rated <i>level {{page.level}} - 
+{%- assign level = page.level -%}
+{%- case level -%}
+    {%- when 100 -%}
+    "Introductory/Overview"
+    {%- when 200 -%}
+    "Basic Concepts"
+    {%- when 300 -%}
+    "More Advanced - Lots of Code"
+    {%- when 400 -%}
+    "Heavy Technical Content"
+    {%- when 500 -%}
+    "Very Advanced - not for the inexperienced"
+    {%- else -%}
+    Unknown
+{%- endcase -%}
+.</i></p>
+{%- endif -%}
+
+{% if page.sourceUrl %}
+<h3>Source Code</h3>
+<a href="{{page.sourceUrl}}" target="_blank">{{page.sourceUrl}}</a>
+{% endif %}
+
+{% if page.powerPointUrl %}
+<iframe src="{{page.powerPointUrl}}" width="610px" height="367px" frameborder="0"></iframe>
+{% endif %}
+
+{% if page.youTubeId %}
+{% capture youtube_id %}
+{{page.youTubeId}}
+{% endcapture %}
+<h3>Video</h3>
+{% include video id=youtube_id provider="youtube" %}
+{% if page.youTubeCaption %}
+<p class="text-center">
+{{page.youTubeCaption}}
+</p>
+{% endif %}
+{% endif %}

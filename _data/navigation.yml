@@ -1,19 +1,11 @@
 # main links
 main:
-  #- title: "Algorithm Design And Analysis"
-  #  url: /AlgDesign/
-  - title: "Optimization"
-    url: /optimization/
-  - title: "Problem Solving"
-    url: /problemSolving/
-  #- title: "About"
-  #  url: /about/
-  #- title: "Quick-Start Guide"
-  #  url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
-  # - title: "About"
-  #   url: https://mmistakes.github.io/minimal-mistakes/about/
+  - title: "Quick-Start Guide"
+    url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
+  - title: "Data Structures"
+    url: /DataStructure/
   # - title: "Sample Posts"
-  #   url: /year-archive/
+  #   url: /pre/
   # - title: "Sample Collections"
   #   url: /collection-archive/
   # - title: "Sitemap"
