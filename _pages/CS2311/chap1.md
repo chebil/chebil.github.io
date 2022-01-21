@@ -4,4 +4,4 @@ layout: splash
 permalink: /DataStructure/chap1
 author_profile: True
 ---
-# Algorithm Analysis
+<embed src="https://chebil.github.io/_pages/CS2311/01_AlgorithmAnalysis.pdf" type="application/pdf">
