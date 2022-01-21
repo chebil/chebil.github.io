@@ -1,9 +1,13 @@
 ---
 title:  Data Structures (CS 2311)
-layout: splash
+layout: single
+classes: wide
 permalink: /DataStructure/
-author_profile: True
+author_profile: false
+sidebar:
+  nav: "DataStructure"
 ---
+
 ## Course Description
 This course aims to introduce basic data structures and performance measurement of algorithms which are to be used as tools in designing solutions to problems. Topics include: methods of analysis of algorithms including asymptotic notations and empirical measurements of performance, pointers and recursion, abstract data type concepts, different data structures including concepts, implementation and operations for maintaining them; such data structures are: lists and linked-lists, stacks, queues, priority queues, trees and its traversal, binary search trees, heaps, hash tables and graphs and graphs’ algorithms. Also, important sorting and searching algorithms will be discussed including: bubble sort, insertion sort, selection sort, merge sort, heap sort and radix sort, sequential search and binary search..
 ## Course Requirements

@@ -10,3 +10,11 @@ main:
   #   url: /collection-archive/
   # - title: "Sitemap"
   #   url: /sitemap/
+# Data Structure links
+DataStructure:
+  - title: Data Structure
+    children:
+      - title: "CS 2311 Main Page"
+        url: /DataStructure/
+      - title: 1. Algorithm Analysis
+        url: /DataStructure/chap1
