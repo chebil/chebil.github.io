@@ -290,13 +290,6 @@ defaults:
       comments: # true
       share: true
       related: true
-
-collections:
-  presentations:
-    output: true
-    permalink: /presentations/:name
-# Defaults
-defaults:
   # _presentations
   - scope:
       path: ""
@@ -306,4 +299,10 @@ defaults:
       share: true
       classes : wide
       author_profile: true
+collections:
+  presentations:
+    output: true
+    permalink: /presentations/:name
+
+  
       
