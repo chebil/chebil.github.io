@@ -23,4 +23,4 @@ Year/Edition: 2015
 
 ## Topics
 
-1. Chapter 1: [ِAlgorithm Analysis](/DataStructure/chap1){:target="_blank" rel="noopener"}
+1. Chapter 1: [ِAlgorithm Analysis](/DataStructure/chap1)
