@@ -1,5 +1,5 @@
 ---
-title: LinkedList
+title: Lists
 layout: single
 classes: wide
 permalink: /DataStructure/chap3
@@ -11,8 +11,20 @@ author_profile: false
 sidebar:
   nav: "DataStructure"
 ---
-# Slides
-<iframe height="400px" width="100%" src="https://drive.google.com/file/d/15hNIGltReO3qZuzmr3R9nTZVWX58S--x/preview" frameborder="0" allowfullscreen="true"></iframe>
 
-# Simple LinkedList implementation
-<iframe height="350px" width="100%" src="https://drive.google.com/file/d/15g1FPgn2qhInCwrIwKGxcbieZjpSmeEE/preview"  frameborder="0"  allowfullscreen></iframe>
+
+# Slides
+<details>
+<summary> Click to expand</summary>
+
+ <iframe height="400px" width="100%" src="https://drive.google.com/file/d/15hNIGltReO3qZuzmr3R9nTZVWX58S--x/preview" frameborder="0" allowfullscreen="true"></iframe> 
+</details>
+
+# Video tutorials
+<details>
+<summary> Simple LinkedList implementation</summary>
+
+ <iframe height="350px" width="100%" src="https://drive.google.com/file/d/15g1FPgn2qhInCwrIwKGxcbieZjpSmeEE/preview"  frameborder="0"  allowfullscreen></iframe>
+</details>
+
+
