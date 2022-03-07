@@ -24,3 +24,6 @@ Year/Edition: 2015
 ## Topics
 
 1. Chapter 1: [ِAlgorithm Analysis](/DataStructure/chap1)
+2. Chapter 2: [Recursion](/DataStructure/chap2)
+3. Chapter 3: [Lists](/DataStructure/chap3)
+4. Chapter 4: [Stacks](/DataStructure/chap4)
