@@ -26,6 +26,8 @@ sidebar:
 
  <iframe height="350px" width="100%" src="https://drive.google.com/file/d/15g1FPgn2qhInCwrIwKGxcbieZjpSmeEE/preview"  frameborder="0"  allowfullscreen></iframe>
 
+</details>
+<details>
  <summary> Double LinkedList implementation</summary>
 
  <iframe height="350px" width="100%" src="https://drive.google.com/file/d/1-B3Vl_Cxbrzp1NalHosnsBQK9ETajSqV/preview"  frameborder="0"  allowfullscreen></iframe>
