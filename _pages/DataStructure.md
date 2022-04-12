@@ -27,3 +27,4 @@ Year/Edition: 2015
 2. Chapter 2: [Recursion](/DataStructure/chap2)
 3. Chapter 3: [Lists](/DataStructure/chap3)
 4. Chapter 4: [Stacks](/DataStructure/chap4)
+4. Chapter 5: [Queues](/DataStructure/chap5)
