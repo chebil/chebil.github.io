@@ -27,4 +27,6 @@ Year/Edition: 2015
 2. Chapter 2: [Recursion](/DataStructure/chap2)
 3. Chapter 3: [Lists](/DataStructure/chap3)
 4. Chapter 4: [Stacks](/DataStructure/chap4)
-4. Chapter 5: [Queues](/DataStructure/chap5)
+5. Chapter 5: [Queues](/DataStructure/chap5)
+6. Chapter 6: [Trees](/DataStructure/chap6)
+7. Chapter 7: [Binary Search Trees and Priority Queues](/DataStructure/chap7)

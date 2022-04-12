@@ -26,3 +26,7 @@ DataStructure:
         url: /DataStructure/chap4      
       - title: 5. Queues
         url: /DataStructure/chap5
+      - title: 6. Trees
+        url: /DataStructure/chap6
+      - title: 7. Binary Search Trees and Priority Queues
+        url: /DataStructure/chap7

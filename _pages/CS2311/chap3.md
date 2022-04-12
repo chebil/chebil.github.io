@@ -14,11 +14,8 @@ sidebar:
 
 
 # Slides
-<details>
-<summary> Click to expand</summary>
+<iframe height="400px" width="100%" src="https://drive.google.com/file/d/15hNIGltReO3qZuzmr3R9nTZVWX58S--x/preview" frameborder="0" allowfullscreen="true"></iframe> 
 
- <iframe height="400px" width="100%" src="https://drive.google.com/file/d/15hNIGltReO3qZuzmr3R9nTZVWX58S--x/preview" frameborder="0" allowfullscreen="true"></iframe> 
-</details>
 
 # Video tutorials
 <details>
