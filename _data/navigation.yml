@@ -23,4 +23,6 @@ DataStructure:
       - title: 3. Lists
         url: /DataStructure/chap3
       - title: 4. Stacks
-        url: /DataStructure/chap4
+        url: /DataStructure/chap4      
+      - title: 5. Queues
+        url: /DataStructure/chap5
