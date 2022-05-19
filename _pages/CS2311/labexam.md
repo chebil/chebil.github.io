@@ -9,6 +9,9 @@ author_profile: false
 ## Complete the missing fragments code in the following MaxHeap methods, then create a main class to test your implementation.
 
 ```java
+//Student name:........
+//Student section:......
+//Student id:.........
 import java.util.*;
  class MaxHeap{
   private int[] heap;
@@ -145,6 +148,6 @@ public class MainHeap {
 ```
 
 ## Use the link below to send your response:
-(Male section)[notyet.com]
+(Male section)[https://docs.google.com/forms/d/e/1FAIpQLSePaMRLmY5GPg0OL9WaONKvEQuteJ0m3CCbscL7aAg5nOzxiQ/viewform?usp=sf_link]
 
 (Female section)[https://docs.google.com/forms/d/e/1FAIpQLSejf6TCIJ5RDND-wDSjsD8bPdQd5guFfi0l_p_wxU9lb8-_VQ/viewform]
