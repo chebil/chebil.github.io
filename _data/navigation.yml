@@ -4,8 +4,8 @@ main:
   #   url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
   - title: "Data Structures"
     url: /DataStructure/
-  # - title: "Sample Posts"
-  #   url: /pre/
+  - title: "Algorithm Design and Analysis"
+    url: /AlgDesign/
   # - title: "Sample Collections"
   #   url: /collection-archive/
   # - title: "Sitemap"
@@ -30,3 +30,14 @@ DataStructure:
         url: /DataStructure/chap6
       - title: 7. Binary Search Trees and Priority Queues
         url: /DataStructure/chap7
+# Alg Design links
+AlgDesign:
+  - title: Algorithm Design and Analysis
+    children:
+      - title: "CS 3401 Main Page"
+        url: /AlgDesign/
+      - title: 1. Introduction
+        url: /AlgDesign/chap1
+      - title: 2. Algorithm Analysis
+        url: /AlgDesign/chap2
+

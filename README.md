@@ -1,2 +1,2 @@
 Chebil.github.io
-bundle exec jekyll serve --livereload
+bundle exec jekyll serve --force_polling
