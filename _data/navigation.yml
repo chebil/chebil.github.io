@@ -18,6 +18,8 @@ DataStructure:
         url: /DataStructure/
       - title: 1. Algorithm Analysis
         url: /DataStructure/chap1
+      - title: ----Lab 1
+        url: /DataStructure/Labs/Lab1
       - title: 2. Recursion
         url: /DataStructure/chap2
       - title: 3. Lists
@@ -40,4 +42,6 @@ AlgDesign:
         url: /AlgDesign/chap1
       - title: 2. Algorithm Analysis
         url: /AlgDesign/chap2
+      - title: 3. Brute force and Exhaustive Search
+        url: /AlgDesign/chap3
 
