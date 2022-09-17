@@ -25,4 +25,5 @@ Year/Edition: 2011
 
 1. Chapter 1: [Introduction](/AlgDesign/chap1)
 2. Chapter 2: [ِAlgorithm Analysis](/AlgDesign/chap2)
-
+3. Chapter 3: [Brute force and Exhaustive Search](/AlgDesign/chap3)
+4. Chapter 4: [Decrease and conquer](/AlgDesign/chap4)
