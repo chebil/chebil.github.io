@@ -22,6 +22,8 @@ DataStructure:
         url: /DataStructure/Labs/Lab1
       - title: 2. Recursion
         url: /DataStructure/chap2
+      - title: ----Lab 2
+        url: /DataStructure/Labs/Lab2
       - title: 3. Lists
         url: /DataStructure/chap3
       - title: 4. Stacks
