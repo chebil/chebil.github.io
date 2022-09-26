@@ -48,4 +48,6 @@ AlgDesign:
         url: /AlgDesign/chap3
       - title: 4. Decrease and conquer
         url: /AlgDesign/chap4
+      - title: 5. Divide and conquer
+        url: /AlgDesign/chap5
 
