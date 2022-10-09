@@ -28,3 +28,4 @@ Year/Edition: 2011
 3. Chapter 3: [Brute force and Exhaustive Search](/AlgDesign/chap3)
 4. Chapter 4: [Decrease and conquer](/AlgDesign/chap4)
 5. Chapter 5: [Divide and conquer](/AlgDesign/chap5)
+6. Chapter 6: [Transform and conquer](/AlgDesign/chap6)

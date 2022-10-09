@@ -29,7 +29,9 @@ DataStructure:
       - title: ----Lab 3
         url: /DataStructure/Labs/Lab3
       - title: 4. Stacks
-        url: /DataStructure/chap4      
+        url: /DataStructure/chap4 
+      - title: ----Lab 4
+        url: /DataStructure/Labs/Lab4     
       - title: 5. Queues
         url: /DataStructure/chap5
       - title: 6. Trees
