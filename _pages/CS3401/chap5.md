@@ -18,3 +18,7 @@ sidebar:
 <div class="responsive-wrap">
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQ-tyKj3m0tX_H6V9mcPOTmOmFtkXhdZqVdfahl9llbLK48OZ1_VYn3_d6ILG77oqtEgA9DazsN3wYY/embed?start=false&loop=false&delayms=3000" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 </div>
+
+<i class="fa fa-download" aria-hidden="true">
+<a href="https://drive.google.com/file/d/1-Afx1F4GK85fTfAOAky4uSOOJsCgOk23/view?usp=sharing" target="_blank">Download slides</a>
+</i> 
