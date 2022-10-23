@@ -56,4 +56,6 @@ AlgDesign:
         url: /AlgDesign/chap5
       - title: 6. Transform and conquer
         url: /AlgDesign/chap6
+      - title: 7. Dynamic programming
+        url: /AlgDesign/chap7
 

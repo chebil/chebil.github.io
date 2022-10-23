@@ -29,3 +29,4 @@ Year/Edition: 2011
 4. Chapter 4: [Decrease and conquer](/AlgDesign/chap4)
 5. Chapter 5: [Divide and conquer](/AlgDesign/chap5)
 6. Chapter 6: [Transform and conquer](/AlgDesign/chap6)
+6. Chapter 7: [Dynamic programming](/AlgDesign/chap7)
