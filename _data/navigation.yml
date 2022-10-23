@@ -34,6 +34,8 @@ DataStructure:
         url: /DataStructure/Labs/Lab4     
       - title: 5. Queues
         url: /DataStructure/chap5
+      - title: ----Lab 5
+        url: /DataStructure/Labs/Lab5   
       - title: 6. Trees
         url: /DataStructure/chap6
       - title: 7. Binary Search Trees and Priority Queues
