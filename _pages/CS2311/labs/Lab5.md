@@ -1,5 +1,5 @@
 ---
-title: "Lab 4: Queue"
+title: "Lab 5: Queue"
 layout: single
 classes: wide
 permalink: /DataStructure/Labs/Lab5
@@ -26,7 +26,11 @@ sidebar:
 
 
 ```java
-//ToDo
+interface QueueADT<E>{
+  void enqueue(E x);
+  E dequeue();
+  boolean isEmpty();
+}
 ```
 
 >The Queue class
