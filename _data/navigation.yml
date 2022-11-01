@@ -40,6 +40,10 @@ DataStructure:
         url: /DataStructure/chap6
       - title: 7. Binary Search Trees and Priority Queues
         url: /DataStructure/chap7
+      - title: ----Lab 6
+        url: /DataStructure/Labs/Lab6
+      - title: 8. Graphs
+        url: /DataStructure/chap8
 # Alg Design links
 AlgDesign:
   - title: Algorithm Design and Analysis
