@@ -18,7 +18,7 @@ Create a new file "List.java" which contains the interface below:
 interface List<E>{
     void addFront(E x); //Add Element at the beginning of the list
     void addEnd(E x); //Add Element at the end of the list
-    void addMid(E val , E x); //Add Element after the value val in the list
+    void addAfter(E val , E x); //Add Element after the value val in the list
     void print(); // print all the elements in the list
     boolean empty();// return true if the list is empty 
     void removeEnd();// remove the last element in the list
@@ -26,6 +26,7 @@ interface List<E>{
     void remove(E x);// remove the element x from the list
     void removeAll();// remove all elements in the list
     boolean exist(E x);// check if the element x is in the list
+    E getHead();// return the data in the head
 }
 ```
 ## Linked List implementation
@@ -76,7 +77,7 @@ class LinkedList<E> implements List<E> {
     }
   }
 
-  public void addMid(E val, E x) {
+  public void addAfter(E val, E x) {
     if (empty())
       System.out.println("empty list!!!");
     else {
@@ -205,6 +206,23 @@ public boolean exist(E x) {
 }
 ```
 
+- Return the data in the head, null if empty 
+
+```java
+public E getHead() {
+//TODO
+
+
+
+
+
+
+
+
+
+
+}
+```
 ## Doubly Linked List implementation
 ### Defining class DNode
 > A list contain a head which is a pointer (reference) to the first node and a Tail which is a pointer to the last element in the list. The first step we should define a **DNode**
@@ -284,7 +302,7 @@ public void addEnd(E x) {
 > 🚩 You have to update the next of the predecessor! 
 
 ```java
-public void addMid(E val, E x) {
+public void addAfter(E val, E x) {
 //TODO
 
 
@@ -423,6 +441,23 @@ public void removeAll() {
 
 ```java
 public boolean exist(E x) {
+//TODO
+
+
+
+
+
+
+
+
+
+
+}
+```
+- Return the data in the head, null if empty 
+
+```java
+public E getHead() {
 //TODO
 
 
