@@ -16,7 +16,7 @@ sidebar:
 .responsive-wrap iframe{ max-width: 100%;}
 </style>
 <div class="responsive-wrap">
-<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vR607lUbjAvq_EpNvWTufM1dIHe3t70amDqK-E__pl1yGLIcLkAu8CMsFK3ffqieu9dre-8bgvLuqhq/embed?start=false&loop=false&delayms=3000" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+<iframe src="https://docs.google.com/presentation/d/17-OS-Mqa10HX_w_odsJDDVfg2EDg9iwUclx2yc6v2Mg/embed?start=false&loop=false&delayms=3000" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 </div>
 
 <i class="fa fa-download" aria-hidden="true">
