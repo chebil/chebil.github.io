@@ -16,12 +16,13 @@ sidebar:
 .responsive-wrap iframe{ max-width: 100%;}
 </style>
 <div class="responsive-wrap">
-<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vR607lUbjAvq_EpNvWTufM1dIHe3t70amDqK-E__pl1yGLIcLkAu8CMsFK3ffqieu9dre-8bgvLuqhq/embed?start=false&loop=false&delayms=3000" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+<!-- <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vR607lUbjAvq_EpNvWTufM1dIHe3t70amDqK-E__pl1yGLIcLkAu8CMsFK3ffqieu9dre-8bgvLuqhq/embed?start=false&loop=false&delayms=3000" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe> -->
+<iframe src="https://drive.google.com/file/d/177ifLduodyQQXNE8DKNvcugImpUu8NdD/preview" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 </div>
 
-<i class="fa fa-download" aria-hidden="true">
+<!-- <i class="fa fa-download" aria-hidden="true">
 <a href="https://drive.google.com/file/d/177ifLduodyQQXNE8DKNvcugImpUu8NdD/view?usp=sharing" target="_blank">Download slides</a>
-</i> 
+</i>  -->
 
 # Implementations
 <details>
