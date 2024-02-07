@@ -29,6 +29,12 @@ sidebar:
 
 # Implementations
 <details>
+<summary> The closest pair problem and the convex Hull problem</summary>
+
+<iframe height="400px" width="100%" src="https://replit.com/@chebilkhalil/ConvexHull?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+
+</details>
+<details>
 <summary> Knapsack problem with brute force</summary>
 
 <iframe height="400px" width="100%" src="https://repl.it/@chebilkhalil/Knapsack-problem-Brute-force?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
