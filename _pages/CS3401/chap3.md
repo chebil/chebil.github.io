@@ -20,14 +20,10 @@ sidebar:
 <iframe src="https://drive.google.com/file/d/1TkfLqnrws9gi7f1edbsM8yNAc8eDm1oR/preview" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 </div>
 
-
-<!-- 
-<i class="fa fa-download" aria-hidden="true">
-<a href="https://drive.google.com/file/d/1TkfLqnrws9gi7f1edbsM8yNAc8eDm1oR/view?usp=sharing" target="_blank">Download slides</a>
-</i>  -->
-
-
 # Implementations
+
+## [The convex Hull problem](/ConvexHull)
+
 <details>
 <summary> The closest pair problem and the convex Hull problem</summary>
 
