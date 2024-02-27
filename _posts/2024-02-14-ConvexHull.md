@@ -8,10 +8,10 @@ author_profile: true
 The convex hull problem is a problem in computational geometry. It is about finding the smallest convex polygon that contains a given set of points. The convex hull problem has many applications in computer graphics, pattern recognition, and image processing. In this post, we will discuss some algorithms to solve the convex hull problem. 
 ![Convex Hull](/assets/images/ConvexHull.png){: .align-center}{:height="50%" width="50%"}
 
-## The brute force algorithm
+## 1. The brute force algorithm
 The brute force algorithm is the simplest algorithm to solve the convex hull problem. It works by checking all possible combinations of points to find the convex hull. The algorithm has a time complexity of O(n^3), where n is the number of points. The brute force algorithm is not practical for large datasets, but it is useful for small datasets to verify the correctness of other algorithms.
 
-### The general idea
+### 1.1 The general idea
 
 ```python
 for every pair of points (i, j) in the set of points
@@ -23,7 +23,7 @@ end for
 
 ![Brute Force](/assets/images/convAnim.gif){: .align-center}{:height="50%" width="50%"}
 
-### Lets move to the implementation
+### 1.2 Lets move to the implementation
 
 > The first step is to define the Point class. The Point class will have two attributes, x and y, to represent the coordinates of the point.
 
@@ -106,3 +106,8 @@ Map<Point, Point> convexHull(Point[] points) {
     return result;
 }
 ```
+**The full code with a graphical representation of the convex hull and a randomly generated set of points can be found [here](https://replit.com/@chebilkhalil/ConvexHull?v=1){:target="_blank"}.**
+
+<!-- ## 2. The Divide and Conquer algorithm
+
+The divide and conquer algorithm is a more efficient algorithm to solve the convex hull problem. It works by dividing the set of points into two subsets, finding the convex hull of each subset, and then merging the two convex hulls to find the convex hull of the entire set of points. The divide and conquer algorithm has a time complexity of O(n log n), where n is the number of points. -->
