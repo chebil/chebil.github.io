@@ -58,9 +58,25 @@ String reverse(String s)
 }
 ```
 ## Task 6
+>Implement a recursive method that search the minimum value in an array of integers:
+
+```java
+int min(int[] A, int start){
+    //toDo
+}
+```
+## Task 7
+>Implement the binary search algorithm using recursion:
+
+```java
+int binarySearch(int[] A, int start, int end, int key){
+    //toDo
+}
+```
+## Task 8
 
 >We have n reversible tokens, aligned. Each token has one side marked 1 and one side marked 0. Initially only the 0 sides of the n tokens are visible. The goal of the game is to turn over the different tokens so that the only visible faces are the 1s.
-- No. Jeton 123………….n
+- Token index: 123………….n
 - Initial configuration 000………….0
 - Final configuration   111………….1
 
