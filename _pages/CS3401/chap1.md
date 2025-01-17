@@ -20,6 +20,3 @@ sidebar:
 <iframe src="https://drive.google.com/file/d/1FKFAoyEkdDz3nABMMgR5O_bnodc6PHYp/preview" frameborder="0" height="400px" width="80%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 </div>
 
-<!-- <i class="fa fa-download" aria-hidden="true">
-<a href="https://drive.google.com/file/d/1FKFAoyEkdDz3nABMMgR5O_bnodc6PHYp/view?usp=sharing" target="_blank">Download slides</a>
-</i> -->
