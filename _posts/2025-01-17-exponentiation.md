@@ -1,7 +1,7 @@
 ---
 layout: posts
 classes: wide
-title:  "Expontiation"
+title:  "exponentiation"
 author_profile: true
 ---
 
