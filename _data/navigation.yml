@@ -6,6 +6,8 @@ main:
     url: /DataStructure/
   - title: "Algorithm Design and Analysis"
     url: /AlgDesign/
+  - title: "Design of Problem Solvers"
+    url: /ProbSolvers/
   # - title: "Sample Collections"
   #   url: /collection-archive/
   # - title: "Sitemap"
@@ -66,4 +68,25 @@ AlgDesign:
         url: /AlgDesign/chap6
       - title: 7. Dynamic programming
         url: /AlgDesign/chap7
+ProbSolvers:
+  - title: Design of Problem Solvers
+    children:
+      - title: "CS 602 Main Page"
+        url: /ProbSolvers/
+      - title: 1. Introduction to Logic Problem Solvers
+        url: /ProbSolvers/chap1
+      # - title: 2. Problem Solving
+      #   url: /ProbSolvers/chap2
+      # - title: 3. Problem Decomposition
+      #   url: /ProbSolvers/chap3
+      # - title: 4. Problem Abstraction
+      #   url: /ProbSolvers/chap4
+      # - title: 5. Problem Reification
+      #   url: /ProbSolvers/chap5
+      # - title: 6. Problem Implementation
+      #   url: /ProbSolvers/chap6
+      # - title: 7. Problem Testing
+      #   url: /ProbSolvers/chap7
+      # - title: 8. Problem Maintenance
+      #   url: /ProbSolvers/chap8
 
