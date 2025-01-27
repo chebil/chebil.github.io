@@ -27,6 +27,28 @@ Author: Kenneth D. Forbus, Johan de Kleer
 Year/Edition: 1993  
 [Link to book](https://mitpress.mit.edu/9780262528153/building-problem-solvers/)
 
+## Grading Policy
+
+|------------|--------|  
+| Assesment | Weight |  
+|-----------|--------|  
+| Midterm Exam | 20% |  
+| Final Exam | 40% |  
+| Assignments | 15% |  
+| Labs and lab exam | 20% |   
+| Oral presentation | 5% |  
+|-----------|--------|  
+
+## Important Dates
+
+|------------|--------|
+| Event | Date |
+|------------|--------|
+| Midterm Exam | 25/02/2025 |
+| Lab Exam | 06/05/2025 |
+| Final Exam | 13/05/2025 |
+|------------|--------|
+
 ## Topics
 
 1. Chapter 1: [Introduction to Logic Problem Solvers](/ProbSolvers/chap1)
