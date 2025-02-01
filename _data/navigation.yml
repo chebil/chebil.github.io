@@ -79,12 +79,14 @@ ProbSolvers:
         url: /ProbSolvers/chap2
       - title: 3. Queries and Updates for Logic Problem Solvers
         url: /ProbSolvers/chap3
-      # - title: 4. Problem Abstraction
-      #   url: /ProbSolvers/chap4
-      # - title: 5. Problem Reification
-      #   url: /ProbSolvers/chap5
-      # - title: 6. Problem Implementation
-      #   url: /ProbSolvers/chap6
+      - title: 4. Query Evaluation and Optimization
+        url: /ProbSolvers/chap4
+      - title: 5. View Definitions and Evaluation
+        url: /ProbSolvers/chap5
+  - title: Labs
+    children:
+      - title: 1. Lab 1
+        url: /ProbSolvers/lab1
       # - title: 7. Problem Testing
       #   url: /ProbSolvers/chap7
       # - title: 8. Problem Maintenance
