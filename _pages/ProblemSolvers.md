@@ -27,6 +27,12 @@ Author: Kenneth D. Forbus, Johan de Kleer
 Year/Edition: 1993  
 [Link to book](https://mitpress.mit.edu/9780262528153/building-problem-solvers/)
 
+## [Link to Sierra](http://epilog.stanford.edu/sierra/) 
+
+## [Introductory Tour of Sierra](http://epilog.stanford.edu/documentation/sierra/tour.html)
+
+## [Epilog Vocabulary](http://epilog.stanford.edu/documentation/sierra/vocabulary.html)
+
 ## Grading Policy
 
 |------------|--------|  
