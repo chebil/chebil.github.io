@@ -12,6 +12,7 @@
   <head>
     {% include head.html %}
     {% include head/custom.html %}
+    <link rel="stylesheet" href="/assets/css/tabs.css">
   </head>
 
   <body class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %}">
@@ -22,7 +23,7 @@
     <div class="initial-content">
       {{ content }}
     </div>
-
+    <script src="/assets/js/tabs.js"></script>
     {% if site.search == true %}
       <div class="search-content">
         {% include_cached search/search_form.html %}
