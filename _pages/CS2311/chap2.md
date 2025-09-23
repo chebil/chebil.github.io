@@ -11,10 +11,9 @@ author_profile: false
 sidebar:
   nav: "DataStructure"
 ---
-<details>
-<summary>Slides</summary>
+
 <iframe height="400px" width="100%" src="https://drive.google.com/file/d/15gJnvedgc2QgS4mRMyRbAl6yh2mpOJrp/preview" frameborder="0" allowfullscreen="true"></iframe>
-</details>
+
 
 ## Some Recursion exercises
 

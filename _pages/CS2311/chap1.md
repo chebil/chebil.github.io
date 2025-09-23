@@ -11,10 +11,9 @@ author_profile: false
 sidebar:
   nav: "DataStructure"
 ---
-<details>
-<summary>Slides</summary>
+
 <iframe height="400px" width="100%" src="https://drive.google.com/file/d/1b1DoqbC_EIIZVTqqDvAU1Hg4ePAIBNzv/preview" frameborder="0" allowfullscreen="true"></iframe>
-</details>
+
 
 # What is an Algorithm?
 An algorithm is a step-by-step procedure for solving a problem. It is a sequence of well-defined instructions that takes some value, or set of values, as input and produces some value, or set of values, as output. It must be correct, efficient, and easy to understand.
