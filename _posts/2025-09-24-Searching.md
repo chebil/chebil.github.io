@@ -29,10 +29,10 @@ This post demonstrates informed search algorithms using **existing Python librar
 
 For the complete interactive implementation with code examples, visualizations, and detailed explanations, please view the html version of the Jupyter notebook:
 
-**[📊 View the Interactive Notebook]({{ site.baseurl }}/assets/notebooks/library_based_search_comparison.html)**
+**[📊 View the Interactive Notebook]({{ site.baseurl }}/assets/notebooks/library_based_search_comparison.html){:target="_blank"}**
 
 To download the notebook, click the link below:
-**[💾 Download the Jupyter Notebook]({{ site.baseurl }}/assets/notebooks/library_based_search_comparison.ipynb)**
+**[💾 Download the Jupyter Notebook]({{ site.baseurl }}/assets/notebooks/library_based_search_comparison.ipynb){:target="_blank"}**
 
 *Note: The notebook contains executable Python code demonstrating each algorithm with real examples and performance comparisons.*
 

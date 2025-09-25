@@ -7,7 +7,7 @@ main:
   - title: "Algorithm Design and Analysis"
     url: /AlgDesign/
   - title: "Artificial Intelligence"
-    url: /AI-slides
+    url: /ai
   # - title: "Design of Problem Solvers"
   #   url: /ProbSolvers/
   # - title: "Sample Collections"
@@ -94,3 +94,10 @@ AlgDesign:
       # - title: 8. Problem Maintenance
       #   url: /ProbSolvers/chap8
 
+AI:
+  - title: Advanced Artificial Intelligence
+    children:
+      - title: "Main Page"
+        url: /ai
+      - title: Slides
+        url: /AI-slides
