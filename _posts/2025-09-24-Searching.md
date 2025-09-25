@@ -3,10 +3,6 @@ layout: posts
 classes: wide
 title:  "Informed Search Algorithms"
 author_profile: true
-categories:
-  - algorithms
-  - search
-  - artificial-intelligence
 tags:
   - python
   - networkx
