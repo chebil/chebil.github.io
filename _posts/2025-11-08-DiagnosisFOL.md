@@ -3,9 +3,6 @@ layout: posts
 classes: wide
 title:  "Building a Medical Diagnostic Chatbot with First Order Logic"
 author_profile: true
-categories:
-  - Artificial Intelligence
-  - Logic Programming
 tags:
   - First Order Logic
   - Python
@@ -14,7 +11,6 @@ tags:
   - Knowledge Base
 ---
 
-## Introduction
 
 In this tutorial, we'll build an interactive medical diagnostic chatbot that uses **First Order Logic (FOL)** for inference. This demonstrates how formal logic can be applied to real-world problems like medical diagnosis. We'll use Python with `streamlit` for the interface and `sympy` for logical operations.
 
