@@ -18,7 +18,6 @@ tags:
 
 In this tutorial, we'll build an interactive medical diagnostic chatbot that uses **First Order Logic (FOL)** for inference. This demonstrates how formal logic can be applied to real-world problems like medical diagnosis. We'll use Python with `streamlit` for the interface and `sympy` for logical operations.
 
-**⚠️ Disclaimer:** This is an educational project. It should never replace professional medical advice.
 
 ## What You'll Learn
 
@@ -318,26 +317,6 @@ st.sidebar.markdown(f"**KB Status:** {'✅ Consistent' if is_consistent else '�
 
 ## Step 10: Implement Page Views
 
-### Home Page
-
-```python
-if page == "🏠 Home":
-    st.header("Welcome to the FOL-Powered Diagnostic Chatbot! 👋")
-    st.markdown("""
-    This application demonstrates how **First Order Logic (FOL)** can be used to build a simple diagnostic system. 
-    It uses the `sympy` library to perform logical inference.
-    
-    **How it works:**
-    1.  You answer questions about your symptoms.
-    2.  Each answer becomes a logical fact in a **Knowledge Base** (e.g., `fever = True`).
-    3.  Diagnostic rules, written as **FOL expressions**, are evaluated against the knowledge base.
-    4.  If a rule's conditions are met, a potential diagnosis is suggested.
-    
-    Go to the **Diagnostic Interview** to get started!
-    """)
-    st.warning("This tool is for educational purposes only and is not a substitute for professional medical advice.")
-```
-
 ### Diagnostic Interview Page
 
 ```python
@@ -479,33 +458,14 @@ elif page == "➕ Add Custom Rule":
 - Uses Streamlit forms for better UX
 - Validates inputs before adding to custom rules
 
-### Reset Functionality
-
-```python
-elif page == "🔄 Reset":
-    st.header("🔄 Reset Session")
-    st.warning("This will clear the knowledge base and reset the interview.")
-    if st.button("Confirm Reset", type="primary"):
-        st.session_state.knowledge_base = {}
-        st.success("Session has been reset.")
-        time.sleep(1)
-        st.rerun()
-```
-
-## Step 11: Add Footer
-
-```python
-# Footer
-st.markdown("---")
-st.markdown(
-    "<div style='text-align: center; color: #626C71; font-size: 12px;'>"
-    "FOL Diagnostic Chatbot v2.0 | Educational Demo"
-    "</div>",
-    unsafe_allow_html=True
-)
-```
 
 ## Running the Application
+
+<div style="margin: 20px 0;">
+  <a href="{{ site.baseurl }}/assets/downloads/diagnostic_chatbot.py" download class="btn btn--primary">
+    📥 Download diagnostic_chatbot.py
+  </a>
+</div>
 
 Save the code as `diagnostic_chatbot.py` and run:
 
@@ -601,6 +561,12 @@ This tutorial demonstrated how First Order Logic can power a practical diagnosti
 The combination of SymPy's symbolic logic capabilities and Streamlit's interactive interface makes it easy to build and understand knowledge-based systems.
 
 ## Complete Source Code
+
+<div style="margin: 20px 0;">
+  <a href="{{ site.baseurl }}/assets/downloads/diagnostic_chatbot.py" download class="btn btn--primary">
+    📥 Download diagnostic_chatbot.py
+  </a>
+</div>
 
 ```python
 import streamlit as st
@@ -927,7 +893,3 @@ st.markdown(
 - [First Order Logic in AI](https://en.wikipedia.org/wiki/First-order_logic)
 - [Forward Chaining Inference](https://en.wikipedia.org/wiki/Forward_chaining)
 - [Medical Expert Systems](https://en.wikipedia.org/wiki/Expert_system#Medical)
-
----
-
-**Try it yourself!** Clone the code and experiment with adding new symptoms or diagnostic rules. This is a great starting point for understanding knowledge-based AI systems.

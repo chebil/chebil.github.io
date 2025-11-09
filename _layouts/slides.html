@@ -8,10 +8,24 @@
 
 		<link rel="stylesheet" href="/assets/reveal.js/dist/reset.css">
 		<link rel="stylesheet" href="/assets/reveal.js/dist/reveal.css">
-		<link rel="stylesheet" href="/assets/reveal.js/dist/theme/black.css">
+		<link rel="stylesheet" href="/assets/reveal.js/dist/theme/simple.css">
 
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="/assets/reveal.js/plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="/assets/reveal.js/plugin/highlight/zenburn.css">
+
+		<style>
+			.reveal .slides {
+				text-align: left;
+			}
+			.reveal h1,
+			.reveal h2,
+			.reveal h3,
+			.reveal h4,
+			.reveal h5,
+			.reveal h6 {
+				text-align: left;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
@@ -31,7 +45,7 @@
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
-
+				disableLayout: true,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
 			});
