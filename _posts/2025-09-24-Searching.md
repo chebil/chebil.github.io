@@ -4,11 +4,11 @@ classes: wide
 title:  "Informed Search Algorithms"
 author_profile: true
 tags:
-  - python
-  - networkx
-  - scipy
-  - optimization
-  - jupyter
+  - Algorithms
+  - Search
+  - Python
+  - NetworkX
+  - Optimization
 ---
 
 # Informed Search Algorithms Using Python Libraries

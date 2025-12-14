@@ -15,10 +15,10 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Khalil Chebil"
+title                    : "Dr. Khalil Chebil"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
-name                     : "Khalil Chebil"
+name                     : "Dr. Khalil Chebil"
 description              : "Computer Science portfolio."
 url                      : "https://chebil.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
@@ -101,7 +101,7 @@ analytics:
 
 # Site Author
 author:
-  name             : "Khalil Chebil"
+  # name             : "Khalil Chebil"
   avatar           : "images/bio.jpg"
   bio              : "Phd Computer Science"
   location         : "INSAT Tunisia"

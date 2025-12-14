@@ -3,6 +3,10 @@ layout: posts
 classes: wide
 title:  "The maximum subsequence sum algorithm"
 author_profile: true
+tags:
+  - Algorithms
+  - Dynamic Programming
+  - Optimization
 ---
 
 The maximum subsequence sum algorithm is a classic problem in computer science. The problem is to find the maximum sum of a contiguous subsequence in an array of integers. The algorithm has a number of different implementations with different time complexities. The following are some of the most common implementations of the algorithm.

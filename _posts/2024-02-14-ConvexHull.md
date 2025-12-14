@@ -3,6 +3,10 @@ layout: posts
 classes: wide
 title:  "The Convex Hull Problem"
 author_profile: true
+tags:
+  - Algorithms
+  - Computational Geometry
+  - Data Structures
 ---
 
 The convex hull problem is a problem in computational geometry. It is about finding the smallest convex polygon that contains a given set of points. The convex hull problem has many applications in computer graphics, pattern recognition, and image processing. In this post, we will discuss some algorithms to solve the convex hull problem. 

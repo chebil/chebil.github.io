@@ -2,12 +2,14 @@
 main:
   # - title: "Quick-Start Guide"
   #   url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
-  - title: "Data Structures"
-    url: /DataStructure/
-  - title: "Algorithm Design and Analysis"
-    url: /AlgDesign/
-  - title: "Artificial Intelligence"
-    url: /ai
+  # - title: "Data Structures"
+  #   url: /DataStructure/
+  # - title: "Algorithm Design and Analysis"
+  #   url: /AlgDesign/
+  # - title: "Artificial Intelligence"
+  #   url: /ai
+  # - title: "Big Data Analytics"
+  #   url: https://chebil.github.io/BigData
   # - title: "Design of Problem Solvers"
   #   url: /ProbSolvers/
   # - title: "Sample Collections"

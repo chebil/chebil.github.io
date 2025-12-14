@@ -3,9 +3,235 @@ layout: home
 author_profile: true
 ---
 
-<h2><u>Coding Truths:</u></h2>
-<ul>
-    <li>It's never too late to start programming</li>
-    <li>The only way to get better is by practicing</li>
-    <li>It's not only for genious, but also not for everyone</li>
-</ul>
+<style>
+.tag-filter-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tag-filter-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag-filter {
+    padding: 0.4rem 0.9rem;
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    color: #667eea;
+    font-weight: 500;
+}
+
+.tag-filter:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.tag-filter.active {
+    background: #667eea;
+    color: white;
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.post-tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: #e8eaf6;
+    color: #667eea;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.courses-section {
+    margin-top: 3rem;
+}
+
+.courses-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.degree-section {
+    margin-bottom: 3rem;
+}
+
+.degree-title {
+    font-size: 1.5rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid #667eea;
+    display: inline-block;
+}
+
+.course-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.course-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #667eea;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.course-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: #667eea;
+    font-size: 1.3rem;
+}
+
+.course-card h3 a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.course-card h3 a:hover {
+    text-decoration: underline;
+}
+
+.course-description {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.course-code {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #555;
+    margin-top: 0.5rem;
+}
+</style>
+
+<div class="intro-section">
+    <p style="font-size: 1.1rem; color: #555; margin-bottom: 2rem;">
+        Welcome to my personal website! Here, I share my journey and insights in the world of programming and computer science.
+    </p>
+        <h2>Coding Truths</h2>
+    <ul>
+        <li>It's never too late to start programming</li>
+        <li>The only way to get better is by practicing</li>
+        <li>It's not only for genious, but also not for everyone</li>
+    </ul>
+</div>
+
+
+<div class="courses-section">
+    <h2>My Courses</h2>
+    
+    <div class="degree-section">
+        <div class="course-cards">
+            <div class="course-card">
+                <h3><a href="/AlgDesign/">Algorithm Design</a></h3>
+                <span class="course-code">Bachelor</span>
+                </div>
+            
+            <div class="course-card">
+                <h3><a href="/DataStructure/">Data Structures</a></h3>
+                <span class="course-code">Bachelor</span>
+            </div>
+            
+            <div class="course-card">
+                <h3><a href="/courses/ai/">Advanced Artificial Intelligence</a></h3>
+                <span class="course-code">Master</span>
+                </div>
+            
+            <div class="course-card">
+                <h3><a href="/BigData/">Big Data Analytics</a></h3>
+                <span class="course-code">Master</span>
+            </div>
+            <div class="course-cards">
+            <div class="course-card">
+                <h3><a href="/stat/">Statistics</a></h3>
+                <span class="course-code">PhD</span>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+</div>
+
+
+<!-- Tag Filter Section -->
+<!-- <div class="tag-filter-section">
+    <div class="tag-filter-title">🏷️ Filter Posts by Tag:</div>
+    <div class="tag-filters">
+        <span class="tag-filter active" data-tag="all">All Posts</span>
+        {% assign all_tags = site.posts | map: 'tags' | join: ',' | split: ',' | uniq | sort %}
+        {% for tag in all_tags %}
+            {% if tag != "" %}
+                <span class="tag-filter" data-tag="{{ tag | strip }}">{{ tag | strip }}</span>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tagFilters = document.querySelectorAll('.tag-filter');
+    const posts = document.querySelectorAll('.list__item');
+    
+    tagFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            // Remove active class from all filters
+            tagFilters.forEach(f => f.classList.remove('active'));
+            // Add active class to clicked filter
+            this.classList.add('active');
+            
+            const selectedTag = this.getAttribute('data-tag');
+            
+            posts.forEach(post => {
+                const postTags = Array.from(post.querySelectorAll('.post-tag')).map(tag => tag.getAttribute('data-tag'));
+                
+                if (selectedTag === 'all' || postTags.includes(selectedTag)) {
+                    post.style.display = 'block';
+                } else {
+                    post.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>

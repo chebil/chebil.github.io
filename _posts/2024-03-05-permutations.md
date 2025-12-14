@@ -3,6 +3,10 @@ layout: posts
 classes: wide
 title:  "Generating permutations"
 author_profile: true
+tags:
+  - Algorithms
+  - Combinatorics
+  - Recursion
 ---
 
 In this post, we will discuss the problem of generating all permutations of a given set of elements. A permutation is an arrangement of elements in a specific order. The table below shows all permutations of the set {1, 2, 3}:
