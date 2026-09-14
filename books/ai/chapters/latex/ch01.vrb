@@ -1,0 +1,21 @@
+\frametitle{Sudoku — Python Implementation}\framesubtitle {Using the \texttt {python-constraint} library}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\scriptsize, numbers=none,
+                   xleftmargin=0.5em, framexleftmargin=0.5em]
+from constraint import Problem, AllDifferentConstraint
+
+def solve_sudoku(puzzle):            # puzzle: 9x9 list, 0 = blank
+    p = Problem()
+    for r in range(9):
+        for c in range(9):
+            v = puzzle[r][c]
+            p.addVariable((r, c), range(1, 10) if v == 0 else [v])
+    for i in range(9):               # rows and columns all-different
+        p.addConstraint(AllDifferentConstraint(), [(i, c) for c in range(9)])
+        p.addConstraint(AllDifferentConstraint(), [(r, i) for r in range(9)])
+    for br in range(3):              # 3x3 sub-grids all-different
+        for bc in range(3):
+            cells = [(br*3 + i, bc*3 + j) for i in range(3) for j in range(3)]
+            p.addConstraint(AllDifferentConstraint(), cells)
+    sols = p.getSolutions()
+    return sols[0] if sols else None
+\end{lstlisting}

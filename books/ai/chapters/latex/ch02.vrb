@@ -1,0 +1,16 @@
+\frametitle{TSP: Order Crossover (OX) — Worked Example}\framesubtitle {Producing a valid child tour}
+\begin{lstlisting}[language={}, basicstyle=\ttfamily\scriptsize, numbers=none,
+                   xleftmargin=0.5em, framexleftmargin=0.5em]
+Parent A: 1 2 | 3 4 5 | 6 7 8     (keep the boxed segment unchanged)
+Parent B: 3 7 | 5 1 6 | 8 2 4
+
+Child:    . . | 3 4 5 | . . .
+
+Fill the remaining slots in Parent B's order, skipping 3, 4, 5:
+  Parent B from the cut point: 8 2 4 3 7 5 1 6  ->  8 2 4 7 1 6
+
+Child:    8 2 | 3 4 5 | 7 1 6     (every city appears exactly once)
+\end{lstlisting}
+\centering\scriptsize
+A later \keyword{swap mutation} might exchange positions 1 and 6:
+\texttt{8 2 3 4 5 7 1 6} $\to$ \texttt{1 2 3 4 5 7 8 6}

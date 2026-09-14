@@ -1,0 +1,6 @@
+\beamer@sectionintoc {1}{Search Problems \& State Spaces}{3}{0}{1}
+\beamer@sectionintoc {2}{Uninformed Search}{9}{0}{2}
+\beamer@sectionintoc {3}{Informed Search}{24}{0}{3}
+\beamer@sectionintoc {4}{Local Search}{31}{0}{4}
+\beamer@sectionintoc {5}{Genetic Algorithms}{41}{0}{5}
+\beamer@sectionintoc {6}{Summary}{49}{0}{6}

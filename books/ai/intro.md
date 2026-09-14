@@ -13,7 +13,8 @@ Instructor: Khalil Chebil
 Welcome to this interactive companion to the study of Artificial Intelligence! This Jupyter Book is designed to complement your learning journey through the Advanced Artificial Intelligence course, combining theoretical foundations with practical Python implementations.
 
 
-## Book Structure
+
+<!-- ## Book Structure
 
 This textbook strikes a balance between **deductive reasoning** and **inductive learning** approaches to artificial intelligence, organized into three major parts:
 
@@ -40,5 +41,5 @@ Data-driven machine learning approaches:
 Advanced topics combining both paradigms:
 - **Chapter 11**: Probabilistic Graphical Models
 - **Chapter 12**: Knowledge Graphs
-- **Chapter 13**: Integrating Reasoning and Learning
+- **Chapter 13**: Integrating Reasoning and Learning -->
 

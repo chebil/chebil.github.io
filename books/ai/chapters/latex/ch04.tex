@@ -1,0 +1,496 @@
+% ============================================================
+%  Artificial Intelligence: A Textbook
+%  Chapter 4 — Propositional Logic
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+%  Prince Sattam Bin Abdulaziz University — CCES
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+
+% ---------- COURSE RE-BRANDING (AI instead of CS3401) --------
+\graphicspath{{../chapters/images/ch4/}{../chapters/images/}}
+\input{branding.tex}
+
+% ---------- SLIDE METADATA ----------------------------------
+\title[Ch.\,4 — Propositional Logic]{Propositional Logic}
+\subtitle{Chapter 4 — Syntax, Semantics, and Automated Inference}
+\author{Dr.\ Khalil Chebil}
+\date{Artificial Intelligence Course}
+
+% Inline check / cross marks
+\newcommand{\cmark}{\textcolor{SuccessGreen}{\ensuremath{\checkmark}}}
+\newcommand{\xmark}{\textcolor{AlertRed}{\ensuremath{\times}}}
+% Truth-value shorthands
+\newcommand{\TT}{\textcolor{SuccessGreen}{\textbf{T}}}
+\newcommand{\FF}{\textcolor{AlertRed}{\textbf{F}}}
+
+\begin{document}
+
+% ============================================================
+%  TITLE
+% ============================================================
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+% ============================================================
+%  OUTLINE
+% ============================================================
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-3}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={4-5}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Master propositional \keyword{syntax}, \keyword{semantics}, and truth tables
+      \item Apply \keyword{equivalences} and convert to \keyword{CNF}
+      \item Understand \keyword{entailment}, \keyword{model checking}, and \keyword{resolution}
+      \item Use \keyword{DPLL} for SAT and \keyword{chaining} for Horn clauses
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Foundations \& Syntax}
+% ============================================================
+
+\begin{frame}{Why Logic in AI?}{A formal language for knowledge \& reasoning}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      Propositional (Boolean) logic is the foundation of knowledge representation
+      and automated reasoning.
+      \begin{itemize}\small
+        \item \keyword{Declarative} — state \emph{what} is true
+        \item \keyword{Compositional} — build complex from simple
+        \item \keyword{Unambiguous} — precise semantics
+        \item \keyword{Inference} — derive new knowledge
+        \item \keyword{Explainable} — transparent steps
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Applications}
+        \small
+        \begin{itemize}
+          \item Expert systems \& diagnosis
+          \item Hardware / software verification
+          \item Planning \& scheduling
+          \item Semantic web, knowledge graphs
+          \item Circuit design \& SAT
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Syntax: Propositions \& Connectives}{Building well-formed formulas}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \keyword{Atomic propositions} $P, Q, R, \dots$ each denote a statement that
+      is \emph{true} or \emph{false}.
+      \vspace{0.3em}
+      \small
+      \renewcommand{\arraystretch}{1.3}
+      \begin{tabularx}{\linewidth}{@{}c l >{\raggedright\arraybackslash}X@{}}
+        \toprule
+        \rowcolor{PrimaryDark}
+        \textcolor{white}{Symbol} & \textcolor{white}{Name} & \textcolor{white}{Meaning} \\
+        \midrule
+        $\neg P$ & NOT & opposite of $P$ \\
+        \rowcolor{PrimaryLight!25}
+        $P \land Q$ & AND & both \\
+        $P \lor Q$ & OR & either or both \\
+        \rowcolor{PrimaryLight!25}
+        $P \rightarrow Q$ & IF-THEN & if $P$ then $Q$ \\
+        $P \leftrightarrow Q$ & IFF & $P$ exactly when $Q$ \\
+        \bottomrule
+      \end{tabularx}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Well-formed formulas (WFF)}
+        \small
+        \begin{itemize}
+          \item Every atom is a WFF
+          \item If $\alpha$ is a WFF, so is $\neg\alpha$
+          \item If $\alpha,\beta$ are WFFs, so are
+            $(\alpha \land \beta),(\alpha \lor \beta),$
+            $(\alpha \rightarrow \beta),(\alpha \leftrightarrow \beta)$
+        \end{itemize}
+      \end{block}
+      \centering\scriptsize
+      $\neg(P \land \neg Q)$ \cmark \qquad $P \land \land Q$ \xmark
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Semantics \& Truth Tables}
+% ============================================================
+
+\begin{frame}{Semantics: Models \& Truth Tables}{A model assigns a truth value to every symbol}
+  \begin{center}
+  \small
+  \renewcommand{\arraystretch}{1.15}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{cc|c|c|c|c|c}
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{$P$} & \textcolor{white}{$Q$} &
+    \textcolor{white}{$\neg P$} & \textcolor{white}{$P\land Q$} &
+    \textcolor{white}{$P\lor Q$} & \textcolor{white}{$P\rightarrow Q$} &
+    \textcolor{white}{$P\leftrightarrow Q$} \\
+    \midrule
+    \TT & \TT & \FF & \TT & \TT & \TT & \TT \\
+    \rowcolor{PrimaryLight!20}
+    \TT & \FF & \FF & \FF & \TT & \FF & \FF \\
+    \FF & \TT & \TT & \FF & \TT & \TT & \FF \\
+    \rowcolor{PrimaryLight!20}
+    \FF & \FF & \TT & \FF & \FF & \TT & \TT \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Key insight}
+        \small $P \rightarrow Q \;\equiv\; \neg P \lor Q$
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Key insight}
+        \small $P \leftrightarrow Q \;\equiv\; (P\rightarrow Q)\land(Q\rightarrow P)$
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Logical Equivalences}{Same truth value in all models: $\alpha \equiv \beta$}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small
+      \begin{block}{Core laws}
+        \begin{itemize}\small
+          \item \keyword{Double negation}: $\neg\neg P \equiv P$
+          \item \keyword{Commutative} / \keyword{Associative}
+          \item \keyword{Distributive}: \\
+            $P \land (Q \lor R) \equiv (P\land Q)\lor(P\land R)$
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \small
+      \begin{exampleblock}{De Morgan's laws}
+        \begin{align*}
+          \neg(P \land Q) &\equiv \neg P \lor \neg Q \\
+          \neg(P \lor Q)  &\equiv \neg P \land \neg Q
+        \end{align*}
+      \end{exampleblock}
+      \begin{block}{Eliminations}
+        \small
+        $P \rightarrow Q \equiv \neg P \lor Q$ \\
+        $P \leftrightarrow Q \equiv (P\rightarrow Q)\land(Q\rightarrow P)$
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Satisfiability, Validity \& Entailment}{The vocabulary of reasoning}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Three properties}
+        \small
+        \begin{itemize}
+          \item \keyword{Satisfiable}: true in \emph{some} model \\ \scriptsize e.g.\ $P \land Q$
+          \item \keyword{Unsatisfiable}: false in \emph{all} \\ \scriptsize e.g.\ $P \land \neg P$
+          \item \keyword{Valid} (tautology): true in \emph{all} \\ \scriptsize e.g.\ $P \lor \neg P$
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Entailment $KB \models \alpha$}
+        \small $\alpha$ is true in every model where $KB$ is true.
+        \\[0.3em]
+        $KB: P\rightarrow Q,\ P \quad\Rightarrow\quad KB \models Q$
+      \end{exampleblock}
+      \begin{alertblock}{Refutation principle}
+        \small $KB \models \alpha \iff (KB \land \neg\alpha)$ is \keyword{unsatisfiable}.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Conjunctive Normal Form (CNF)}{A conjunction of clauses of literals}
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \begin{block}{Definitions}
+        \small
+        \begin{itemize}
+          \item \keyword{Literal}: $P$ or $\neg P$
+          \item \keyword{Clause}: disjunction of literals
+          \item \keyword{CNF}: conjunction of clauses
+        \end{itemize}
+      \end{block}
+      \centering\scriptsize
+      $(P\lor Q)\land(\neg P\lor R)$ \cmark \\
+      $(P\land Q)\lor R$ \xmark
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \begin{exampleblock}{Conversion algorithm}
+        \small
+        \begin{enumerate}
+          \item Eliminate $\rightarrow,\leftrightarrow$
+          \item Push $\neg$ inward (De Morgan)
+          \item Distribute $\lor$ over $\land$
+        \end{enumerate}
+      \end{exampleblock}
+      \scriptsize
+      \textbf{Example} — convert $\neg(P\rightarrow Q)$:
+      \[ \neg(\neg P\lor Q) \;\Rightarrow\; \neg\neg P\land\neg Q \;\Rightarrow\; P\land\neg Q \]
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Inference: Model Checking, Resolution, DPLL}
+% ============================================================
+
+\begin{frame}{Model Checking}{Enumerate all models}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \keyword{TT-Entails?} checks $KB \models \alpha$ by trying every assignment of
+      the $n$ symbols.
+      \begin{itemize}\small
+        \item For each model: if $KB$ true, require $\alpha$ true
+        \item \keyword{Sound} and \keyword{complete}
+      \end{itemize}
+      \begin{alertblock}{Cost}
+        \small $\mathcal{O}(2^n)$ — only practical for small formulas.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[level distance=0.9cm, level 1/.style={sibling distance=2.4cm},
+          level 2/.style={sibling distance=1.2cm},
+          n/.style={circle, draw=PrimaryMid, fill=PrimaryLight!45, font=\scriptsize, minimum size=0.5cm},
+          l/.style={rectangle, rounded corners=1pt, draw=PrimaryMid, fill=white, font=\scriptsize\ttfamily, inner sep=2pt},
+          edge from parent/.style={draw=PrimaryMid}]
+        \node[n] {$P$}
+          child {node[n] {$Q$}
+            child {node[l] {TT}}
+            child {node[l] {TF}}
+            edge from parent node[left,font=\scriptsize] {T}}
+          child {node[n] {$Q$}
+            child {node[l] {FT}}
+            child {node[l] {FF}}
+            edge from parent node[right,font=\scriptsize] {F}};
+      \end{tikzpicture}\\
+      \scriptsize $2^n$ leaves for $n$ symbols
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Resolution Theorem Proving}{One sound, refutation-complete rule}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      From two clauses with complementary literals, infer their resolvent:
+      \[ \frac{\ell \lor A,\quad \neg\ell \lor B}{A \lor B} \]
+      \begin{block}{Example rule}
+        \small \[ \frac{P \lor Q,\quad \neg P \lor R}{Q \lor R} \]
+      \end{block}
+      \centering\scriptsize
+      Prove $KB \models \alpha$ by showing $KB \land \neg\alpha$ derives the
+      \keyword{empty clause} $\square$.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Refutation: $KB \models R$}
+        \small $KB=\{P\rightarrow Q,\ Q\rightarrow R,\ P\}$
+      \end{exampleblock}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.4cm and 0.5cm,
+          c/.style={rectangle, rounded corners=2pt, draw=PrimaryMid, fill=PrimaryLight!40, font=\scriptsize, minimum height=0.5cm},
+          r/.style={rectangle, rounded corners=2pt, draw=AccentOrange, fill=AccentYellow!30, font=\scriptsize, minimum height=0.5cm}]
+        \node[c] (p) {$P$};
+        \node[c, right=1.1cm of p] (pq) {$\neg P\lor Q$};
+        \node[r, below=0.5cm of $(p)!0.5!(pq)$] (q) {$Q$};
+        \node[c, right=0.5cm of pq] (qr) {$\neg Q\lor R$};
+        \node[r, below=0.5cm of $(q)!0.5!(qr)$] (rr) {$R$};
+        \node[c, right=0.5cm of qr] (nr) {$\neg R$};
+        \node[r, below=0.5cm of $(rr)!0.5!(nr)$, fill=AlertRed!20, draw=AlertRed] (box) {$\square$};
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (p)--(q);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (pq)--(q);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (q)--(rr);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (qr)--(rr);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (rr)--(box);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (nr)--(box);
+      \end{tikzpicture}\\
+      \scriptsize Empty clause $\Rightarrow$ proved.
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{DPLL Algorithm for SAT}{The engine behind modern SAT solvers}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      Backtracking search with powerful heuristics:
+      \begin{itemize}\small
+        \item \keyword{Early termination} — stop when decided
+        \item \keyword{Pure symbol} — one polarity $\Rightarrow$ assign it
+        \item \keyword{Unit clause} — single literal must be true
+        \item \keyword{Splitting} — try both values, backtrack
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Properties}
+        \small
+        \begin{itemize}
+          \item Much faster than plain enumeration
+          \item Still exponential worst-case
+          \item Foundation of \keyword{CDCL} SAT solvers
+        \end{itemize}
+      \end{block}
+      \centering\scriptsize
+      Unit propagation + pure literals prune huge parts of the search tree.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Horn Clauses \& Chaining}
+% ============================================================
+
+\begin{frame}{Horn Clauses}{Restricted but tractable}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      A \keyword{Horn clause} has \emph{at most one} positive literal.
+      \begin{itemize}\small
+        \item \keyword{Definite}: exactly one positive \\
+          \scriptsize $\neg P \lor \neg Q \lor R \equiv (P \land Q \rightarrow R)$
+        \item \keyword{Fact}: a single positive literal $P$
+        \item \keyword{Goal}: no positive literals
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Why they matter}
+        \small
+        \begin{itemize}
+          \item Many real KBs are naturally Horn
+          \item Inference is \keyword{linear time}
+          \item Foundation of \keyword{Prolog} / logic programming
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Forward vs.\ Backward Chaining}{Two ways to reason with Horn clauses}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Forward (data-driven)}
+        \small Start from facts, fire rules, derive \emph{all} consequences until
+        the query appears.
+      \end{block}
+      \begin{exampleblock}{Backward (goal-driven)}
+        \small Start from the query, recurse on rule premises until grounded in facts.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \small
+      \renewcommand{\arraystretch}{1.3}
+      \begin{tabularx}{\linewidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+        \toprule
+        \rowcolor{PrimaryDark}
+        \textcolor{white}{Aspect} & \textcolor{white}{Forward} & \textcolor{white}{Backward} \\
+        \midrule
+        Direction & Data-driven & Goal-driven \\
+        \rowcolor{PrimaryLight!25}
+        Strategy & Breadth-first & Depth-first \\
+        Space & More & Less \\
+        \rowcolor{PrimaryLight!25}
+        Best for & All facts & Specific query \\
+        \bottomrule
+      \end{tabularx}
+      \centering\scriptsize Both complete for definite clauses; $\mathcal{O}(pn)$.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Inference Methods Compared}{Choose by problem shape}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l cc l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Method} & \textcolor{white}{Compl.} & \textcolor{white}{Sound} &
+    \textcolor{white}{Complexity} & \textcolor{white}{Best for} \\
+    \midrule
+    Truth tables & Yes & Yes & $\mathcal{O}(2^n)$ & Small formulas \\
+    \rowcolor{PrimaryLight!25}
+    Resolution & Yes$^\ast$ & Yes & Exponential & General CNF \\
+    DPLL & Yes & Yes & Exponential & SAT problems \\
+    \rowcolor{PrimaryLight!25}
+    Forward chain & Yes$^{\ast\ast}$ & Yes & $\mathcal{O}(pn)$ & Derive all facts \\
+    Backward chain & Yes$^{\ast\ast}$ & Yes & $\mathcal{O}(pn)$ & Specific queries \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \centering\scriptsize $^\ast$refutation-complete \quad $^{\ast\ast}$for Horn clauses
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Represent}
+        \small
+        \begin{itemize}
+          \item Syntax: propositions + connectives
+          \item Semantics: models \& truth tables
+          \item \keyword{CNF} as the standard inference form
+        \end{itemize}
+      \end{block}
+      \begin{exampleblock}{Reason}
+        \small Model checking, \keyword{resolution}, \keyword{DPLL}, and chaining.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Limitations}
+        \small Propositional logic cannot express \keyword{quantifiers},
+        \keyword{objects}, \keyword{relations}, or \keyword{functions} — it must
+        enumerate every instance.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Ch.\,5: \keyword{First-Order Logic} adds quantifiers and relations.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 5 — First-Order Logic}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

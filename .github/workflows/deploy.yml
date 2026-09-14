@@ -123,7 +123,8 @@ jobs:
             out/AlgDesign/chap7/index.html \
             out/AlgDesign/convex-hull/index.html \
             out/AI-course-book/index.html \
-            out/AI-course-book/ch13-integration/index.html \
+            out/AI-course-book/ch01-slides/index.html \
+            out/AI-course-book/ch05-slides/index.html \
             out/AI-course-book/ch05-firstorder-diagnosis/index.html \
             out/stat/index.html \
             out/stat/part1/ch01-datasets/index.html \

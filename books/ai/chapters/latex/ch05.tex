@@ -1,0 +1,466 @@
+% ============================================================
+%  Artificial Intelligence: A Textbook
+%  Chapter 5 — First-Order Logic
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+%  Prince Sattam Bin Abdulaziz University — CCES
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+
+% ---------- COURSE RE-BRANDING (AI instead of CS3401) --------
+\graphicspath{{../chapters/images/ch5/}{../chapters/images/}}
+\input{branding.tex}
+
+% ---------- SLIDE METADATA ----------------------------------
+\title[Ch.\,5 — First-Order Logic]{First-Order Logic}
+\subtitle{Chapter 5 — Predicates, Quantifiers, Unification, and Resolution}
+\author{Dr.\ Khalil Chebil}
+\date{Artificial Intelligence Course}
+
+% Inline check / cross marks
+\newcommand{\cmark}{\textcolor{SuccessGreen}{\ensuremath{\checkmark}}}
+\newcommand{\xmark}{\textcolor{AlertRed}{\ensuremath{\times}}}
+
+\begin{document}
+
+% ============================================================
+%  TITLE
+% ============================================================
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+% ============================================================
+%  OUTLINE
+% ============================================================
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-3}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={4-5}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item See the \keyword{limitations} of propositional logic
+      \item Master FOL \keyword{syntax}, \keyword{quantifiers}, and \keyword{semantics}
+      \item Apply \keyword{unification}, substitution, and \keyword{Skolemization}
+      \item Reason with \keyword{chaining} and \keyword{resolution}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Why FOL \& Syntax}
+% ============================================================
+
+\begin{frame}{Why First-Order Logic?}{Propositional logic cannot generalize}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{alertblock}{The problem}
+        \small ``All mammals give birth to live babies; a cat is a mammal;
+        therefore a cat does.''
+        \\[0.3em] In propositional logic you would need a \emph{separate rule for
+        every object} — unwieldy or impossible for large domains.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{FOL adds}
+        \small
+        \begin{itemize}
+          \item \keyword{Objects} — entities in the domain
+          \item \keyword{Relations} — links between objects
+          \item \keyword{Functions} — object $\to$ object
+          \item \keyword{Quantifiers} — $\forall$ (all), $\exists$ (some)
+          \item \keyword{Variables} — bind to any object
+        \end{itemize}
+      \end{block}
+      \centering\scriptsize SQL, RDF/OWL, and Prolog are all built on FOL.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Syntax: Terms, Predicates, Atoms}{The building blocks}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small
+      \begin{itemize}
+        \item \keyword{Constants}: \textsc{John}, \textsc{Beef}
+        \item \keyword{Variables}: $x, y, z$
+        \item \keyword{Functions}: $\mathrm{Father}(x)$ — object $\to$ object
+        \item \keyword{Predicates}: $E(x,y)$ — return truth values
+      \end{itemize}
+      \vspace{0.3em}
+      \begin{block}{Terms (denote objects)}
+        \scriptsize
+        constant \textbullet\ variable \textbullet\ function of terms:
+        $\mathrm{Father}(\mathrm{Father}(x))$
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Atomic formula}
+        \small $P(t_1,\dots,t_n)$ applies a predicate to terms.
+        \[ F(\text{Spielberg}, \text{SPR}, \text{BestDir}) = \text{True} \]
+      \end{exampleblock}
+      \centering\scriptsize
+      Same connectives as before: $\neg,\ \land,\ \lor,\ \rightarrow,\ \leftrightarrow$,
+      now over predicates.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Quantifiers \& Semantics}
+% ============================================================
+
+\begin{frame}{Quantifiers}{Statements about whole domains}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Universal $\forall$}
+        \small ``for all $x$'' — a big \keyword{conjunction}.
+        \[ \forall x\,[\mathrm{Mammal}(x) \rightarrow \mathrm{LiveBirth}(x)] \]
+        \scriptsize $\forall x\,P(x) \equiv P(a)\land P(b)\land\cdots$
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Existential $\exists$}
+        \small ``there exists $x$'' — a big \keyword{disjunction}.
+        \[ \exists x\,[N(x) \land E(x,\text{Beef})] \]
+        \scriptsize $\exists x\,P(x) \equiv P(a)\lor P(b)\lor\cdots$
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vspace{0.3em}
+  \begin{alertblock}{Common mistake}
+    \small $\exists x\,[N(x) \rightarrow E(x,\text{Beef})]$ is \important{wrong} for
+    ``some non-vegetarian eats beef'' — it is true whenever any vegetarian exists.
+    Use $\land$ with $\exists$.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Quantifier Order \& Negation}{Order changes meaning}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Mixed order matters}
+        \small
+        \[ \forall x\,\exists y\; E(x,y) \]
+        everyone eats \emph{something} (maybe different).
+        \[ \exists y\,\forall x\; E(x,y) \]
+        one food \emph{everyone} eats — much stronger!
+        \[ \forall x\,\exists y \;\not\equiv\; \exists y\,\forall x \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{De Morgan for quantifiers}
+        \small
+        \begin{align*}
+          \neg(\forall x\,\alpha) &\equiv \exists x\,\neg\alpha \\
+          \neg(\exists x\,\alpha) &\equiv \forall x\,\neg\alpha
+        \end{align*}
+        \scriptsize Pushing $\neg$ through a quantifier \keyword{flips its type}.
+      \end{exampleblock}
+      \centering\scriptsize
+      Same-type quantifiers commute: $\forall x\forall y \equiv \forall y\forall x$.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Semantics: Interpretations \& Entailment}{Meaning in a model}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      An \keyword{interpretation} fixes:
+      \begin{itemize}\small
+        \item a non-empty \keyword{domain}
+        \item each \keyword{constant} $\to$ an object
+        \item each \keyword{function} $\to$ a mapping
+        \item each \keyword{predicate} $\to$ truth values
+      \end{itemize}
+      \scriptsize $\forall x\,\alpha$ true iff $\alpha$ holds for \emph{every} object;
+      $\exists x\,\alpha$ iff for \emph{some}.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Valid / Satisfiable}
+        \small
+        Valid: true in all models — $\forall x\,[P(x)\lor\neg P(x)]$. \\
+        Unsatisfiable: $\exists x\,[P(x)\land\neg P(x)]$.
+      \end{block}
+      \begin{alertblock}{Entailment}
+        \small $KB \models \alpha \iff (KB \land \neg\alpha)$ unsatisfiable
+        — the basis of \keyword{proof by contradiction}.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Unification \& Inference}
+% ============================================================
+
+\begin{frame}{Substitution \& Unification}{Making expressions identical}
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \keyword{Substitution} $\{x/t\}$ replaces a variable with a term:
+      \[ P(x,f(y))\{x/a,\,y/b\} = P(a,f(b)) \]
+      \begin{block}{MGU}
+        \small The \keyword{most general unifier} commits to the fewest bindings —
+        e.g.\ unify $P(x),P(y)$ with $\{x/y\}$, not $\{x/a,y/a\}$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \small
+      \renewcommand{\arraystretch}{1.35}
+      \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X c@{}}
+        \toprule
+        \rowcolor{PrimaryDark}
+        \textcolor{white}{Unify} & \textcolor{white}{$\theta$} & \textcolor{white}{} \\
+        \midrule
+        $P(x),\,P(a)$ & $\{x/a\}$ & \cmark \\
+        \rowcolor{PrimaryLight!25}
+        $P(x,f(y)),\,P(a,f(b))$ & $\{x/a,y/b\}$ & \cmark \\
+        $P(x,f(y)),\,P(y,f(a))$ & $\{x/a,y/a\}$ & \cmark \\
+        \rowcolor{PrimaryLight!25}
+        $P(x,x),\,P(a,b)$ & — & \xmark \\
+        \bottomrule
+      \end{tabularx}
+      \centering\scriptsize
+      \keyword{Occur check} forbids $x = f(x)$ (infinite terms).
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Generalized Modus Ponens \& Instantiation}{Inference with variables}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Generalized Modus Ponens}
+        \small
+        \[ \frac{P_1',\dots,P_n',\ (P_1\land\cdots\land P_n \rightarrow Q)}{Q\theta} \]
+        where $\theta$ unifies each $P_i'$ with $P_i$.
+      \end{block}
+      \scriptsize
+      Rule $\forall x,y\,[E(x,y)\land M(y)\rightarrow N(x)]$ with
+      $E(\text{John},\text{Beef}),M(\text{Beef})$ gives $N(\text{John})$.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Instantiation}
+        \small
+        \begin{itemize}
+          \item \keyword{Universal}: $\dfrac{\forall x\,\alpha}{\alpha\{x/t\}}$
+          \item \keyword{Existential}: introduce a \emph{new} Skolem constant
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Skolemization}{Eliminate $\exists$ for inference}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Skolem constant}
+        \small $\exists$ not inside $\forall$:
+        \[ \exists x\,P(x) \;\Rightarrow\; P(c) \]
+        $c$ is a new constant.
+      \end{block}
+      \begin{exampleblock}{Skolem function}
+        \small $\exists$ inside $\forall$:
+        \[ \forall x\,\exists y\,E(x,y) \;\Rightarrow\; \forall x\,E(x,f(x)) \]
+        the choice of $y$ \keyword{depends on} $x$.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Nested example}
+        \scriptsize
+        \[ \forall x\,\exists y\,[\forall z\,\exists w\,P(x,y,z,w)] \]
+        becomes
+        \[ \forall x\,\forall z\,P(x,\,f(x),\,z,\,g(x,z)) \]
+        \begin{itemize}
+          \item $f(x)$ depends on $x$
+          \item $g(x,z)$ depends on $x$ and $z$
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Forward vs.\ Backward Chaining}{Definite clauses in FOL}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{Ancestor example}
+        \scriptsize
+        Rules: $\mathrm{Parent}(x,y)\rightarrow\mathrm{Anc}(x,y)$;\\
+        $\mathrm{Parent}(x,z)\land\mathrm{Anc}(z,y)\rightarrow\mathrm{Anc}(x,y)$.\\
+        Facts: $\mathrm{Parent}(\text{John},\text{Bob}),\ \mathrm{Parent}(\text{Bob},\text{Mary})$.
+      \end{block}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.3cm and 0.5cm,
+          f/.style={rectangle, rounded corners=2pt, draw=PrimaryMid, fill=PrimaryLight!40, font=\scriptsize, minimum height=0.44cm},
+          d/.style={rectangle, rounded corners=2pt, draw=AccentOrange, fill=AccentYellow!30, font=\scriptsize, minimum height=0.44cm}]
+        \node[f] (p1) {Par(J,B)};
+        \node[f, right=of p1] (p2) {Par(B,M)};
+        \node[d, below=0.45cm of p1] (a1) {Anc(J,B)};
+        \node[d, below=0.45cm of p2] (a2) {Anc(B,M)};
+        \node[d, below=0.45cm of $(a1)!0.5!(a2)$, fill=SuccessGreen!25, draw=SuccessGreen] (a3) {Anc(J,M)};
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (p1)--(a1);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (p2)--(a2);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (p1)--(a3);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (a2)--(a3);
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \small
+      \renewcommand{\arraystretch}{1.3}
+      \begin{tabularx}{\linewidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+        \toprule
+        \rowcolor{PrimaryDark}
+        \textcolor{white}{} & \textcolor{white}{Forward} & \textcolor{white}{Backward} \\
+        \midrule
+        Driven by & Data & Goal \\
+        \rowcolor{PrimaryLight!25}
+        Search & Breadth & Depth \\
+        Space & Higher & Lower \\
+        \rowcolor{PrimaryLight!25}
+        Best for & Many queries & One query \\
+        \bottomrule
+      \end{tabularx}
+      \centering\scriptsize Both sound \& complete for definite clauses.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Resolution \& Summary}
+% ============================================================
+
+\begin{frame}{Conversion to CNF}{Prerequisite for resolution}
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \begin{enumerate}\small
+        \item Eliminate $\rightarrow,\leftrightarrow$
+        \item Move $\neg$ inward (incl.\ quantifiers)
+        \item Standardize variables apart
+        \item \keyword{Skolemize} (remove $\exists$)
+        \item Drop universal quantifiers
+        \item Distribute $\lor$ over $\land$
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \begin{exampleblock}{Example}
+        \scriptsize
+        \begin{align*}
+          &\forall x\,[\mathrm{Cat}(x) \rightarrow \exists y\,\mathrm{Owns}(y,x)] \\
+          \Rightarrow\ &\forall x\,[\neg\mathrm{Cat}(x) \lor \exists y\,\mathrm{Owns}(y,x)] \\
+          \Rightarrow\ &\forall x\,[\neg\mathrm{Cat}(x) \lor \mathrm{Owns}(f(x),x)] \\
+          \Rightarrow\ &\neg\mathrm{Cat}(x) \lor \mathrm{Owns}(f(x),x)
+        \end{align*}
+      \end{exampleblock}
+      \centering\scriptsize Now a single CNF clause.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Resolution with Unification}{Refutation-complete for FOL}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      Resolve on complementary literals unified by $\theta$:
+      \[ \frac{\ell \lor A,\quad m \lor B}{(A \lor B)\theta},\ \theta = \mathrm{UNIFY}(\ell,\neg m) \]
+      \begin{block}{Prove Whiskers is a mammal}
+        \scriptsize
+        (1) $\neg\mathrm{Cat}(x)\lor\mathrm{Mammal}(x)$ \\
+        (2) $\mathrm{Cat}(\text{Whiskers})$ \\
+        (3) $\neg\mathrm{Mammal}(\text{Whiskers})$ (negated query)
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.4cm and 0.35cm,
+          c/.style={rectangle, rounded corners=2pt, draw=PrimaryMid, fill=PrimaryLight!40, font=\scriptsize, minimum height=0.5cm, align=center},
+          r/.style={rectangle, rounded corners=2pt, draw=AccentOrange, fill=AccentYellow!30, font=\scriptsize, minimum height=0.5cm, align=center}]
+        \node[c] (c1) {$\neg$Cat($x$)\\$\lor$ Mam($x$)};
+        \node[c, right=of c1] (c2) {Cat(Whisk.)};
+        \node[r, below=0.55cm of $(c1)!0.5!(c2)$] (m) {Mam(Whisk.)};
+        \node[c, right=1.0cm of m] (c3) {$\neg$Mam(Whisk.)};
+        \node[r, below=0.55cm of $(m)!0.5!(c3)$, fill=AlertRed!20, draw=AlertRed] (box) {$\square$};
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (c1)--(m) node[midway,left,font=\tiny]{$x/$W};
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (c2)--(m);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (m)--(box);
+        \draw[-{Latex[length=1.2mm]},PrimaryMid] (c3)--(box);
+      \end{tikzpicture}\\[0.2em]
+      \scriptsize Empty clause $\square\Rightarrow KB\models\mathrm{Mammal}(\text{Whiskers})$.
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Propositional vs.\ First-Order Logic}{More power, less decidability}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Aspect} & \textcolor{white}{Propositional} & \textcolor{white}{First-Order} \\
+    \midrule
+    Objects / Relations / Functions & No & Yes \\
+    \rowcolor{PrimaryLight!25}
+    Quantifiers & No & Yes ($\forall,\exists$) \\
+    Expressiveness & Limited & High \\
+    \rowcolor{PrimaryLight!25}
+    Decidability & Decidable (NP-complete) & Semi-decidable \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{center}\scriptsize
+    \important{Semi-decidable:} if $KB\models\alpha$, resolution will prove it;
+    if not, it may run forever.
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Represent}
+        \small
+        \begin{itemize}
+          \item Objects, relations, functions
+          \item \keyword{Quantifiers} $\forall,\exists$ and variables
+          \item Interpretations \& entailment
+        \end{itemize}
+      \end{block}
+      \begin{exampleblock}{Reason}
+        \small Unification, Skolemization, chaining, and resolution.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Why it matters}
+        \small Foundations of expert systems, the semantic web, databases (SQL),
+        planning, and theorem proving.
+      \end{block}
+      \begin{alertblock}{Looking ahead}
+        \small Ch.\,6: from logic to \keyword{machine learning} — inductive reasoning.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 6 — Machine Learning}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

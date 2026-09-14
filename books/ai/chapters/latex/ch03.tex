@@ -1,0 +1,477 @@
+% ============================================================
+%  Artificial Intelligence: A Textbook
+%  Chapter 3 — Multiagent Search
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+%  Prince Sattam Bin Abdulaziz University — CCES
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+
+% ---------- COURSE RE-BRANDING (AI instead of CS3401) --------
+\graphicspath{{../chapters/images/ch3/}{../chapters/images/ch4/}{../chapters/images/}}
+\input{branding.tex}
+
+% ---------- SLIDE METADATA ----------------------------------
+\title[Ch.\,3 — Multiagent Search]{Multiagent Search}
+\subtitle{Chapter 3 — Adversarial Games: Minimax, $\alpha$–$\beta$, and MCTS}
+\author{Dr.\ Khalil Chebil}
+\date{Artificial Intelligence Course}
+
+% Inline check / cross marks
+\newcommand{\cmark}{\textcolor{SuccessGreen}{\ensuremath{\checkmark}}}
+\newcommand{\xmark}{\textcolor{AlertRed}{\ensuremath{\times}}}
+
+\begin{document}
+
+% ============================================================
+%  TITLE
+% ============================================================
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+% ============================================================
+%  OUTLINE
+% ============================================================
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-3}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={4-6}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Understand \keyword{multiagent} environments and strategy selection
+      \item Model contingencies with \keyword{AND-OR} search trees
+      \item Apply \keyword{minimax} and \keyword{alpha--beta} pruning to adversarial games
+      \item Use \keyword{evaluation functions} and \keyword{Monte Carlo Tree Search}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Multiagent Environments}
+% ============================================================
+
+\begin{frame}{From Plan Finding to Strategy Selection}{Others react to your moves}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      In \keyword{single-agent} search, an action determines the next state.
+      In \keyword{multiagent} search, other agents cooperate, compete, or act
+      independently.
+      \vspace{0.3em}
+      \begin{alertblock}{The central shift}
+        \small A move does not define \emph{one} future — it defines a
+        \keyword{set of possible futures}. We seek a \keyword{strategy}, not a
+        fixed plan.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Key challenges}
+        \small
+        \begin{itemize}
+          \item Others have different goals \& information
+          \item Effects depend on others' responses
+          \item Needs contingency reasoning
+          \item Search grows fast with each reply
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Types of Multiagent Environments}{Method depends on the relationship}
+  \begin{columns}[T]
+    \begin{column}{0.34\textwidth}
+      \begin{block}{Competitive}
+        \small Conflicting objectives; one's gain is another's loss.
+        \\[0.3em] \scriptsize \textit{Chess, Go, Tic-Tac-Toe} \\ $\Rightarrow$ adversarial search
+      \end{block}
+    \end{column}
+    \begin{column}{0.34\textwidth}
+      \begin{exampleblock}{Independent}
+        \small Act without explicit coordination, yet still affect one another.
+        \\[0.3em] \scriptsize \textit{Self-driving cars in traffic}
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.34\textwidth}
+      \begin{block}{Cooperative}
+        \small Share information or align objectives for a joint outcome.
+        \\[0.3em] \scriptsize \textit{Warehouse robots, rescue teams}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.5em}
+  \begin{center}\small
+    \important{Tic-Tac-Toe:} after you place \texttt{X}, the opponent chooses
+    \texttt{O} — your move opens many futures, not one.
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{AND-OR Search Trees}
+% ============================================================
+
+\begin{frame}{AND-OR Search Trees}{Our choices vs.\ outcomes we must handle}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item \keyword{OR node} — \emph{our} turn: pick \keyword{one} good action
+        \item \keyword{AND node} — outside our control: the plan must work for
+          \keyword{all} relevant continuations
+      \end{itemize}
+      \vspace{0.3em}
+      \begin{block}{In adversarial games}
+        \small OR $=$ our move \quad AND $=$ opponent's possible replies.
+        \\[0.2em]\scriptsize (AND nodes may also model uncertain environment outcomes.)
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[level distance=1.05cm, node distance=0.5cm,
+          orn/.style={circle, draw=PrimaryMid, fill=PrimaryLight!50, minimum size=0.7cm, font=\scriptsize\bfseries},
+          andn/.style={rectangle, rounded corners=1pt, draw=AccentOrange, fill=AccentYellow!35, minimum size=0.6cm, font=\scriptsize\bfseries},
+          level 1/.style={sibling distance=2.6cm},
+          level 2/.style={sibling distance=1.3cm}]
+        \node[orn] {OR}
+          child {node[andn] {AND}
+            child {node[orn] {OR}}
+            child {node[orn] {OR}}}
+          child {node[andn] {AND}
+            child {node[orn] {OR}}};
+      \end{tikzpicture}\\[0.3em]
+      \scriptsize One good choice at OR; ready for every branch at AND.
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{AO-Search \& Many Agents}{Guaranteed paths in an AND-OR tree}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{AO-search logic}
+        \small
+        \begin{itemize}
+          \item At an \keyword{OR} node: succeed if \keyword{some} action succeeds
+          \item At an \keyword{AND} node: succeed only if \keyword{every} outcome succeeds
+        \end{itemize}
+      \end{block}
+      \centering\scriptsize A plan is a \emph{sub-tree} guaranteeing the goal.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{More than two agents}
+        \small In a 3-agent game (A, B, C):
+        \begin{itemize}
+          \item OR nodes $=$ agent A's choices
+          \item AND nodes $=$ combined choices of B and C
+        \end{itemize}
+      \end{exampleblock}
+      \centering\scriptsize \important{Combining actions blows up the branching factor.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The AND-OR Tree, Illustrated}{}
+  \begin{center}
+    \includegraphics[width=0.6\textwidth]{1.png}
+  \end{center}
+  \begin{center}\scriptsize
+    Our agent chooses at OR nodes; the plan must stay valid across the outcomes at AND nodes.
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Evaluation \& Depth-Limited Search}
+% ============================================================
+
+\begin{frame}{Evaluation Functions}{``How promising is this state right now?''}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      Full trees are infeasible in chess or Go. An \keyword{evaluation function}
+      estimates the quality of a \keyword{non-terminal} state.
+      \vspace{0.3em}
+      \begin{block}{Chess features}
+        \small material advantage \textbullet\ king safety \textbullet\ center
+        control \textbullet\ piece activity
+      \end{block}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{alertblock}{Powerful but imperfect}
+        \small
+        \begin{itemize}
+          \item Summarize rich positions with few features
+          \item May miss deep tactical ideas
+          \item Their quality drives decision quality
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Terminology \& Depth-Limited Search}{Fix the vocabulary}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Core terms}
+        \small
+        \begin{itemize}
+          \item \keyword{State / Action / Terminal state}
+          \item \keyword{Utility}: larger is better for MAX
+          \item \keyword{Loss / cost}: smaller is better
+          \item \keyword{MAX / MIN}: the two adversarial roles
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Depth-limited search}
+        \small Cut off expansion at depth $d$, then apply the evaluation function
+        at the frontier.
+        \begin{itemize}
+          \item Deeper search $\Rightarrow$ better decisions
+          \item Too deep $\Rightarrow$ infeasible
+          \item Good evaluation offsets shallow search
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vspace{0.2em}
+  \begin{center}\scriptsize
+    Strong engines combine \keyword{lookahead} with a good \keyword{evaluation function}.
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Minimax}
+% ============================================================
+
+\begin{frame}{Minimax for Adversarial Search}{Optimal play in zero-sum games}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      For two-player, \keyword{zero-sum}, deterministic, perfect-information games.
+      \begin{itemize}\small
+        \item \keyword{MAX} maximizes the utility value
+        \item \keyword{MIN} minimizes it
+        \item Terminal states give the true payoff
+        \item Others inherit the value of the best move for the player to act
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Mutual recursion}
+        \scriptsize
+        \texttt{max\_player(s)} $=\displaystyle\max_{a}$ \texttt{min\_player(s')}\\[0.2em]
+        \texttt{min\_player(s)} $=\displaystyle\min_{a}$ \texttt{max\_player(s')}\\[0.2em]
+        base case: depth $=0$ or terminal $\Rightarrow$ \texttt{utility(s)}
+      \end{block}
+      \centering\scriptsize A model of \important{perfect play} — the best
+      \emph{guaranteed} outcome.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Minimax Example}{Read the tree from the leaves upward}
+  \begin{center}
+  \begin{tikzpicture}[level distance=1.25cm,
+      maxn/.style={rectangle, rounded corners=2pt, draw=PrimaryDark, fill=PrimaryLight!55, font=\small\bfseries, minimum size=0.7cm},
+      minn/.style={diamond, draw=AlertRed, fill=AlertRed!15, font=\small\bfseries, inner sep=1pt, minimum size=0.7cm},
+      leaf/.style={circle, draw=PrimaryMid, fill=white, font=\scriptsize, minimum size=0.55cm},
+      level 1/.style={sibling distance=4.2cm},
+      level 2/.style={sibling distance=1.35cm},
+      edge from parent/.style={draw=PrimaryMid}]
+    \node[maxn] (root) {MAX $=3$}
+      child {node[minn] {$3$}
+        child {node[leaf] {3}}
+        child {node[leaf] {12}}
+        child {node[leaf] {8}}}
+      child {node[minn] {$2$}
+        child {node[leaf] {2}}
+        child {node[leaf] {4}}
+        child {node[leaf] {6}}}
+      child {node[minn] {$2$}
+        child {node[leaf] {14}}
+        child {node[leaf] {5}}
+        child {node[leaf] {2}}};
+  \end{tikzpicture}
+  \end{center}
+  \begin{center}\small
+    MIN nodes: $\min(3,12,8){=}3$, $\min(2,4,6){=}2$, $\min(14,5,2){=}2$ \quad
+    $\Rightarrow$ \quad MAX: \textcolor{AlertRed}{$\max(3,2,2)=\mathbf{3}$} (left branch).
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Alpha--Beta \& MCTS}
+% ============================================================
+
+\begin{frame}{Alpha--Beta Pruning}{Same answer as minimax, fewer nodes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      Skip branches that cannot change the final choice.
+      \begin{itemize}\small
+        \item $\alpha$ — best value \keyword{MAX} can guarantee so far
+        \item $\beta$ — best value \keyword{MIN} can guarantee so far
+        \item Prune the branch when $\alpha \ge \beta$
+      \end{itemize}
+      \begin{alertblock}{Move ordering matters}
+        \small Examining strong moves early creates tighter bounds and prunes more.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[level distance=1.15cm,
+          maxn/.style={rectangle, rounded corners=2pt, draw=PrimaryDark, fill=PrimaryLight!55, font=\scriptsize\bfseries, minimum size=0.6cm},
+          minn/.style={diamond, draw=AlertRed, fill=AlertRed!15, font=\scriptsize\bfseries, inner sep=1pt, minimum size=0.6cm},
+          leaf/.style={circle, draw=PrimaryMid, fill=white, font=\scriptsize, minimum size=0.5cm},
+          pruned/.style={circle, draw=gray, fill=gray!20, font=\scriptsize, text=gray, minimum size=0.5cm},
+          level 1/.style={sibling distance=2.9cm},
+          level 2/.style={sibling distance=0.85cm},
+          edge from parent/.style={draw=PrimaryMid}]
+        \node[maxn] {MAX}
+          child {node[minn] {$3$}
+            child {node[leaf] {3}}
+            child {node[leaf] {12}}
+            child {node[leaf] {8}}}
+          child {node[minn] {$\le 2$}
+            child {node[leaf] {2}}
+            child {node[pruned] {4}}
+            child {node[pruned] {6}}};
+      \end{tikzpicture}\\[0.2em]
+      \scriptsize After leaf $2$, the right MIN $\le 2 < 3=\alpha$ — prune the rest.
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Alpha--Beta: Worked Example}{Track $\alpha$ and $\beta$ after each child}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{3.png}\\[0.2em]
+      \scriptsize Where does pruning occur (left-to-right)?
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{4.png}\\[0.2em]
+      \scriptsize Solution: a node already worse than an earlier alternative
+      cannot improve the parent's decision.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Monte Carlo Tree Search (MCTS)}{Estimate by simulation, not exhaustion}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      Ideal for \keyword{huge branching factors} or when a good evaluation
+      function is hard to design.
+      \vspace{0.2em}
+      \begin{block}{Four phases}
+        \small
+        \begin{enumerate}
+          \item \keyword{Selection} — descend via UCT
+          \item \keyword{Expansion} — add a child at the frontier
+          \item \keyword{Simulation} — roll out to estimate quality
+          \item \keyword{Backpropagation} — update visits \& rewards
+        \end{enumerate}
+      \end{block}
+      \centering\scriptsize \emph{Anytime}: more simulations $\Rightarrow$ better estimates.
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{UCT: exploit vs.\ explore}
+        \[ u_i = \frac{w_i}{n_i} + c\,\sqrt{\frac{\ln N_i}{n_i}} \]
+        \scriptsize
+        $w_i$ reward, $n_i$ visits to $i$, $N_i$ parent visits, $c$ exploration weight.
+      \end{exampleblock}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.3cm,
+          p/.style={processstep, minimum width=3.2cm, minimum height=0.42cm, font=\scriptsize}]
+        \node[p, fill=PrimaryLight!45] (s) {Select};
+        \node[p, right=0.3cm of s, fill=SuccessGreen!20] (e) {Expand};
+        \node[p, below=0.32cm of s, fill=AccentYellow!35] (sim) {Simulate};
+        \node[p, right=0.3cm of sim, fill=AlertRed!15] (b) {Backprop.};
+        \draw[-{Latex[length=1.4mm]},PrimaryMid] (s)--(e);
+        \draw[-{Latex[length=1.4mm]},PrimaryMid] (e.south) to[out=-90,in=90] (b.north);
+        \draw[-{Latex[length=1.4mm]},PrimaryMid] (b)--(sim);
+        \draw[-{Latex[length=1.4mm]},PrimaryMid] (sim.north) to[out=90,in=-90] (s.south);
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Choosing a Method \& Summary}
+% ============================================================
+
+\begin{frame}{Choosing the Right Search Method}{No method dominates everywhere}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.3cm} >{\bfseries\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Situation} & \textcolor{white}{Method} & \textcolor{white}{Reason} \\
+    \midrule
+    Contingent planning, uncertain outcomes & AND-OR / AO-search & Must cover multiple continuations \\
+    \rowcolor{PrimaryLight!25}
+    Two-player game, manageable depth & Minimax & Optimal under perfect play \\
+    Same setting, deeper trees & Alpha--beta & Minimax result, less search \\
+    \rowcolor{PrimaryLight!25}
+    Huge branching / weak heuristic & MCTS & Simulation focuses computation \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{center}\scriptsize
+    Beyond board games: \keyword{autonomous driving} \textbullet\ \keyword{cybersecurity}
+    \textbullet\ \keyword{robotics} \textbullet\ \keyword{auctions}.
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Modeling}
+        \small
+        \begin{itemize}
+          \item Good decisions account for others' responses
+          \item \keyword{AND-OR} trees capture contingencies
+          \item Evaluation functions make big trees tractable
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Algorithms}
+        \small
+        \begin{itemize}
+          \item \keyword{Minimax}: optimal in zero-sum games
+          \item \keyword{Alpha--beta}: same answer, fewer nodes
+          \item \keyword{MCTS}: simulation for huge trees
+        \end{itemize}
+      \end{exampleblock}
+      \begin{alertblock}{Looking ahead}
+        \small Ch.\,4: Propositional Logic and knowledge representation.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 4 — Propositional Logic}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}
