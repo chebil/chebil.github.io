@@ -1,33 +1,24 @@
 #!/usr/bin/env bash
 #
 # Build the whole site the way .github/workflows/deploy.yml does, into out/.
-# Keep this script and that workflow in step -- the cutover procedure relies
-# on the local build matching what CI publishes.
+# Keep this script and that workflow in step.
 #
 #   tools/build-site.sh           build into out/
 #   tools/build-site.sh --serve   build, then serve out/ at http://localhost:8000
 #
-# Serving at the root is the point: production serves the site from the
-# domain root, so this is the only local arrangement where the books'
-# /stat/ and /AI-course-book/ paths resolve exactly as they will live.
+# Serving at the root is the point: production serves from the domain root,
+# so this is the only local arrangement where the sub-paths resolve exactly
+# as they will live.
 
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 ROOT="$PWD"
 OUT="$ROOT/out"
 
-# Jekyll 3.9 pulls Liquid 4.0.3, which calls Object#tainted?. Ruby 3.2
-# removed it. CI pins 3.1; locally you need the same or the build dies
-# part way through rendering the posts.
-ruby_major_minor=$(ruby -e 'print RUBY_VERSION[/\d+\.\d+/]' 2>/dev/null || echo "none")
-if [ "$ruby_major_minor" != "3.1" ]; then
-  echo "warning: Ruby $ruby_major_minor found, CI uses 3.1."
-  echo "         3.2+ fails on Object#tainted? while rendering posts."
-fi
-
-echo "==> Jekyll site -> out/"
+echo "==> Static pages and assets -> out/"
 rm -rf "$OUT"
-( cd site && JEKYLL_ENV=production bundle exec jekyll build --destination "$OUT" --baseurl "" )
+mkdir -p "$OUT"
+cp -r static/. "$OUT/"
 
 echo "==> AI book -> out/AI-course-book/"
 ( cd books/ai && BASE_URL=/AI-course-book myst build --html )
@@ -43,10 +34,8 @@ python3 tools/make_course_redirects.py
 
 mkdir -p "$OUT/AI-course-book" "$OUT/stat" \
          "$OUT/DataStructure" "$OUT/AlgDesign" "$OUT/ProbSolvers"
-cp -r books/ai/_build/html/.      "$OUT/AI-course-book/"
-cp -r books/stat/_build/html/.    "$OUT/stat/"
-# Courses are copied over the Jekyll output, not instead of it: the two
-# reveal.js decks still come from Jekyll and live inside these paths.
+cp -r books/ai/_build/html/.       "$OUT/AI-course-book/"
+cp -r books/stat/_build/html/.     "$OUT/stat/"
 cp -r courses/cs2311/_build/html/. "$OUT/DataStructure/"
 cp -r courses/cs3401/_build/html/. "$OUT/AlgDesign/"
 cp -r courses/cs602/_build/html/.  "$OUT/ProbSolvers/"
@@ -57,23 +46,24 @@ echo "==> Checking the assembled tree"
 missing=0
 for p in \
   index.html \
-  feed.xml \
+  images/bio.jpg \
+  assets/downloads/diagnostic_chatbot.py \
+  ai/index.html \
   DataStructure/index.html \
   DataStructure/chap1/index.html \
   DataStructure/Labs/Lab1.html \
   DataStructure/labs/lab1/index.html \
   AlgDesign/chap7/index.html \
-  ProbSolvers/chap1/index.html \
-  ProbSolvers/slideschap2.html \
   AlgDesign/convex-hull/index.html \
-  AI-course-book/ch05-firstorder-diagnosis/index.html \
-  ConvexHull/index.html \
-  DiagnosisFOL/index.html \
+  ProbSolvers/chap1/index.html \
   AI-course-book/index.html \
   AI-course-book/ch13-integration/index.html \
+  AI-course-book/ch05-firstorder-diagnosis/index.html \
   stat/index.html \
   stat/part1/ch01-datasets/index.html \
-  stat/part1/ch01_datasets.html
+  stat/part1/ch01_datasets.html \
+  ConvexHull/index.html \
+  DiagnosisFOL/index.html
 do
   if [ ! -f "$OUT/$p" ]; then echo "  MISSING $p"; missing=1; fi
 done
@@ -83,9 +73,9 @@ echo "==> Built $(find "$OUT" -type f | wc -l) files into out/"
 
 if [ "${1:-}" = "--serve" ]; then
   echo
-  echo "Serving http://localhost:8000/ -- note that python's http.server does"
-  echo "not redirect /DataStructure/chap1 to /DataStructure/chap1/ the way"
-  echo "GitHub Pages does. Use the trailing slash locally."
+  echo "Serving http://localhost:8000/ -- use trailing slashes on project"
+  echo "pages (/DataStructure/chap1/). GitHub Pages redirects the bare form;"
+  echo "python's http.server does not."
   echo
   cd "$OUT" && exec python3 -m http.server 8000
 fi

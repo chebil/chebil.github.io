@@ -8,13 +8,13 @@ repository by a single workflow.
 
 | Path | Tool | Publishes to |
 |---|---|---|
-| `site/` | Jekyll (minimal-mistakes) | `/` — homepage, `/ai/`, `/labexam`, two reveal.js decks |
+| `static/` | plain HTML | `/` — the homepage, `/images/`, `/assets/` |
 | `books/ai/` | MyST MD | `/AI-course-book/` — *Artificial Intelligence: A Textbook* |
 | `books/stat/` | MyST MD | `/stat/` — *Probability and Statistics for Computer Science* |
 | `courses/cs2311/` | MyST MD | `/DataStructure/` — Data Structures |
 | `courses/cs3401/` | MyST MD | `/AlgDesign/` — Algorithm Design |
 | `courses/cs602/` | MyST MD | `/ProbSolvers/` — Design of Problem Solvers |
-| `tools/` | — | `build-site.sh`, which builds all six |
+| `tools/` | — | `build-site.sh`, which builds everything |
 | `.github/workflows/deploy.yml` | GitHub Actions | builds and publishes the whole thing |
 
 Two sites are **not** here and keep their own repositories:
@@ -39,7 +39,6 @@ One caveat when clicking around locally — use trailing slashes
 
 ### One piece at a time
 
-    cd site           && bundle exec jekyll serve --livereload
     cd books/ai       && myst start
     cd books/stat     && myst start
     cd courses/cs2311 && myst start
@@ -47,15 +46,6 @@ One caveat when clicking around locally — use trailing slashes
 `myst start` gives a live-reloading preview. Install it once with
 `npm install -g mystmd`.
 
-### Use Ruby 3.1
-
-Not 3.2 or later. Jekyll 3.9 pulls in Liquid 4.0.3, which calls
-`Object#tainted?` — removed in Ruby 3.2. On a newer Ruby the build dies part
-way through rendering the posts. CI pins 3.1 for the same reason.
-
-Python dependencies are per book (`books/*/requirements.txt`) and are only
-needed to *run* the notebooks. CI never executes them; it renders the outputs
-already stored in each `.ipynb`.
 
 ## How publishing works
 
@@ -114,13 +104,15 @@ Two more things to know when editing course markdown:
 - **Keep images inside the course.** A course cannot reach `site/assets/`;
   put images in its own `images/` directory and reference them relatively.
 
-### The blog is empty
+### There is no site generator any more
 
-`site/_posts/` has no posts left. Every one of them expanded on a specific
-chapter, so they live in the relevant book or course now, and
-`tools/make_post_redirects.py` keeps their old root URLs working.
+`static/` is plain HTML, copied verbatim into the build. The homepage is a
+single self-contained file; there is no theme, no Ruby, and no Gemfile.
 
-Jekyll still generates an empty `feed.xml` and the homepage still has room
-for a post listing, so writing a post again needs nothing but a file. If it
-stays empty, the blog scaffolding -- the feed, the post layouts, the
-listing on the homepage -- can be removed as its own change.
+That removes the last of the minimal-mistakes fork, and with it the blog:
+no `feed.xml`, no `sitemap.xml`, no post layouts. Every post turned out to
+be chapter material and now lives in the relevant project, with
+`tools/make_post_redirects.py` keeping the old URLs working.
+
+If a real blog is ever wanted again, it needs a generator adding back --
+this is a one-way door, taken deliberately.
