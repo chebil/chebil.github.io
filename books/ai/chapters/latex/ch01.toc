@@ -1,0 +1,6 @@
+\beamer@sectionintoc {1}{What is Artificial Intelligence?}{3}{0}{1}
+\beamer@sectionintoc {2}{How to Achieve AI}{12}{0}{2}
+\beamer@sectionintoc {3}{Constraint Satisfaction Problems}{17}{0}{3}
+\beamer@sectionintoc {4}{Intelligent Agents}{24}{0}{4}
+\beamer@sectionintoc {5}{Learning Paradigms}{30}{0}{5}
+\beamer@sectionintoc {6}{Summary}{36}{0}{6}

@@ -1,0 +1,894 @@
+% ============================================================
+%  Artificial Intelligence: A Textbook
+%  Chapter 1 — Introduction to Artificial Intelligence
+%  Offline Beamer slides (uses shared theme.tex)
+%  Prince Sattam Bin Abdulaziz University — CCES
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+
+% ---------- COURSE RE-BRANDING (AI instead of CS3401) --------
+% Where to find the chapter images used in the online book
+\graphicspath{{../chapters/images/ch1/}{../chapters/images/}}
+
+% Shared AI-course footer/title-page overrides
+\input{branding.tex}
+
+% ---------- SLIDE METADATA ----------------------------------
+\title[Ch.\,1 — Introduction]{Introduction to Artificial Intelligence}
+\subtitle{Chapter 1 — Agents, Reasoning, and Learning}
+\author{Dr.\ Khalil Chebil}
+\date{Artificial Intelligence Course}
+
+\begin{document}
+
+% ============================================================
+%  TITLE
+% ============================================================
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+% ============================================================
+%  OUTLINE
+% ============================================================
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-3}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={4-6}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Distinguish \keyword{deductive reasoning} from \keyword{inductive learning}
+      \item Understand the concept of \keyword{agents} and \keyword{environments}
+      \item Explore \concept{supervised}, \concept{unsupervised}, and \concept{reinforcement} learning
+      \item Reflect on the \important{Turing Test} and the goal of AGI
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{What is Artificial Intelligence?}
+% ============================================================
+
+\begin{frame}{What is Artificial Intelligence?}{A working definition}
+  \begin{block}{Definition}
+    A branch of computer science concerned with the
+    \keyword{automation of intelligent behaviors}.
+  \end{block}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.6cm and 1.3cm]
+    \node[processstep, fill=PrimaryDark, text=white] (sys) {Intelligent\\System};
+    \node[processstep, right=of sys, yshift=1.7cm] (a) {Learning};
+    \node[processstep, right=of sys, yshift=0.55cm] (b) {Reasoning};
+    \node[processstep, right=of sys, yshift=-0.6cm] (c) {Problem Solving};
+    \node[processstep, right=of sys, yshift=-1.75cm] (d) {Decision Making};
+    \foreach \n in {a,b,c,d}{\draw[-{Latex[length=2mm]},PrimaryMid,thick] (sys.east) -- (\n.west);}
+  \end{tikzpicture}
+  \end{center}
+  \begin{center}\small\textit{Examples:} speech recognition, visual perception, language translation.\end{center}
+\end{frame}
+
+\begin{frame}{The Evolution of AI}{Six defining phases}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{enumerate}
+        \item \keyword{Early Excitement} (1950s–60s) \\ \small optimism about reasoning machines
+        \item \keyword{First AI Winter} (1970s) \\ \small limited computational power
+        \item \keyword{Expert Systems Era} (1980s) \\ \small knowledge-based systems
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{enumerate}\setcounter{enumi}{3}
+        \item \keyword{Second AI Winter} (late 80s–90s) \\ \small LISP market collapse, funding cuts
+        \item \keyword{ML Renaissance} (2000s–10s) \\ \small statistical methods
+        \item \important{Deep Learning Revolution} (2010s–) \\ \small neural nets + massive data
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Roots of Artificial Intelligence}{An interdisciplinary field}
+  \begin{center}
+  \resizebox{0.95\textwidth}{!}{%
+  \begin{tikzpicture}[
+      root/.style={draw=PrimaryDark, fill=PrimaryDark, text=white, rounded corners=2pt,
+        font=\bfseries\small, minimum width=2.4cm, minimum height=0.6cm},
+      disc/.style={draw=PrimaryMid, fill=PrimaryLight!45, rounded corners=2pt,
+        font=\footnotesize, minimum width=2.4cm, minimum height=0.55cm},
+      leaf/.style={font=\scriptsize\itshape, text=DarkText}]
+    \node[root] (ai) {Roots of AI};
+    \node[disc, above left=0.6cm and 1.6cm of ai] (phi) {Philosophy};
+    \node[disc, left=1.6cm of ai] (mat) {Mathematics};
+    \node[disc, below left=0.6cm and 1.6cm of ai] (cs) {Computer Sci.};
+    \node[disc, above right=0.6cm and 1.6cm of ai] (neu) {Neuroscience};
+    \node[disc, right=1.6cm of ai] (psy) {Psychology};
+    \node[disc, below right=0.6cm and 1.6cm of ai] (lin) {Linguistics};
+    \foreach \n in {phi,mat,cs,neu,psy,lin}{\draw[PrimaryMid,thick] (ai) -- (\n);}
+    \node[leaf, left=0.2cm of phi] {Knowledge, Reasoning};
+    \node[leaf, left=0.2cm of mat] {Logic, Probability, Stats};
+    \node[leaf, left=0.2cm of cs] {Algorithms, Complexity};
+    \node[leaf, right=0.2cm of neu] {Understanding the brain};
+    \node[leaf, right=0.2cm of psy] {Understanding behavior};
+    \node[leaf, right=0.2cm of lin] {Modeling language};
+  \end{tikzpicture}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Timeline of AI History}{Milestones}
+  \begin{center}
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[x=1.3cm, milestone/.style={draw=PrimaryMid, fill=PrimaryLight!40,
+      rounded corners=2pt, align=center, font=\scriptsize, text width=2.1cm, minimum height=1.4cm}]
+    \draw[line width=2pt, PrimaryDark, -{Latex[length=3mm]}] (-0.6,0) -- (11,0);
+    \foreach \x/\y/\txt in {
+      0/0.55/{\textbf{1950}\\Turing Test proposed},
+      2/-0.55/{\textbf{1956}\\Dartmouth: \emph{“AI”} coined},
+      4/0.55/{\textbf{1980s}\\Expert Systems},
+      6/-0.55/{\textbf{1997}\\Deep Blue beats Kasparov},
+      8/0.55/{\textbf{2012}\\ImageNet \& deep learning},
+      10/-0.55/{\textbf{2020s}\\LLMs: ChatGPT \& beyond}}{
+      \fill[PrimaryDark] (\x,0) circle (2pt);
+      \node[milestone, anchor=\ifdim\y pt>0pt south\else north\fi]
+        at (\x, \ifdim\y pt>0pt 0.35\else -0.35\fi) {\txt};
+      \draw[PrimaryMid] (\x,0) -- (\x,\ifdim\y pt>0pt 0.3\else -0.3\fi);
+    }
+  \end{tikzpicture}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{The Turing Test}{Can a machine think? (Turing, 1950)}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \textbf{Procedure}
+      \begin{enumerate}
+        \item All communication is text-based
+        \item A judge questions two hidden respondents
+        \item One is human, one is a computer
+        \item The machine \emph{passes} if the judge cannot reliably tell them apart
+      \end{enumerate}
+      \vspace{0.4em}
+      \begin{alertblock}{Criticisms}
+        \small Tests \emph{deception} rather than intelligence; linguistic-only;
+        needs no understanding or consciousness; anthropocentric.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.7cm,
+          box/.style={draw, rounded corners=2pt, minimum width=2.6cm, minimum height=0.7cm, font=\small},
+          judge/.style={box, fill=PrimaryDark, text=white}]
+        \node[judge] (j) {Human Judge};
+        \node[box, fill=SuccessGreen!25, below left=1.3cm and -0.6cm of j] (h) {Human};
+        \node[box, fill=AlertRed!18, below right=1.3cm and -0.6cm of j] (c) {Computer};
+        \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, PrimaryMid, thick] (j) -- (h);
+        \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, PrimaryMid, thick] (j) -- (c);
+        \node[font=\scriptsize\itshape, below=1.1cm of j, text width=3.4cm, align=center]
+          {Cannot distinguish? \\ $\Rightarrow$ Pass the test};
+      \end{tikzpicture}
+      \end{center}
+      \vspace{0.2em}
+      \begin{block}{Status}
+        \small No system has convincingly passed the \emph{full} test. AGI remains
+        aspirational, not a present reality.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Subfields of AI}{The AI landscape}
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{image.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{AI in Industry}{Where value is created}
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \begin{itemize}
+        \item \keyword{Anomaly detection} in processes and equipment
+        \item \keyword{Optimize processes} to improve yield
+        \item \keyword{Smarter decisions} that minimize risk
+        \item \keyword{Predict future scenarios} with neural networks
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{image-ind.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Is Artificial Intelligence Dangerous?}{Responsible AI}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      AI can be dangerous if \important{misused} or \important{poorly designed}.
+      Key risks include:
+      \begin{itemize}
+        \item Job displacement
+        \item Privacy concerns
+        \item Bias and discrimination
+        \item Autonomous weapons
+      \end{itemize}
+      \vspace{0.4em}
+      \begin{exampleblock}{Takeaway}
+        \small Ethical development, transparency, and regulation are essential.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[draw=AlertRed, line width=1.2pt, rounded corners=6pt,
+              fill=AlertRed!8, minimum width=3.6cm, minimum height=2.6cm,
+              align=center, font=\small] {%
+          \textcolor{AlertRed}{\Large\textbf{!}}\\[0.4em]
+          Safety \\ Fairness \\ Accountability \\ Governance};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{How to Achieve AI}
+% ============================================================
+
+\begin{frame}{Two Roads to Artificial Intelligence}{Phenomenal vs. Biological}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{1. Phenomenal Approach}
+        \small
+        \begin{itemize}
+          \item \keyword{Knowledge Representation}
+          \item \keyword{Expert Systems \& Planning}
+          \item \keyword{Search}
+          \begin{itemize}\scriptsize
+            \item Uninformed: BFS, DFS
+            \item Informed: A$^\ast$, Greedy
+          \end{itemize}
+        \end{itemize}
+        \centering\scriptsize\textit{Deductive reasoning}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{2. Biological Approach}
+        \small
+        \begin{itemize}
+          \item \keyword{Neural Networks} (ANN)
+          \item \keyword{Evolutionary Algorithms}
+          \item \keyword{Learning}: supervised, unsupervised, reinforcement
+          \item \keyword{Agents}: NLP, vision, robotics
+        \end{itemize}
+        \centering\scriptsize\textit{Inductive learning}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Deductive vs. Inductive Reasoning}{The two schools of thought}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Deductive Reasoning}
+        \small Start from a \keyword{knowledge base} of facts; apply logic to make
+        inferences.
+        \[ \text{Rules} + \text{Facts} \Rightarrow \text{Conclusions} \]
+        \textit{Search and logic-based methods.}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Inductive Reasoning}
+        \small Start from \keyword{observations}; generalize to broader rules or
+        patterns.
+        \[ \text{Examples} \Rightarrow \text{General Rule} \]
+        \textit{The foundation of machine learning.}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vspace{0.6em}
+  \begin{center}\small
+    \important{The greatest strength of deductive reasoning — interpretability —
+    is also its greatest limitation.}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Deductive Methods}{Systematic inference from knowledge}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item \keyword{Constraint Satisfaction (CSP)}\\
+          \scriptsize variables, domains, constraints
+        \item \keyword{Search Algorithms}\\
+          \scriptsize BFS, DFS, UCS, A$^\ast$, local search
+        \item \keyword{Logic-Based Systems}\\
+          \scriptsize propositional \& first-order logic, resolution
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Expert Systems}
+        \small
+        \begin{itemize}
+          \item \keyword{Knowledge base}: facts + rules
+          \item \keyword{Inference engine}: applies rules
+          \item \keyword{User interface}
+        \end{itemize}
+        \scriptsize Forward chaining (data-driven) \textbullet\
+        Backward chaining (goal-driven)
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Expert System Example}{Chaining inferences for diagnosis}
+  \begin{columns}[c]
+    \begin{column}{0.44\textwidth}
+      \textbf{Facts about John}
+      \begin{itemize}\small
+        \item Running a temperature
+        \item Coughing
+        \item Colored phlegm
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.56\textwidth}
+      \begin{tikzpicture}[node distance=0.42cm, rule/.style={processstep, minimum width=5.4cm}]
+        \node[rule] (r1) {\scriptsize IF coughing \textsc{and} temperature \textsc{then} infection};
+        \node[rule, below=of r1] (r2) {\scriptsize IF colored phlegm \textsc{and} infection\\ \textsc{then} bacterial infection};
+        \node[rule, below=of r2, fill=SuccessGreen!20, draw=SuccessGreen] (r3) {\scriptsize IF bacterial infection \textsc{then} administer antibiotic};
+        \draw[-{Latex[length=2mm]},PrimaryMid,thick] (r1) -- (r2);
+        \draw[-{Latex[length=2mm]},PrimaryMid,thick] (r2) -- (r3);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \vspace{0.4em}
+  \begin{center}\scriptsize\itshape
+    In practice, thousands of rules and cases are needed for a system to work well.
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Constraint Satisfaction Problems}
+% ============================================================
+
+\begin{frame}{Constraint Satisfaction Problems (CSPs)}{A deductive modeling framework}
+  \begin{columns}[c]
+    \begin{column}{0.58\textwidth}
+      A \keyword{CSP} is defined by three ingredients:
+      \begin{itemize}\small
+        \item \keyword{Variables} $X_1,\dots,X_n$
+        \item \keyword{Domains} — allowed values for each variable
+        \item \keyword{Constraints} — legal combinations of values
+      \end{itemize}
+      \vspace{0.3em}
+      A \emph{solution} assigns a value to every variable so that \important{all
+      constraints hold}.
+      \vspace{0.4em}
+      \begin{exampleblock}{Everyday CSPs}
+        \small Sudoku \textbullet\ $N$-Queens \textbullet\ Traveling Salesperson
+        \textbullet\ map / graph coloring \textbullet\ scheduling.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.45cm, b/.style={processstep, minimum width=3.1cm}]
+        \node[b, fill=PrimaryLight!45] (v) {Variables};
+        \node[b, below=of v, fill=SuccessGreen!20] (d) {Domains};
+        \node[b, below=of d, fill=AccentYellow!35] (c) {Constraints};
+        \node[b, below=of c, fill=AccentOrange!20, draw=AccentOrange] (s) {Solution};
+        \draw[-{Latex[length=2mm]},PrimaryMid] (v)--(d);
+        \draw[-{Latex[length=2mm]},PrimaryMid] (d)--(c);
+        \draw[-{Latex[length=2mm]},PrimaryMid] (c)--(s);
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example 1 — Sudoku as a CSP}{Fill the $9\times9$ grid}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      \begin{itemize}\small
+        \item \keyword{Variables}: $X_{i,j}$ for each cell $(i,j)$
+        \item \keyword{Domains}: $\{1,2,\dots,9\}$
+        \item \keyword{Constraints} — all different within each unit:
+      \end{itemize}
+      \small
+      \begin{block}{Row / column / sub-grid}
+        \footnotesize
+        \textbf{Rows:} $\forall i,\ j\neq k:\ X_{i,j}\neq X_{i,k}$ \\[0.2em]
+        \textbf{Columns:} $\forall j,\ i\neq k:\ X_{i,j}\neq X_{k,j}$ \\[0.2em]
+        \textbf{Sub-grids:} within each $3\times3$ block, \\
+        \quad $X_{3m+i,\,3n+j}\neq X_{3m+k,\,3n+l}$ for $(i,j)\neq(k,l)$
+      \end{block}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[scale=0.38]
+        \fill[PrimaryLight!30] (0,0) rectangle (9,9);
+        \draw[step=1, PrimaryMid, thin] (0,0) grid (9,9);
+        \draw[step=3, PrimaryDark, line width=1.2pt] (0,0) grid (9,9);
+        \draw[PrimaryDark, line width=1.2pt] (0,0) rectangle (9,9);
+      \end{tikzpicture}\\[0.3em]
+      \scriptsize 81 variables, 27 \emph{all-different} constraints.
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Sudoku — Python Implementation}{Using the \texttt{python-constraint} library}
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\scriptsize, numbers=none,
+                   xleftmargin=0.5em, framexleftmargin=0.5em]
+from constraint import Problem, AllDifferentConstraint
+
+def solve_sudoku(puzzle):            # puzzle: 9x9 list, 0 = blank
+    p = Problem()
+    for r in range(9):
+        for c in range(9):
+            v = puzzle[r][c]
+            p.addVariable((r, c), range(1, 10) if v == 0 else [v])
+    for i in range(9):               # rows and columns all-different
+        p.addConstraint(AllDifferentConstraint(), [(i, c) for c in range(9)])
+        p.addConstraint(AllDifferentConstraint(), [(r, i) for r in range(9)])
+    for br in range(3):              # 3x3 sub-grids all-different
+        for bc in range(3):
+            cells = [(br*3 + i, bc*3 + j) for i in range(3) for j in range(3)]
+            p.addConstraint(AllDifferentConstraint(), cells)
+    sols = p.getSolutions()
+    return sols[0] if sols else None
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Example 2 — Eight Queens as a CSP}{No two queens attack each other}
+  \begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+      \begin{itemize}\small
+        \item \keyword{Variables}: $Q_1,\dots,Q_8$ — column of the queen in row $i$
+        \item \keyword{Domains}: $\{1,\dots,8\}$
+      \end{itemize}
+      \begin{block}{Constraints}
+        \small
+        \textbf{Columns differ:} $\ \forall i\neq j:\ Q_i \neq Q_j$ \\[0.3em]
+        \textbf{Diagonals differ:} $\ |Q_i - Q_j| \neq |i - j|$
+      \end{block}
+      \centering\scriptsize
+      Rows are handled implicitly — one queen per row by construction.
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[scale=0.34]
+        \foreach \x in {0,...,7}{\foreach \y in {0,...,7}{
+          \pgfmathtruncatemacro{\s}{mod(\x+\y,2)}
+          \ifnum\s=0 \fill[PrimaryLight!35] (\x,\y) rectangle ++(1,1);\fi
+        }}
+        \draw[PrimaryMid] (0,0) grid (8,8);
+        \draw[PrimaryDark, line width=1pt] (0,0) rectangle (8,8);
+        \foreach \r/\c in {1/1,2/5,3/8,4/6,5/3,6/7,7/2,8/4}{
+          \fill[AccentOrange] (\c-0.5,\r-0.5) circle (0.32);
+        }
+      \end{tikzpicture}\\[0.3em]
+      \scriptsize One valid placement of 8 queens.
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Example 3 — Traveling Salesperson as a CSP}{Shortest tour of all cities}
+  \begin{columns}[T]
+    \begin{column}{0.56\textwidth}
+      Cities $\{1,\dots,n\}$ with distances $d(i,j)$; find a tour of cost at most $C$.
+      \begin{itemize}\small
+        \item \keyword{Variables}: $X_{i,j}\in\{0,1\}$ — $1$ if the tour goes directly $i\to j$
+        \item \keyword{Domains}: $\{0,1\}$
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{block}{Constraints}
+        \footnotesize
+        Enter each city once: $\displaystyle\sum_{i\neq j} X_{i,j}=1$ \\[0.4em]
+        Leave each city once: $\displaystyle\sum_{j\neq i} X_{i,j}=1$ \\[0.4em]
+        Bounded cost: $\displaystyle\sum_{i}\sum_{j\neq i} d(i,j)\,X_{i,j}\le C$
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.3em}
+  \begin{center}\scriptsize
+    A tour with $n$ cities has $(n-1)!$ possibilities — \important{NP-hard} as $n$ grows.
+  \end{center}
+\end{frame}
+
+\begin{frame}{Example 4 — Graph / Map Coloring as a CSP}{Adjacent regions differ}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      Graph $G=(V,E)$ with colors $\{1,\dots,k\}$.
+      \begin{itemize}\small
+        \item \keyword{Variables}: $X_{i,c}\in\{0,1\}$ — $1$ if vertex $i$ has color $c$
+        \item \keyword{Domains}: $\{0,1\}$
+      \end{itemize}
+      \begin{block}{Constraints}
+        \footnotesize
+        One color per node: $\displaystyle\sum_{c=1}^{k} X_{i,c}=1,\ \forall i$ \\[0.3em]
+        Adjacent differ: $\ X_{i,c}+X_{j,c}\le 1,\ \forall (i,j)\in E,\ \forall c$
+      \end{block}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[scale=0.95, every node/.style={circle, draw, minimum size=0.5cm, font=\scriptsize\bfseries}]
+        \node[fill=AlertRed!45] (a) at (0,1.2) {A};
+        \node[fill=SuccessGreen!45] (b) at (1.4,1.7) {B};
+        \node[fill=PrimaryLight] (c) at (2.3,0.6) {C};
+        \node[fill=SuccessGreen!45] (d) at (1.5,-0.4) {D};
+        \node[fill=AlertRed!45] (e) at (0.2,-0.5) {E};
+        \draw (a)--(b); \draw (b)--(c); \draw (c)--(d);
+        \draw (d)--(e); \draw (e)--(a); \draw (a)--(d);
+      \end{tikzpicture}\\[0.3em]
+      \scriptsize No edge joins two same-colored nodes.
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Intelligent Agents}
+% ============================================================
+
+\begin{frame}{The Agent Abstraction}{Perceive — Decide — Act}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      An \keyword{agent}:
+      \begin{enumerate}
+        \item \keyword{Perceives} the environment via \emph{sensors}
+        \item \keyword{Acts} on it via \emph{actuators}
+        \item Makes \keyword{decisions} to achieve goals
+      \end{enumerate}
+      \vspace{0.4em}
+      \begin{block}{Formal definition}
+        \small An agent function maps percept histories to actions:
+        \[ f : P^{\ast} \rightarrow A \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.9cm,
+          ag/.style={draw=AccentOrange, fill=AccentYellow!30, rounded corners=3pt,
+            minimum width=2.6cm, minimum height=1.0cm, font=\bfseries\small, align=center},
+          env/.style={draw=PrimaryMid, fill=PrimaryLight!45, rounded corners=3pt,
+            minimum width=2.6cm, minimum height=1.0cm, font=\bfseries\small, align=center}]
+        \node[ag] (a) {Agent\\Function};
+        \node[env, below=1.6cm of a] (e) {Environment};
+        \draw[-{Latex[length=2.5mm]}, PrimaryMid, thick]
+          (e.west) to[out=180,in=180] node[left, font=\scriptsize] {Percepts} (a.west);
+        \draw[-{Latex[length=2.5mm]}, AccentOrange, thick]
+          (a.east) to[out=0,in=0] node[right, font=\scriptsize] {Actions} (e.east);
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{PEAS Description}{Characterizing an agent}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l *{4}{>{\raggedright\arraybackslash}X}@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Agent} & \textcolor{white}{Performance} &
+    \textcolor{white}{Environment} & \textcolor{white}{Actuators} &
+    \textcolor{white}{Sensors} \\
+    \midrule
+    Cleaning robot & Cleanliness, battery & Room, dirt & Wheels, vacuum & Camera, dirt sensor \\
+    \rowcolor{PrimaryLight!25}
+    Chess program & Win/loss/draw & Board, opponent & Move selection & Board position \\
+    Self-driving car & Safety, speed & Roads, traffic & Steering, throttle & Cameras, LIDAR, GPS \\
+    \rowcolor{PrimaryLight!25}
+    Medical diagnosis & Patient health & Symptoms & Treatment plan & Lab tests, imaging \\
+    Chatbot & User satisfaction & Conversation & Text response & User input text \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \centering\scriptsize \keyword{P}erformance \textbullet\ \keyword{E}nvironment
+  \textbullet\ \keyword{A}ctuators \textbullet\ \keyword{S}ensors
+\end{frame}
+
+\begin{frame}{Types of Agents}{From reflexes to learning}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.35cm and 0.5cm,
+      typ/.style={draw, rounded corners=3pt, minimum width=2.5cm, minimum height=1.5cm,
+        align=center, font=\footnotesize\bfseries, text width=2.4cm}]
+    \node[typ, fill=AlertRed!15, draw=AlertRed] (a) {Simple Reflex\\[0.2em]\scriptsize\mdseries condition–action rules};
+    \node[typ, right=of a, fill=PrimaryLight!40, draw=PrimaryMid] (b) {Model-Based\\[0.2em]\scriptsize\mdseries internal state};
+    \node[typ, right=of b, fill=SuccessGreen!15, draw=SuccessGreen] (c) {Goal-Based\\[0.2em]\scriptsize\mdseries plans to a goal};
+    \node[typ, right=of c, fill=AccentOrange!18, draw=AccentOrange] (d) {Utility-Based\\[0.2em]\scriptsize\mdseries maximize utility};
+    \node[typ, right=of d, fill=AccentYellow!30, draw=AccentOrange] (e) {Learning\\[0.2em]\scriptsize\mdseries improves w/ experience};
+    \draw[-{Latex[length=2mm]},PrimaryMid,thick] (a)--(b);
+    \draw[-{Latex[length=2mm]},PrimaryMid,thick] (b)--(c);
+    \draw[-{Latex[length=2mm]},PrimaryMid,thick] (c)--(d);
+    \draw[-{Latex[length=2mm]},PrimaryMid,thick] (d)--(e);
+  \end{tikzpicture}
+  \end{center}
+  \vspace{0.3em}
+  \begin{center}\scriptsize
+  \begin{tabular}{@{}ll@{}}
+    \textbf{Thermostat} $\to$ simple reflex &
+    \textbf{Vacuum w/ memory} $\to$ model-based \\
+    \textbf{GPS navigation} $\to$ goal-based &
+    \textbf{Trading bot} $\to$ utility-based \quad
+    \textbf{AlphaGo} $\to$ learning \\
+  \end{tabular}
+  \end{center}
+  \vspace{0.2em}
+  \begin{center}
+    \href{https://colab.research.google.com/github/chebil/AI-course-book/blob/main/chapters/ch01_AgentLab.ipynb}{%
+      \tikz{\node[fill=AccentOrange, rounded corners=4pt, inner sep=5pt,
+        text=white, font=\small\bfseries]
+        {$\blacktriangleright$\,\ Open the Agent Lab in Google Colab};}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{The Learning Agent}{Four interacting components}
+  \begin{columns}[c]
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item \keyword{Performance Element} — selects actions
+        \item \keyword{Learning Element} — improves the performance element
+        \item \keyword{Critic} — provides feedback on performance
+        \item \keyword{Problem Generator} — suggests exploratory actions
+      \end{itemize}
+      \vspace{0.4em}
+      \begin{exampleblock}{Example}
+        \small \keyword{AlphaGo} learned to master Go through self-play.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[node distance=0.5cm and 0.6cm,
+          c/.style={draw=PrimaryMid, fill=PrimaryLight!40, rounded corners=2pt,
+            font=\scriptsize, minimum width=2.0cm, minimum height=0.7cm, align=center}]
+        \node[c, fill=SuccessGreen!20, draw=SuccessGreen] (cr) {Critic};
+        \node[c, below=of cr] (le) {Learning\\Element};
+        \node[c, right=1.2cm of le] (pe) {Performance\\Element};
+        \node[c, below=of le, fill=AccentYellow!30, draw=AccentOrange] (pg) {Problem\\Generator};
+        \draw[-{Latex[length=1.6mm]},PrimaryMid] (cr)--(le);
+        \draw[-{Latex[length=1.6mm]},PrimaryMid] (le)--(pe);
+        \draw[-{Latex[length=1.6mm]},PrimaryMid] (pg)--(le);
+        \draw[-{Latex[length=1.6mm]},PrimaryMid] (pe.north) to[out=90,in=0] (cr.east);
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Types of Environments}{Design depends on the world}
+  \small
+  \renewcommand{\arraystretch}{1.25}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\itshape\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Dimension} & \textcolor{white}{Type 1} &
+    \textcolor{white}{Type 2} & \textcolor{white}{Example} \\
+    \midrule
+    Observability & Fully observable & Partially observable & Chess vs.\ Poker \\
+    \rowcolor{PrimaryLight!25}
+    Determinism & Deterministic & Stochastic & Chess vs.\ Backgammon \\
+    Episodes & Episodic & Sequential & Image class.\ vs.\ Chess \\
+    \rowcolor{PrimaryLight!25}
+    Dynamics & Static & Dynamic & Crossword vs.\ Driving \\
+    State space & Discrete & Continuous & Chess vs.\ Robot control \\
+    \rowcolor{PrimaryLight!25}
+    Agents & Single-agent & Multi-agent & Puzzle vs.\ Poker \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{center}\scriptsize\itshape
+    Simplest: fully observable, deterministic, episodic, static, discrete, single-agent.
+    Hardest: real-world robotics (the opposite of every dimension).
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Learning Paradigms}
+% ============================================================
+
+\begin{frame}{Three Types of Learning}{Inductive learning from data}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.5cm and 1.0cm,
+      root/.style={draw=PrimaryDark, fill=PrimaryDark, text=white, rounded corners=3pt,
+        font=\bfseries, minimum width=3.0cm, minimum height=0.7cm},
+      typ/.style={rounded corners=3pt, font=\bfseries\small, minimum width=3.0cm,
+        minimum height=0.7cm, align=center},
+      leaf/.style={font=\scriptsize, align=center}]
+    \node[root] (ml) {Machine Learning};
+    \node[typ, fill=AlertRed!15, draw=AlertRed, below left=1.0cm and 0.6cm of ml] (s) {Supervised};
+    \node[typ, fill=PrimaryLight!45, draw=PrimaryMid, below=1.0cm of ml] (u) {Unsupervised};
+    \node[typ, fill=AccentYellow!30, draw=AccentOrange, below right=1.0cm and 0.6cm of ml] (r) {Reinforcement};
+    \draw[-{Latex[length=2mm]},PrimaryMid,thick] (ml)--(s);
+    \draw[-{Latex[length=2mm]},PrimaryMid,thick] (ml)--(u);
+    \draw[-{Latex[length=2mm]},PrimaryMid,thick] (ml)--(r);
+    \node[leaf, below=0.35cm of s] {Classification\\Regression};
+    \node[leaf, below=0.35cm of u] {Clustering\\Dim.\ reduction};
+    \node[leaf, below=0.35cm of r] {Trial \& error\\Reward max.};
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Supervised Learning}{Learning with a teacher}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      Learn a function from \keyword{labeled} examples.
+      \begin{itemize}\small
+        \item Training data: $(X_1,y_1),\ldots,(X_n,y_n)$
+        \item Learn $f$ such that $y_i \approx f(X_i)$
+        \item Minimize loss: $\displaystyle L = \sum_{i=1}^{n}(y_i - f(X_i))^2$
+      \end{itemize}
+      \vspace{0.3em}
+      \textbf{Two tasks}
+      \begin{itemize}\small
+        \item \keyword{Classification}: categorical (spam/not spam)
+        \item \keyword{Regression}: numerical (house prices)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Example}
+        \small Data $(1,3),(2,5),(3,7),(4,9)$
+        \[ y = 2x + 1 \]
+        Predict $x=5 \Rightarrow y = 11$.
+      \end{block}
+      \begin{center}
+      \begin{tikzpicture}
+        \begin{axis}[width=5.2cm, height=3.4cm, tick style={draw=none},
+          xtick=\empty, ytick=\empty, axis lines=left,
+          xlabel=\scriptsize $x$, ylabel=\scriptsize $y$, xmin=0, xmax=5.5, ymin=0, ymax=12]
+          \addplot[only marks, mark=*, PrimaryMid] coordinates {(1,3)(2,5)(3,7)(4,9)};
+          \addplot[AccentOrange, thick, domain=0.5:5] {2*x+1};
+        \end{axis}
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Unsupervised Learning}{Discovering hidden structure}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      Find structure in \keyword{unlabeled} data.
+      \begin{itemize}\small
+        \item \keyword{Clustering}: K-means, hierarchical, DBSCAN
+        \item \keyword{Dimensionality reduction}: PCA, t-SNE
+        \item \keyword{Anomaly detection}: fraud, intrusion
+      \end{itemize}
+      \vspace{0.3em}
+      \begin{block}{K-Means (sketch)}
+        \scriptsize
+        1. Initialize $k$ random centroids \\
+        2. Repeat until convergence: \\
+        \quad a. Assign each point to nearest centroid \\
+        \quad b. Update centroids to cluster means
+      \end{block}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \begin{axis}[width=5.4cm, height=4.2cm, tick style={draw=none},
+          xtick=\empty, ytick=\empty, axis lines=left]
+          \addplot[only marks, mark=*, AlertRed] coordinates {(1,1)(1.3,0.8)(0.8,1.2)(1.1,1.4)};
+          \addplot[only marks, mark=*, PrimaryMid] coordinates {(3,3)(3.2,2.8)(2.8,3.3)(3.4,3.1)};
+          \addplot[only marks, mark=*, SuccessGreen] coordinates {(1,3)(1.2,3.3)(0.9,2.8)(1.3,3.1)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Three clusters discovered
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Reinforcement Learning}{Learning from interaction}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      An \keyword{agent} learns which actions to take by observing \keyword{rewards}.
+      \begin{itemize}\small
+        \item State $s$, action $a$, reward $r$, policy $\pi(s)$
+        \item Goal: maximize cumulative reward
+      \end{itemize}
+      \[ G_t = \sum_{k=0}^{\infty}\gamma^k r_{t+k},\quad \gamma\in[0,1] \]
+      \scriptsize Algorithms: Q-Learning, DQN (value-based); Policy Gradient,
+      Actor–Critic (policy-based); AlphaZero (model-based).
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[node distance=1.7cm,
+          b/.style={draw, rounded corners=3pt, minimum width=2.4cm,
+            minimum height=1.0cm, font=\bfseries\small, align=center}]
+        \node[b, fill=AccentYellow!30, draw=AccentOrange] (a) {Agent};
+        \node[b, fill=PrimaryLight!45, draw=PrimaryMid, right=of a] (e) {Environment};
+        \draw[-{Latex[length=2mm]}, AccentOrange, thick]
+          (a.north) to[out=45,in=135] node[above, font=\scriptsize] {action $a_t$} (e.north);
+        \draw[-{Latex[length=2mm]}, PrimaryMid, thick]
+          (e.south) to[out=-135,in=-45] node[below, font=\scriptsize] {state $s_{t+1}$, reward $r_t$} (a.south);
+      \end{tikzpicture}
+      \end{center}
+      \vspace{0.3em}
+      \begin{exampleblock}{Applications}
+        \scriptsize AlphaGo, robotics, autonomous vehicles, data-center cooling.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Comparing Learning Types}{At a glance}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Aspect} & \textcolor{white}{Supervised} &
+    \textcolor{white}{Unsupervised} & \textcolor{white}{Reinforcement} \\
+    \midrule
+    Data & Labeled examples & Unlabeled data & Interaction w/ environment \\
+    \rowcolor{PrimaryLight!25}
+    Feedback & Correct answers & None (implicit) & Rewards / penalties \\
+    Goal & Predict outputs & Discover patterns & Maximize reward \\
+    \rowcolor{PrimaryLight!25}
+    Training & $(X,y)$ pairs & $X$ only & $(s,a,r,s')$ tuples \\
+    Example & Spam detection & Segmentation & Game playing \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Reasoning}
+        \small
+        \begin{itemize}
+          \item \keyword{Deductive}: rules + facts $\Rightarrow$ conclusions
+          \item \keyword{Inductive}: examples $\Rightarrow$ general rules
+        \end{itemize}
+      \end{block}
+      \begin{block}{Agents}
+        \small Perceive–decide–act; PEAS; five agent types; environment dimensions.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Learning}
+        \small
+        \begin{itemize}
+          \item Supervised — labeled data
+          \item Unsupervised — hidden structure
+          \item Reinforcement — reward-driven
+        \end{itemize}
+      \end{exampleblock}
+      \begin{alertblock}{Looking ahead}
+        \small Ch.\ 2: Search \textbullet\ Ch.\ 3: Multiagent Search \textbullet\ Ch.\ 4–5: Logic.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 2 — Searching State Spaces}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

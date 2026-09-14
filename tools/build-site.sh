@@ -54,7 +54,8 @@ for p in \
   AlgDesign/chap7/index.html \
   AlgDesign/convex-hull/index.html \
   AI-course-book/index.html \
-  AI-course-book/ch13-integration/index.html \
+  AI-course-book/ch01-slides/index.html \
+  AI-course-book/ch05-slides/index.html \
   AI-course-book/ch05-firstorder-diagnosis/index.html \
   stat/index.html \
   stat/part1/ch01-datasets/index.html \

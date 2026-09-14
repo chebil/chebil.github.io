@@ -1,0 +1,50 @@
+% ============================================================
+%  Artificial Intelligence: A Textbook
+%  Shared re-branding for the AI course (input AFTER theme.tex)
+%  Overrides the CS3401 footer/title page from theme.tex.
+% ============================================================
+
+% Footer rebranded for the AI course
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.4pt,dp=0pt]{footer rule}{}
+  \end{beamercolorbox}
+  \leavevmode
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.60\paperwidth,ht=1.8em,dp=0.6em,leftskip=1em]{normal text}%
+      \textcolor{PrimaryDark}{\tiny\textbf{Dr. Khalil Chebil} %
+        \quad\textbar\quad CCES, PSAU}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.40\paperwidth,ht=1.8em,dp=0.6em,rightskip=1em,right]{normal text}%
+      \textcolor{PrimaryDark}{\tiny\insertshorttitle%
+        \quad\textbar\quad\insertframenumber\,/\,\inserttotalframenumber}%
+    \end{beamercolorbox}%
+  }%
+}
+
+% Title page rebranded for the AI course
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.45]
+      ([shift={(2.5cm,-2.5cm)}]current page.north east) circle(5.5cm);
+    \fill[AccentOrange,opacity=0.10]
+      ([shift={(-1.5cm,2.0cm)}]current page.south west) circle(4.2cm);
+    \draw[white,opacity=0.08,line width=40pt]
+      ([shift={(0cm,-0.5cm)}]current page.north west)
+      to[out=-30,in=210]
+      ([shift={(0cm,0.5cm)}]current page.south east);
+  \end{tikzpicture}%
+  \vspace{0.6cm}
+  \begin{center}
+    {\tiny\textcolor{PrimaryLight}{\textbf{CCES} \textendash{}
+      College of Computer Engineering and Sciences}}\\[0.2em]
+    {\tiny\textcolor{PrimaryLight}{Prince Sattam Bin Abdulaziz University}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{\textbf{CS600: Advanced AI }}}\\[1.5em]
+    \textcolor{PrimaryMid}{\rule{0.55\textwidth}{0.6pt}}\\[0.9em]
+    {\Large\usebeamerfont{title}\textcolor{white}{\inserttitle}}\\[0.4em]
+    {\small\usebeamerfont{subtitle}\textcolor{PrimaryLight}{\insertsubtitle}}\\[0.7em]
+    \textcolor{PrimaryMid}{\rule{0.55\textwidth}{0.6pt}}\\[1.0em]
+    {\small\textcolor{white}{\insertauthor}}\\[0.3em]
+    {\footnotesize\textcolor{PrimaryLight}{\insertdate}}
+  \end{center}%
+}
