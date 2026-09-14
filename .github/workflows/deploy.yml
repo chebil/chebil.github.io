@@ -49,6 +49,8 @@ jobs:
 
   deploy:
     needs: build
+    # Never publish from a pull request -- PRs build to validate, nothing more.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
