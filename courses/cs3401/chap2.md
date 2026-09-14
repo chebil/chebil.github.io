@@ -13,9 +13,9 @@ title: 2. Algorithm Analysis
 
 # Implementations
 
-## [The maximum subsequence sum algorithm](https://chebil.github.io/MaximumSubSequence)
+## [The maximum subsequence sum algorithm](maximum-subsequence.md)
 
-## [Computing the exponentiation of a number](https://chebil.github.io/exponentiation)
+## [Computing the exponentiation of a number](exponentiation.md)
 
 ## Recursive Factorial Algorithm
 ```java

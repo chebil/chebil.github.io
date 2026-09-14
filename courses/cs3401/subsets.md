@@ -1,12 +1,5 @@
 ---
-layout: posts
-classes: wide
-title:  "Generating subsets"
-author_profile: true
-tags:
-  - Algorithms
-  - Combinatorics
-  - Backtracking
+title: Generating subsets
 ---
 
 In this post, we will discuss the problem of generating all subsets of a given set of elements. A subset is a collection of elements that are selected from a set. The table below shows all subsets of the set {1, 2, 3}:
@@ -43,9 +36,8 @@ return L
 We can implements the algorithm using recusion as follows:  
 
 
-{% tabs log %}
-
-{% tab log python %}
+::::{tab-set}
+:::{tab-item} Python
 ```python
 def gray_code(n):
     if n == 1:
@@ -57,9 +49,8 @@ def gray_code(n):
         L2 = ['1' + x for x in L2]
         return L1 + L2
 ```
-{% endtab %}
-
-{% tab log java %}
+:::
+:::{tab-item} Java
 ```java
 List<String> generate(int n) {
         if (n <= 0) {
@@ -96,17 +87,15 @@ List<String> generate(int n) {
         return smallerGrayCode;
     }
 ```
-{% endtab %}
-
-{% endtabs %}
+:::
+::::
 
 The function `gray_code(n)` generates the Gray code for n bits. The base case is when n=1, in which case the function returns the list ['0', '1']. Otherwise, the function generates the Gray code for (n-1) bits and then copies the list in reverse order. It then adds '0' as a prefix to each bit string in the original list and '1' as a prefix to each bit string in the reversed list. Finally, the function appends the reversed list to the original list and returns the result.
 
 We can avoid unnecessary copying of the list by using a single list and swapping the elements in place. The following **iterative** implementation demonstrates this approach:
 
-{% tabs log %}
-
-{% tab log python %}
+::::{tab-set}
+:::{tab-item} Python
 ```python
 def gray_code(n):
     if n <= 0:
@@ -122,9 +111,8 @@ def gray_code(n):
 
     return gray_code_list
 ```
-{% endtab %}
-
-{% tab log java %}
+:::
+:::{tab-item} Java
 ```java
 List<String> generateIterative(int n){
         List<String> grayCodeList = new ArrayList<>();
@@ -147,6 +135,5 @@ List<String> generateIterative(int n){
         return grayCodeList;
     }
 ```
-{% endtab %}
-
-{% endtabs %}
+:::
+::::

@@ -1,16 +1,6 @@
 ---
-layout: posts
-classes: wide
-title:  "Building a Medical Diagnostic Chatbot with First Order Logic"
-author_profile: true
-tags:
-  - First Order Logic
-  - Python
-  - Streamlit
-  - SymPy
-  - Knowledge Base
+title: Building a Medical Diagnostic Chatbot with First Order Logic
 ---
-
 
 In this tutorial, we'll build an interactive medical diagnostic chatbot that uses **First Order Logic (FOL)** for inference. This demonstrates how formal logic can be applied to real-world problems like medical diagnosis. We'll use Python with `streamlit` for the interface and `sympy` for logical operations.
 
@@ -458,7 +448,7 @@ elif page == "➕ Add Custom Rule":
 ## Running the Application
 
 <div style="margin: 20px 0;">
-  <a href="{{ site.baseurl }}/assets/downloads/diagnostic_chatbot.py" download class="btn btn--primary">
+  <a href="https://chebil.github.io/assets/downloads/diagnostic_chatbot.py" download class="btn btn--primary">
     📥 Download diagnostic_chatbot.py
   </a>
 </div>
@@ -559,7 +549,7 @@ The combination of SymPy's symbolic logic capabilities and Streamlit's interacti
 ## Complete Source Code
 
 <div style="margin: 20px 0;">
-  <a href="{{ site.baseurl }}/assets/downloads/diagnostic_chatbot.py" download class="btn btn--primary">
+  <a href="https://chebil.github.io/assets/downloads/diagnostic_chatbot.py" download class="btn btn--primary">
     📥 Download diagnostic_chatbot.py
   </a>
 </div>

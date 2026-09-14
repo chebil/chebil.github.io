@@ -51,6 +51,8 @@ cp -r courses/cs2311/_build/html/. "$OUT/DataStructure/"
 cp -r courses/cs3401/_build/html/. "$OUT/AlgDesign/"
 cp -r courses/cs602/_build/html/.  "$OUT/ProbSolvers/"
 
+python3 tools/make_post_redirects.py
+
 echo "==> Checking the assembled tree"
 missing=0
 for p in \
@@ -63,6 +65,10 @@ for p in \
   AlgDesign/chap7/index.html \
   ProbSolvers/chap1/index.html \
   ProbSolvers/slideschap2.html \
+  AlgDesign/convex-hull/index.html \
+  AI-course-book/ch05-firstorder-diagnosis/index.html \
+  ConvexHull/index.html \
+  DiagnosisFOL/index.html \
   AI-course-book/index.html \
   AI-course-book/ch13-integration/index.html \
   stat/index.html \

@@ -35,6 +35,8 @@ project:
         title: Implementation and Applications
       - file: chapters/ch02_search_lab.ipynb
         title: Lab Exercises
+      - file: chapters/ch02_search_libraries.ipynb
+        title: Informed Search with Python Libraries
     - title: Chapter 3 - Multiagent Search
       children:
       - file: chapters/ch03_multiagent.ipynb
@@ -59,6 +61,8 @@ project:
         title: Implementation and Applications
       - file: chapters/ch05_firstorder_lab.ipynb
         title: Lab Exercises
+      - file: chapters/ch05_firstorder_diagnosis.md
+        title: Case Study - A Medical Diagnostic Chatbot
   - title: Part II - Inductive Learning
     children:
     - title: Chapter 6 - Machine Learning Introduction
@@ -132,9 +136,6 @@ site:
   title: Artificial Intelligence - A Textbook
   options:
     logo_text: Dr. Khalil Chebil
-  # Header navigation, so every project links back to the site and to its
-  # siblings. URLs must be fully qualified: MyST prefixes BASE_URL to
-  # anything starting with "/", which turns "/" into "<base>/build/undefined".
   nav:
   - title: Home
     url: https://chebil.github.io/

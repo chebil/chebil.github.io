@@ -1,12 +1,5 @@
 ---
-layout: posts
-classes: wide
-title:  "Exponentiation"
-author_profile: true
-tags:
-  - Algorithms
-  - Complexity Analysis
-  - Recursion
+title: Exponentiation
 ---
 
 Computing the exponentiation of a number is a classic problem in computer science. The problem is to find the value of a number raised to the power of another number. The algorithm has a number of different implementations with different time complexities. The following are some of the most common implementations of the algorithm and an analysis of their time complexity.

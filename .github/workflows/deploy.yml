@@ -120,6 +120,11 @@ jobs:
           cp -r courses/cs3401/_build/html/. out/AlgDesign/
           cp -r courses/cs602/_build/html/. out/ProbSolvers/
 
+      # Seven posts that expanded on a specific chapter now live inside the
+      # project they belong to; their old root URLs keep working.
+      - name: Add redirects for the posts that moved into the books
+        run: python tools/make_post_redirects.py
+
       - name: Check the assembled tree
         run: |
           set -e
@@ -133,6 +138,10 @@ jobs:
             out/AlgDesign/chap7/index.html \
             out/ProbSolvers/chap1/index.html \
             out/ProbSolvers/slideschap2.html \
+            out/AlgDesign/convex-hull/index.html \
+            out/AI-course-book/ch05-firstorder-diagnosis/index.html \
+            out/ConvexHull/index.html \
+            out/DiagnosisFOL/index.html \
             out/AI-course-book/index.html \
             out/AI-course-book/ch13-integration/index.html \
             out/stat/index.html \
