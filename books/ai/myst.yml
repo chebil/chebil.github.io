@@ -136,6 +136,9 @@ site:
   title: Artificial Intelligence - A Textbook
   options:
     logo_text: Dr. Khalil Chebil
+  # Header navigation, so every project links back to the site and to its
+  # siblings. URLs must be fully qualified: MyST prefixes BASE_URL to
+  # anything starting with "/", which turns "/" into "<base>/build/undefined".
   nav:
   - title: Home
     url: https://chebil.github.io/
@@ -143,8 +146,6 @@ site:
     url: https://chebil.github.io/DataStructure/
   - title: Algorithm Design
     url: https://chebil.github.io/AlgDesign/
-  - title: Problem Solvers
-    url: https://chebil.github.io/ProbSolvers/
   - title: Statistics
     url: https://chebil.github.io/stat/
   # The nav above is hidden below 1024px (Tailwind `lg`). This button

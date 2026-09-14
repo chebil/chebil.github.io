@@ -26,19 +26,17 @@ echo "==> AI book -> out/AI-course-book/"
 echo "==> Statistics book -> out/stat/"
 ( cd books/stat && BASE_URL=/stat myst build --html && python3 scripts/make_redirects.py )
 
-echo "==> Courses -> out/DataStructure|AlgDesign|ProbSolvers/"
+echo "==> Courses -> out/DataStructure|AlgDesign/"
 ( cd courses/cs2311 && BASE_URL=/DataStructure myst build --html )
 ( cd courses/cs3401 && BASE_URL=/AlgDesign     myst build --html )
-( cd courses/cs602  && BASE_URL=/ProbSolvers   myst build --html )
 python3 tools/make_course_redirects.py
 
 mkdir -p "$OUT/AI-course-book" "$OUT/stat" \
-         "$OUT/DataStructure" "$OUT/AlgDesign" "$OUT/ProbSolvers"
+         "$OUT/DataStructure" "$OUT/AlgDesign"
 cp -r books/ai/_build/html/.       "$OUT/AI-course-book/"
 cp -r books/stat/_build/html/.     "$OUT/stat/"
 cp -r courses/cs2311/_build/html/. "$OUT/DataStructure/"
 cp -r courses/cs3401/_build/html/. "$OUT/AlgDesign/"
-cp -r courses/cs602/_build/html/.  "$OUT/ProbSolvers/"
 
 python3 tools/make_post_redirects.py
 
@@ -55,7 +53,6 @@ for p in \
   DataStructure/labs/lab1/index.html \
   AlgDesign/chap7/index.html \
   AlgDesign/convex-hull/index.html \
-  ProbSolvers/chap1/index.html \
   AI-course-book/index.html \
   AI-course-book/ch13-integration/index.html \
   AI-course-book/ch05-firstorder-diagnosis/index.html \

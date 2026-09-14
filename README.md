@@ -13,14 +13,16 @@ repository by a single workflow.
 | `books/stat/` | MyST MD | `/stat/` — *Probability and Statistics for Computer Science* |
 | `courses/cs2311/` | MyST MD | `/DataStructure/` — Data Structures |
 | `courses/cs3401/` | MyST MD | `/AlgDesign/` — Algorithm Design |
-| `courses/cs602/` | MyST MD | `/ProbSolvers/` — Design of Problem Solvers |
 | `tools/` | — | `build-site.sh`, which builds everything |
 | `.github/workflows/deploy.yml` | GitHub Actions | builds and publishes the whole thing |
 
-Two sites are **not** here and keep their own repositories:
-[AI-slides](https://github.com/chebil/AI-slides) (Slidev, embedded in `/ai/`)
-and [BigData](https://github.com/chebil/BigData). They publish to
-`/AI-slides/` and `/BigData/` as project pages.
+[AI-slides](https://github.com/chebil/AI-slides) is not here -- it keeps its
+own repository and publishes to `/AI-slides/` as a project page, linked from
+the homepage.
+
+[BigData](https://github.com/chebil/BigData) also still publishes to
+`/BigData/`, but nothing links to it any more. To take it offline, disable
+Pages on that repository.
 
 ## Building
 

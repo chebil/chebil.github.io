@@ -8,7 +8,6 @@ name: Build and deploy the site
 #   books/stat/      MyST        ->  /stat/
 #   courses/cs2311/  MyST        ->  /DataStructure/
 #   courses/cs3401/  MyST        ->  /AlgDesign/
-#   courses/cs602/   MyST        ->  /ProbSolvers/
 #
 # The sub-paths match what the separate repositories published, so no
 # existing link changes. tools/build-site.sh runs the same sequence
@@ -88,7 +87,6 @@ jobs:
         run: |
           ( cd courses/cs2311 && BASE_URL=/DataStructure myst build --html )
           ( cd courses/cs3401 && BASE_URL=/AlgDesign     myst build --html )
-          ( cd courses/cs602  && BASE_URL=/ProbSolvers   myst build --html )
 
       # MyST lowercases every path segment, so /DataStructure/Labs/Lab1
       # would become /DataStructure/labs/lab1/ and 404 on a case-sensitive
@@ -99,12 +97,11 @@ jobs:
       - name: Assemble the books and courses under the site
         run: |
           mkdir -p out/AI-course-book out/stat \
-                   out/DataStructure out/AlgDesign out/ProbSolvers
+                   out/DataStructure out/AlgDesign
           cp -r books/ai/_build/html/. out/AI-course-book/
           cp -r books/stat/_build/html/. out/stat/
           cp -r courses/cs2311/_build/html/. out/DataStructure/
           cp -r courses/cs3401/_build/html/. out/AlgDesign/
-          cp -r courses/cs602/_build/html/. out/ProbSolvers/
 
       # Posts that expanded on a specific chapter live inside the project
       # they belong to now; their old root URLs keep working.
@@ -125,7 +122,6 @@ jobs:
             out/DataStructure/labs/lab1/index.html \
             out/AlgDesign/chap7/index.html \
             out/AlgDesign/convex-hull/index.html \
-            out/ProbSolvers/chap1/index.html \
             out/AI-course-book/index.html \
             out/AI-course-book/ch13-integration/index.html \
             out/AI-course-book/ch05-firstorder-diagnosis/index.html \
