@@ -59,74 +59,74 @@ project:
               title: Implementation and Applications
             - file: chapters/ch05_firstorder_lab.ipynb
               title: Lab Exercises
-    # - title: Part II - Inductive Learning
-    #   children:
-    #     - title: Chapter 6 - Machine Learning Introduction
-    #       children:
-    #         - file: chapters/ch06_ml_intro.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch06_ml_intro_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch06_ml_intro_lab.ipynb
-    #           title: Lab Exercises
-    #     - title: Chapter 7 - Neural Networks
-    #       children:
-    #         - file: chapters/ch07_neural.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch07_neural_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch07_neural_lab.ipynb
-    #           title: Lab Exercises
-    #     - title: Chapter 8 - Domain-Specific Architectures
-    #       children:
-    #         - file: chapters/ch08_domain_architectures.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch08_domain_architectures_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch08_domain_architectures_lab.ipynb
-    #           title: Lab Exercises
-    #     - title: Chapter 9 - Unsupervised Learning
-    #       children:
-    #         - file: chapters/ch09_unsupervised.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch09_unsupervised_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch09_unsupervised_lab.ipynb
-    #           title: Lab Exercises
-    #     - title: Chapter 10 - Reinforcement Learning
-    #       children:
-    #         - file: chapters/ch10_reinforcement.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch10_reinforcement_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch10_reinforcement_lab.ipynb
-    #           title: Lab Exercises
-    # - title: Part III - Integration
-    #   children:
-    #     - title: Chapter 11 - Probabilistic Graphical Models
-    #       children:
-    #         - file: chapters/ch11_pgm.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch11_pgm_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch11_pgm_lab.ipynb
-    #           title: Lab Exercises
-    #     - title: Chapter 12 - Knowledge Graphs
-    #       children:
-    #         - file: chapters/ch12_knowledge_graphs.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch12_knowledge_graphs_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch12_knowledge_graphs_lab.ipynb
-    #           title: Lab Exercises
-    #     - title: Chapter 13 - Integration and Hybrid AI
-    #       children:
-    #         - file: chapters/ch13_integration.ipynb
-    #           title: Theory and Algorithms
-    #         - file: chapters/ch13_integration_implementation.ipynb
-    #           title: Implementation and Applications
-    #         - file: chapters/ch13_integration_lab.ipynb
-    #           title: Lab Exercises
+    - title: Part II - Inductive Learning
+      children:
+        - title: Chapter 6 - Machine Learning Introduction
+          children:
+            - file: chapters/ch06_ml_intro.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch06_ml_intro_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch06_ml_intro_lab.ipynb
+              title: Lab Exercises
+        - title: Chapter 7 - Neural Networks
+          children:
+            - file: chapters/ch07_neural.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch07_neural_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch07_neural_lab.ipynb
+              title: Lab Exercises
+        - title: Chapter 8 - Domain-Specific Architectures
+          children:
+            - file: chapters/ch08_domain_architectures.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch08_domain_architectures_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch08_domain_architectures_lab.ipynb
+              title: Lab Exercises
+        - title: Chapter 9 - Unsupervised Learning
+          children:
+            - file: chapters/ch09_unsupervised.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch09_unsupervised_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch09_unsupervised_lab.ipynb
+              title: Lab Exercises
+        - title: Chapter 10 - Reinforcement Learning
+          children:
+            - file: chapters/ch10_reinforcement.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch10_reinforcement_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch10_reinforcement_lab.ipynb
+              title: Lab Exercises
+    - title: Part III - Integration
+      children:
+        - title: Chapter 11 - Probabilistic Graphical Models
+          children:
+            - file: chapters/ch11_pgm.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch11_pgm_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch11_pgm_lab.ipynb
+              title: Lab Exercises
+        - title: Chapter 12 - Knowledge Graphs
+          children:
+            - file: chapters/ch12_knowledge_graphs.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch12_knowledge_graphs_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch12_knowledge_graphs_lab.ipynb
+              title: Lab Exercises
+        - title: Chapter 13 - Integration and Hybrid AI
+          children:
+            - file: chapters/ch13_integration.ipynb
+              title: Theory and Algorithms
+            - file: chapters/ch13_integration_implementation.ipynb
+              title: Implementation and Applications
+            - file: chapters/ch13_integration_lab.ipynb
+              title: Lab Exercises
     
 site:
   template: book-theme
