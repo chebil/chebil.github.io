@@ -27,3 +27,15 @@ codekit-config.json
 .sass-cache
 _asset_bundler_cache
 _site
+
+# MyST build output (books/ and courses/)
+_build/
+.myst.session.json
+
+# Assembled site, as the deploy workflow produces it
+/out/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
