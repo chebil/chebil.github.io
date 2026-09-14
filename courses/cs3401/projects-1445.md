@@ -1,12 +1,5 @@
 ---
-layout: posts
-classes: wide
-title:  "CS3401 Projects 1445 1st semester"
-author_profile: true
-tags:
-  - Projects
-  - Student Work
-  - CS3401
+title: CS3401 Projects 1445 1st semester
 ---
 
 # Project 1: Project management system
@@ -28,5 +21,3 @@ tags:
 ```
 right, right, right, down, down, left, left.
 ```
-
-

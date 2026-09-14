@@ -26,6 +26,8 @@ MOVED = {
     "MaximumSubSequence": "/AlgDesign/maximum-subsequence/",
     "Searching":          "/AI-course-book/ch02-search-libraries/",
     "DiagnosisFOL":       "/AI-course-book/ch05-firstorder-diagnosis/",
+    "projects44":         "/AlgDesign/projects-1444/",
+    "projects45":         "/AlgDesign/projects-1445/",
 }
 
 STUB = """<!doctype html>

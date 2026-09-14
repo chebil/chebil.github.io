@@ -37,6 +37,12 @@ project:
     title: 6. Transform and conquer
   - file: chap7.md
     title: 7. Dynamic programming
+  - title: Student Projects
+    children:
+    - file: projects-1445.md
+      title: 1445 - First Semester
+    - file: projects-1444.md
+      title: 1444 - Earlier Projects
 site:
   template: book-theme
   title: Algorithm Design and Analysis

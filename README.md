@@ -8,7 +8,7 @@ repository by a single workflow.
 
 | Path | Tool | Publishes to |
 |---|---|---|
-| `site/` | Jekyll (minimal-mistakes) | `/` — bio, blog, `/ai/`, `/labexam`, two reveal.js decks |
+| `site/` | Jekyll (minimal-mistakes) | `/` — homepage, `/ai/`, `/labexam`, two reveal.js decks |
 | `books/ai/` | MyST MD | `/AI-course-book/` — *Artificial Intelligence: A Textbook* |
 | `books/stat/` | MyST MD | `/stat/` — *Probability and Statistics for Computer Science* |
 | `courses/cs2311/` | MyST MD | `/DataStructure/` — Data Structures |
@@ -113,3 +113,14 @@ Two more things to know when editing course markdown:
   (`](https://chebil.github.io/ConvexHull)`).
 - **Keep images inside the course.** A course cannot reach `site/assets/`;
   put images in its own `images/` directory and reference them relatively.
+
+### The blog is empty
+
+`site/_posts/` has no posts left. Every one of them expanded on a specific
+chapter, so they live in the relevant book or course now, and
+`tools/make_post_redirects.py` keeps their old root URLs working.
+
+Jekyll still generates an empty `feed.xml` and the homepage still has room
+for a post listing, so writing a post again needs nothing but a file. If it
+stays empty, the blog scaffolding -- the feed, the post layouts, the
+listing on the homepage -- can be removed as its own change.
