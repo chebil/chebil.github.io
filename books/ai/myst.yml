@@ -4,134 +4,145 @@ project:
   id: 3fdd09b7-9a79-4ea9-8355-87538f27d341
   title: Artificial Intelligence
   authors:
-    - name: Dr. Khalil Chebil
-      email: khalil.chebil@insat.ucar.tn
+  - name: Dr. Khalil Chebil
+    email: khalil.chebil@insat.ucar.tn
   github: https://github.com/chebil/AI-course-book
   exports:
-    - format: pdf
+  - format: pdf
   toc:
-    - file: intro.md
-    - title: Part I - Deductive Reasoning
+  - file: intro.md
+  - title: Part I - Deductive Reasoning
+    children:
+    - title: Chapter 1 - Introduction to AI
       children:
-        - title: Chapter 1 - Introduction to AI
-          children:
-            - file: chapters/ch01_introduction.ipynb
-              title: Theory and Concepts
-            - file: chapters/ch01_Agents.ipynb
-              title: The concept of Agents and Environments
-            - file: chapters/ch01_AgentLab.ipynb
-              title: Agents Lab
-            - file: chapters/ch01_AgentAssignments.ipynb
-              title: Agents Assignments
-            - file: chapters/ch01_inductive_deductive.ipynb
-              title: Inductive vs Deductive Reasoning
-            - file: chapters/ch01_introduction_lab.ipynb
-              title: CSPs Lab
-        - title: Chapter 2 - Searching State Spaces
-          children:
-            - file: chapters/ch02_search.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch02_search_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch02_search_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 3 - Multiagent Search
-          children:
-            - file: chapters/ch03_multiagent.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch03_multiagent_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch03_multiagent_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 4 - Propositional Logic
-          children:
-            - file: chapters/ch04_propositional.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch04_propositional_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch04_propositional_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 5 - First-Order Logic
-          children:
-            - file: chapters/ch05_firstorder.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch05_firstorder_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch05_firstorder_lab.ipynb
-              title: Lab Exercises
-    - title: Part II - Inductive Learning
+      - file: chapters/ch01_introduction.ipynb
+        title: Theory and Concepts
+      - file: chapters/ch01_Agents.ipynb
+        title: The concept of Agents and Environments
+      - file: chapters/ch01_AgentLab.ipynb
+        title: Agents Lab
+      - file: chapters/ch01_AgentAssignments.ipynb
+        title: Agents Assignments
+      - file: chapters/ch01_inductive_deductive.ipynb
+        title: Inductive vs Deductive Reasoning
+      - file: chapters/ch01_introduction_lab.ipynb
+        title: CSPs Lab
+    - title: Chapter 2 - Searching State Spaces
       children:
-        - title: Chapter 6 - Machine Learning Introduction
-          children:
-            - file: chapters/ch06_ml_intro.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch06_ml_intro_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch06_ml_intro_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 7 - Neural Networks
-          children:
-            - file: chapters/ch07_neural.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch07_neural_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch07_neural_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 8 - Domain-Specific Architectures
-          children:
-            - file: chapters/ch08_domain_architectures.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch08_domain_architectures_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch08_domain_architectures_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 9 - Unsupervised Learning
-          children:
-            - file: chapters/ch09_unsupervised.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch09_unsupervised_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch09_unsupervised_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 10 - Reinforcement Learning
-          children:
-            - file: chapters/ch10_reinforcement.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch10_reinforcement_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch10_reinforcement_lab.ipynb
-              title: Lab Exercises
-    - title: Part III - Integration
+      - file: chapters/ch02_search.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch02_search_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch02_search_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 3 - Multiagent Search
       children:
-        - title: Chapter 11 - Probabilistic Graphical Models
-          children:
-            - file: chapters/ch11_pgm.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch11_pgm_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch11_pgm_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 12 - Knowledge Graphs
-          children:
-            - file: chapters/ch12_knowledge_graphs.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch12_knowledge_graphs_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch12_knowledge_graphs_lab.ipynb
-              title: Lab Exercises
-        - title: Chapter 13 - Integration and Hybrid AI
-          children:
-            - file: chapters/ch13_integration.ipynb
-              title: Theory and Algorithms
-            - file: chapters/ch13_integration_implementation.ipynb
-              title: Implementation and Applications
-            - file: chapters/ch13_integration_lab.ipynb
-              title: Lab Exercises
-    
+      - file: chapters/ch03_multiagent.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch03_multiagent_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch03_multiagent_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 4 - Propositional Logic
+      children:
+      - file: chapters/ch04_propositional.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch04_propositional_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch04_propositional_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 5 - First-Order Logic
+      children:
+      - file: chapters/ch05_firstorder.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch05_firstorder_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch05_firstorder_lab.ipynb
+        title: Lab Exercises
+  - title: Part II - Inductive Learning
+    children:
+    - title: Chapter 6 - Machine Learning Introduction
+      children:
+      - file: chapters/ch06_ml_intro.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch06_ml_intro_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch06_ml_intro_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 7 - Neural Networks
+      children:
+      - file: chapters/ch07_neural.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch07_neural_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch07_neural_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 8 - Domain-Specific Architectures
+      children:
+      - file: chapters/ch08_domain_architectures.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch08_domain_architectures_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch08_domain_architectures_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 9 - Unsupervised Learning
+      children:
+      - file: chapters/ch09_unsupervised.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch09_unsupervised_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch09_unsupervised_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 10 - Reinforcement Learning
+      children:
+      - file: chapters/ch10_reinforcement.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch10_reinforcement_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch10_reinforcement_lab.ipynb
+        title: Lab Exercises
+  - title: Part III - Integration
+    children:
+    - title: Chapter 11 - Probabilistic Graphical Models
+      children:
+      - file: chapters/ch11_pgm.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch11_pgm_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch11_pgm_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 12 - Knowledge Graphs
+      children:
+      - file: chapters/ch12_knowledge_graphs.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch12_knowledge_graphs_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch12_knowledge_graphs_lab.ipynb
+        title: Lab Exercises
+    - title: Chapter 13 - Integration and Hybrid AI
+      children:
+      - file: chapters/ch13_integration.ipynb
+        title: Theory and Algorithms
+      - file: chapters/ch13_integration_implementation.ipynb
+        title: Implementation and Applications
+      - file: chapters/ch13_integration_lab.ipynb
+        title: Lab Exercises
 site:
   template: book-theme
   title: Artificial Intelligence - A Textbook
   options:
     logo_text: Dr. Khalil Chebil
-  #   favicon: favicon.ico
-  #   logo: site_logo.png
+  # Header navigation, so every project links back to the site and to its
+  # siblings. URLs must be fully qualified: MyST prefixes BASE_URL to
+  # anything starting with "/", which turns "/" into "<base>/build/undefined".
+  nav:
+  - title: Home
+    url: https://chebil.github.io/
+  - title: Data Structures
+    url: https://chebil.github.io/DataStructure/
+  - title: Algorithm Design
+    url: https://chebil.github.io/AlgDesign/
+  - title: Problem Solvers
+    url: https://chebil.github.io/ProbSolvers/
+  - title: Statistics
+    url: https://chebil.github.io/stat/
