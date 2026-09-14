@@ -128,9 +128,6 @@ site:
   options:
     logo_text: Dr. Khalil Chebil
     folders: true
-  # Header navigation, so every project links back to the site and to its
-  # siblings. URLs must be fully qualified: MyST prefixes BASE_URL to
-  # anything starting with "/", which turns "/" into "<base>/build/undefined".
   nav:
   - title: Home
     url: https://chebil.github.io/
@@ -142,3 +139,9 @@ site:
     url: https://chebil.github.io/ProbSolvers/
   - title: AI Textbook
     url: https://chebil.github.io/AI-course-book/
+  # The nav above is hidden below 1024px (Tailwind `lg`). This button
+  # renders from 640px up, so there is still a way back on a narrow
+  # window, a tablet, or a split screen.
+  actions:
+  - title: Home
+    url: https://chebil.github.io/

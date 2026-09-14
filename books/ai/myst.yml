@@ -147,3 +147,9 @@ site:
     url: https://chebil.github.io/ProbSolvers/
   - title: Statistics
     url: https://chebil.github.io/stat/
+  # The nav above is hidden below 1024px (Tailwind `lg`). This button
+  # renders from 640px up, so there is still a way back on a narrow
+  # window, a tablet, or a split screen.
+  actions:
+  - title: Home
+    url: https://chebil.github.io/
