@@ -135,6 +135,50 @@ author_profile: true
     font-size: 0.95rem;
 }
 
+.book-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.book-card {
+    display: block;
+    background: white;
+    border-radius: 6px;
+    padding: 1.25rem 1.4rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-left: 3px solid #667eea;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.book-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.13);
+}
+
+.book-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.book-card:hover h3 {
+    color: #667eea;
+}
+
+.book-card .course-description {
+    margin: 0 0 0.75rem;
+}
+
+.book-meta {
+    display: inline-block;
+    font-size: 0.78rem;
+    color: #6c757d;
+    letter-spacing: 0.02em;
+}
+
 .course-code {
     display: inline-block;
     background: #6c757d;
@@ -161,37 +205,75 @@ author_profile: true
 
 <div class="courses-section">
     <h2>My Courses</h2>
-    
+
     <div class="degree-section">
+        <div class="degree-title">Bachelor</div>
         <div class="course-cards">
             <div class="course-card">
-                <h3><a href="/AlgDesign/">Algorithm Design</a></h3>
-                <span class="course-code">Bachelor</span>
-                </div>
-            
-            <div class="course-card">
                 <h3><a href="/DataStructure/">Data Structures</a></h3>
-                <span class="course-code">Bachelor</span>
+                <span class="course-code">CS 2311</span>
             </div>
-            
+            <div class="course-card">
+                <h3><a href="/AlgDesign/">Algorithm Design</a></h3>
+                <span class="course-code">CS 3401</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="degree-section">
+        <div class="degree-title">Master</div>
+        <div class="course-cards">
             <div class="course-card">
                 <h3><a href="/ai/">Advanced Artificial Intelligence</a></h3>
                 <span class="course-code">Master</span>
-                </div>
-            
+            </div>
             <div class="course-card">
                 <h3><a href="/BigData/">Big Data Analytics</a></h3>
                 <span class="course-code">Master</span>
             </div>
-            <div class="course-cards">
+        </div>
+    </div>
+
+    <div class="degree-section">
+        <div class="degree-title">PhD</div>
+        <div class="course-cards">
             <div class="course-card">
-                <h3><a href="/stat/">Statistics</a></h3>
+                <h3><a href="/stat/">Probability and Statistics</a></h3>
                 <span class="course-code">PhD</span>
             </div>
         </div>
-        </div>
     </div>
-    
+</div>
+
+<div class="courses-section">
+    <h2>Interactive Textbooks</h2>
+    <p style="text-align:center; color:#666; margin-top:-0.5rem; margin-bottom:1.5rem;">
+        Full texts with runnable Jupyter notebooks &mdash; read online, or open any chapter in Colab.
+    </p>
+
+    <div class="book-cards">
+        <a class="book-card" href="/AI-course-book/">
+            <h3>Artificial Intelligence: A Textbook</h3>
+            <p class="course-description">
+                Thirteen chapters across deductive reasoning, machine learning and
+                integration &mdash; agents, search, logic, neural networks,
+                reinforcement learning and knowledge graphs. Every chapter pairs
+                theory with an implementation notebook and a lab.
+            </p>
+            <span class="book-meta">13 chapters &middot; theory, implementation and labs</span>
+        </a>
+
+        <a class="book-card" href="/stat/">
+            <h3>Probability and Statistics for Computer Science</h3>
+            <p class="course-description">
+                Three parts &mdash; describing datasets, probability, and inference.
+                Covers summarising and plotting data, random variables and
+                distributions, confidence intervals, significance, ANOVA, and
+                Bayesian inference.
+            </p>
+            <span class="book-meta">9 chapters &middot; 46 notebook sections</span>
+        </a>
+    </div>
 </div>
 
 

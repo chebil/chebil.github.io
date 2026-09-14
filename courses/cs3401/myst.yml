@@ -1,0 +1,32 @@
+# CS 3401 - Algorithm Design and Analysis, published at /AlgDesign/
+# Generated from site/_data/navigation.yml during the Jekyll -> MyST move.
+version: 1
+project:
+  id: 67edb165-3166-493c-9448-d9cd956ee44d
+  title: CS 3401 - Algorithm Design and Analysis
+  authors:
+  - name: Dr. Khalil Chebil
+  github: https://github.com/chebil/chebil.github.io
+  toc:
+  - file: index.md
+    title: CS 3401 Main Page
+  - file: chap1.md
+    title: 1. Introduction
+  - file: chap2.md
+    title: 2. Algorithm Analysis
+  - file: chap3.md
+    title: 3. Brute force and Exhaustive Search
+  - file: chap4.md
+    title: 4. Decrease and conquer
+  - file: chap5.md
+    title: 5. Divide and conquer
+  - file: chap6.md
+    title: 6. Transform and conquer
+  - file: chap7.md
+    title: 7. Dynamic programming
+site:
+  template: book-theme
+  title: Algorithm Design and Analysis
+  options:
+    logo_text: Dr. Khalil Chebil
+    folders: true

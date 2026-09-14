@@ -1,3 +1,8 @@
+# Navigation for the Jekyll side of the site only.
+#
+# The Data Structures, Algorithm Design and Problem Solvers menus used to
+# live here. Those courses are MyST projects under courses/ now, and their
+# sidebars come from each myst.yml toc instead.
 # main links
 main:
   # - title: "Quick-Start Guide"
@@ -16,62 +21,6 @@ main:
   #   url: /collection-archive/
   # - title: "Sitemap"
   #   url: /sitemap/
-# Data Structure links
-DataStructure:
-  - title: Data Structure
-    children:
-      - title: "CS 2311 Main Page"
-        url: /DataStructure/
-      - title: 1. Algorithm Analysis
-        url: /DataStructure/chap1
-      - title: ----Lab 1
-        url: /DataStructure/Labs/Lab1
-      - title: 2. Recursion
-        url: /DataStructure/chap2
-      - title: ----Lab 2
-        url: /DataStructure/Labs/Lab2
-      - title: ----Genericity in java
-        url: /DataStructure/Labs/Generic
-      - title: 3. Lists
-        url: /DataStructure/chap3
-      - title: ----Lab 3
-        url: /DataStructure/Labs/Lab3
-      - title: 4. Stacks
-        url: /DataStructure/chap4 
-      - title: ----Lab 4
-        url: /DataStructure/Labs/Lab4     
-      - title: 5. Queues
-        url: /DataStructure/chap5
-      - title: ----Lab 5
-        url: /DataStructure/Labs/Lab5   
-      - title: 6. Trees
-        url: /DataStructure/chap6
-      - title: 7. Binary Search Trees and Priority Queues
-        url: /DataStructure/chap7
-      - title: ----Lab 6
-        url: /DataStructure/Labs/Lab6
-      - title: 8. Graphs
-        url: /DataStructure/chap8
-# Alg Design links
-AlgDesign:
-  - title: Algorithm Design and Analysis
-    children:
-      - title: "CS 3401 Main Page"
-        url: /AlgDesign/
-      - title: 1. Introduction
-        url: /AlgDesign/chap1
-      - title: 2. Algorithm Analysis
-        url: /AlgDesign/chap2
-      - title: 3. Brute force and Exhaustive Search
-        url: /AlgDesign/chap3
-      - title: 4. Decrease and conquer
-        url: /AlgDesign/chap4
-      - title: 5. Divide and conquer
-        url: /AlgDesign/chap5
-      - title: 6. Transform and conquer
-        url: /AlgDesign/chap6
-      - title: 7. Dynamic programming
-        url: /AlgDesign/chap7
 # ProbSolvers:
 #   - title: Design of Problem Solvers
 #     children:

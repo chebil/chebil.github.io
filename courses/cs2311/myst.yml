@@ -1,0 +1,54 @@
+# CS 2311 - Data Structures, published at /DataStructure/
+# Generated from site/_data/navigation.yml during the Jekyll -> MyST move.
+version: 1
+project:
+  id: d73f39d8-648b-49fe-930b-bcf0ae859cef
+  title: CS 2311 - Data Structures
+  authors:
+  - name: Dr. Khalil Chebil
+  github: https://github.com/chebil/chebil.github.io
+  toc:
+  - file: index.md
+    title: CS 2311 Main Page
+  - file: chap1.md
+    title: 1. Algorithm Analysis
+    children:
+    - file: Labs/Lab1.md
+      title: Lab 1
+  - file: chap2.md
+    title: 2. Recursion
+    children:
+    - file: Labs/Lab2.md
+      title: Lab 2
+    - file: Labs/Generic.md
+      title: Genericity in java
+  - file: chap3.md
+    title: 3. Lists
+    children:
+    - file: Labs/Lab3.md
+      title: Lab 3
+  - file: chap4.md
+    title: 4. Stacks
+    children:
+    - file: Labs/Lab4.md
+      title: Lab 4
+  - file: chap5.md
+    title: 5. Queues
+    children:
+    - file: Labs/Lab5.md
+      title: Lab 5
+  - file: chap6.md
+    title: 6. Trees
+  - file: chap7.md
+    title: 7. Binary Search Trees and Priority Queues
+    children:
+    - file: Labs/Lab6.md
+      title: Lab 6
+  - file: chap8.md
+    title: 8. Graphs
+site:
+  template: book-theme
+  title: Data Structures
+  options:
+    logo_text: Dr. Khalil Chebil
+    folders: true

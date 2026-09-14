@@ -3,13 +3,21 @@ name: Build and deploy the site
 # One repository, one Pages deployment. Three builds are assembled into a
 # single artifact:
 #
-#   site/        Jekyll   ->  /
-#   books/ai/    MyST     ->  /AI-course-book/
-#   books/stat/  MyST     ->  /stat/
+#   site/            Jekyll  ->  /
+#   books/ai/        MyST    ->  /AI-course-book/
+#   books/stat/      MyST    ->  /stat/
+#   courses/cs2311/  MyST    ->  /DataStructure/
+#   courses/cs3401/  MyST    ->  /AlgDesign/
+#   courses/cs602/   MyST    ->  /ProbSolvers/
 #
 # The sub-paths match what the separate repositories published, so no
 # existing link changes. tools/build-site.sh runs the same sequence
 # locally -- keep the two in step.
+#
+# There are deliberately no `paths:` filters. A Pages deployment replaces
+# the whole site, so a run that skipped the book builds would publish a
+# site without the books. Measured on a clean runner the build is ~80s:
+# Ruby setup 31s, each book 12s, Jekyll 6s. Not worth splitting.
 
 on:
   push:
@@ -88,11 +96,29 @@ jobs:
         working-directory: books/stat
         run: python scripts/make_redirects.py
 
-      - name: Assemble the books under the site
+      - name: Build the courses
         run: |
-          mkdir -p out/AI-course-book out/stat
+          ( cd courses/cs2311 && BASE_URL=/DataStructure myst build --html )
+          ( cd courses/cs3401 && BASE_URL=/AlgDesign     myst build --html )
+          ( cd courses/cs602  && BASE_URL=/ProbSolvers   myst build --html )
+
+      # MyST lowercases every path segment, so /DataStructure/Labs/Lab1
+      # would become /DataStructure/labs/lab1/ and 404 on a case-sensitive
+      # host. Only the seven lab pages need this; Pages resolves the rest.
+      - name: Add redirects for the old course URLs
+        run: python tools/make_course_redirects.py
+
+      - name: Assemble the books and courses under the site
+        run: |
+          mkdir -p out/AI-course-book out/stat \
+                   out/DataStructure out/AlgDesign out/ProbSolvers
           cp -r books/ai/_build/html/. out/AI-course-book/
           cp -r books/stat/_build/html/. out/stat/
+          # Copied over the Jekyll output, not instead of it: the two
+          # reveal.js decks still come from Jekyll inside these paths.
+          cp -r courses/cs2311/_build/html/. out/DataStructure/
+          cp -r courses/cs3401/_build/html/. out/AlgDesign/
+          cp -r courses/cs602/_build/html/. out/ProbSolvers/
 
       - name: Check the assembled tree
         run: |
@@ -100,7 +126,13 @@ jobs:
           for p in \
             out/index.html \
             out/feed.xml \
-            out/DataStructure/chap1.html \
+            out/DataStructure/index.html \
+            out/DataStructure/chap1/index.html \
+            out/DataStructure/Labs/Lab1.html \
+            out/DataStructure/labs/lab1/index.html \
+            out/AlgDesign/chap7/index.html \
+            out/ProbSolvers/chap1/index.html \
+            out/ProbSolvers/slideschap2.html \
             out/AI-course-book/index.html \
             out/AI-course-book/ch13-integration/index.html \
             out/stat/index.html \
