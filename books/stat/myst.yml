@@ -1,0 +1,130 @@
+# MyST MD configuration -- replaces _config.yml and _toc.yml.
+#
+# Build:  npm install -g mystmd
+#         myst start          # live preview
+#         myst build --html   # what CI publishes
+#
+# The toc below was generated from _toc.yml; all 46 pages carried over.
+version: 1
+project:
+  id: 82013819-7ad8-49e3-bfb5-1dbe0d446885
+  title: Probability and Statistics for Computer Science
+  authors:
+  - name: Dr. Khalil Chebil
+  copyright: '2025'
+  github: https://github.com/chebil/stat
+  bibliography:
+  - references.bib
+  toc:
+  - file: intro.ipynb
+  - title: Part I - Describing Datasets
+    children:
+    - file: part1/chapter01.ipynb
+      title: 'Chapter 1: First Tools for Looking at Data'
+      children:
+      - file: part1/ch01_datasets.ipynb
+        title: 1.1 Datasets
+      - file: part1/ch01_plotting.ipynb
+        title: 1.2 Plotting Data
+      - file: part1/ch01_summarizing.ipynb
+        title: 1.3 Summarizing 1D Data
+      - file: part1/ch01_australian_pizzas.ipynb
+        title: 1.4 Australian Pizzas Case Study
+      - file: part1/ch01_you_should.ipynb
+        title: 1.5 You Should Know
+      - file: part1/ch01_assignment.ipynb
+        title: '1.6 Assignment: Exploring Global Data'
+    - file: part1/chapter02.ipynb
+      title: 'Chapter 2: Looking at Relationships'
+      children:
+      - file: part1/ch02_2d_data.ipynb
+        title: 2.1 Plotting 2D Data
+      - file: part1/ch02_correlation.ipynb
+        title: 2.2 Correlation
+      - file: part1/ch02_assignment.ipynb
+        title: '2.3 Assignment: Analyzing Relationships'
+  - title: Part II - Probability
+    children:
+    - file: part2/chapter03.ipynb
+      title: 'Chapter 3: Basic Ideas in Probability'
+      children:
+      - file: part2/ch03_experiments.ipynb
+        title: 3.1 Experiments and Outcomes
+      - file: part2/ch03_events.ipynb
+        title: 3.2 Events
+      - file: part2/ch03_independence.ipynb
+        title: 3.3 Independence
+      - file: part2/ch03_conditional.ipynb
+        title: 3.4 Conditional Probability
+    - file: part2/chapter04.ipynb
+      title: 'Chapter 4: Random Variables and Expectations'
+      children:
+      - file: part2/ch04_random_variables.ipynb
+        title: 4.1 Random Variables
+      - file: part2/ch04_expectations.ipynb
+        title: 4.2 Expectations and Expected Values
+      - file: part2/ch04_weak_law.ipynb
+        title: 4.3 Weak Law of Large Numbers
+      - file: part2/ch04_applications.ipynb
+        title: 4.4 Applications
+    - file: part2/chapter05.ipynb
+      title: 'Chapter 5: Useful Probability Distributions'
+      children:
+      - file: part2/ch05_discrete.ipynb
+        title: 5.1 Discrete Distributions
+      - file: part2/ch05_continuous.ipynb
+        title: 5.2 Continuous Distributions
+      - file: part2/ch05_normal.ipynb
+        title: 5.3 Normal Distribution
+      - file: part2/ch05_approximation.ipynb
+        title: 5.4 Approximating Binomials
+  - title: Part III - Inference
+    children:
+    - file: part3/chapter06.ipynb
+      title: 'Chapter 6: Samples and Populations'
+      children:
+      - file: part3/ch06_sample_mean.ipynb
+        title: 6.1 The Sample Mean
+      - file: part3/ch06_confidence.ipynb
+        title: 6.2 Confidence Intervals
+      - file: part3/ch06_applications.ipynb
+        title: 6.3 Applications
+    - file: part3/chapter07.ipynb
+      title: 'Chapter 7: The Significance of Evidence'
+      children:
+      - file: part3/ch07_significance.ipynb
+        title: 7.1 Significance and P-Values
+      - file: part3/ch07_comparing_means.ipynb
+        title: 7.2 Comparing Population Means
+      - file: part3/ch07_other_tests.ipynb
+        title: 7.3 Other Useful Tests
+      - file: part3/ch07_pvalue_hacking.ipynb
+        title: 7.4 P-Value Hacking and Multiple Testing
+    - file: part3/chapter08.ipynb
+      title: 'Chapter 8: Experiments'
+      children:
+      - file: part3/ch08_one_way_anova.ipynb
+        title: 8.1 Simple Experiments (One-Way ANOVA)
+      - file: part3/ch08_two_way_anova.ipynb
+        title: 8.2 Two-Factor Experiments (Two-Way ANOVA)
+      - file: part3/ch08_design_principles.ipynb
+        title: 8.3 Experimental Design Principles
+    - file: part3/chapter09.ipynb
+      title: 'Chapter 9: Inferring Probability Models'
+      children:
+      - file: part3/ch09_mle.ipynb
+        title: 9.1 Maximum Likelihood Estimation
+      - file: part3/ch09_bayesian.ipynb
+        title: 9.2 Bayesian Inference
+      - file: part3/ch09_conjugate.ipynb
+        title: 9.3 Conjugate Priors and MAP
+      - file: part3/ch09_bayesian_normal.ipynb
+        title: 9.4 Bayesian Normal Inference
+      - file: part3/ch09_applications.ipynb
+        title: 9.5 Applications
+site:
+  template: book-theme
+  title: Probability and Statistics for Computer Science
+  options:
+    logo_text: Dr. Khalil Chebil
+    folders: true

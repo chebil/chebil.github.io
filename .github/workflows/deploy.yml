@@ -1,0 +1,134 @@
+name: Build and deploy the site
+
+# One repository, one Pages deployment. Three builds are assembled into a
+# single artifact:
+#
+#   site/        Jekyll   ->  /
+#   books/ai/    MyST     ->  /AI-course-book/
+#   books/stat/  MyST     ->  /stat/
+#
+# The sub-paths match what the separate repositories published, so no
+# existing link changes. tools/build-site.sh runs the same sequence
+# locally -- keep the two in step.
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Ruby 3.1, not later. Jekyll 3.9 pulls Liquid 4.0.3, which calls
+      # Object#tainted? -- removed in Ruby 3.2. The build dies there.
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+          working-directory: site
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install MyST
+        run: npm install -g mystmd
+
+      - name: Install Python helpers
+        run: pip install pyyaml
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      # The user site serves from the domain root, so baseurl is empty.
+      - name: Build the Jekyll site
+        working-directory: site
+        env:
+          JEKYLL_ENV: production
+        run: bundle exec jekyll build --destination "${{ github.workspace }}/out" --baseurl ""
+
+      - name: Build the AI book
+        working-directory: books/ai
+        env:
+          BASE_URL: /AI-course-book
+        run: myst build --html
+
+      - name: Build the statistics book
+        working-directory: books/stat
+        env:
+          BASE_URL: /stat
+        run: myst build --html
+
+      # Jupyter Book published /stat/part1/ch01_datasets.html; MyST
+      # publishes /stat/part1/ch01-datasets/. Keeps the old links alive.
+      - name: Add redirects for the old statistics book URLs
+        working-directory: books/stat
+        run: python scripts/make_redirects.py
+
+      - name: Assemble the books under the site
+        run: |
+          mkdir -p out/AI-course-book out/stat
+          cp -r books/ai/_build/html/. out/AI-course-book/
+          cp -r books/stat/_build/html/. out/stat/
+
+      - name: Check the assembled tree
+        run: |
+          set -e
+          for p in \
+            out/index.html \
+            out/feed.xml \
+            out/DataStructure/chap1.html \
+            out/AI-course-book/index.html \
+            out/AI-course-book/ch13-integration/index.html \
+            out/stat/index.html \
+            out/stat/part1/ch01-datasets/index.html \
+            out/stat/part1/ch01_datasets.html
+          do
+            [ -f "$p" ] || { echo "::error::missing $p"; exit 1; }
+          done
+          echo "assembled $(find out -type f | wc -l) files"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    # Publish only from the default branch, and never from a pull request.
+    # A workflow_dispatch run on a feature branch builds and uploads the
+    # artifact for inspection without touching the live site.
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
