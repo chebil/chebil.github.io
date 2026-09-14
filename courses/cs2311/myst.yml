@@ -52,13 +52,14 @@ site:
   options:
     logo_text: Dr. Khalil Chebil
     folders: true
+  # Header navigation, so every project links back to the site and to its
+  # siblings. URLs must be fully qualified: MyST prefixes BASE_URL to
+  # anything starting with "/", which turns "/" into "<base>/build/undefined".
   nav:
   - title: Home
     url: https://chebil.github.io/
   - title: Algorithm Design
     url: https://chebil.github.io/AlgDesign/
-  - title: Problem Solvers
-    url: https://chebil.github.io/ProbSolvers/
   - title: AI Textbook
     url: https://chebil.github.io/AI-course-book/
   - title: Statistics

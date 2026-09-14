@@ -29,7 +29,6 @@ import yaml
 COURSES = {
     "courses/cs2311": "/DataStructure",
     "courses/cs3401": "/AlgDesign",
-    "courses/cs602": "/ProbSolvers",
 }
 
 STUB = """<!doctype html>
