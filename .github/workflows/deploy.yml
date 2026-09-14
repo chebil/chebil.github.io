@@ -10,6 +10,11 @@ name: Build and deploy the site
 # The sub-paths match what the separate repositories published, so no
 # existing link changes. tools/build-site.sh runs the same sequence
 # locally -- keep the two in step.
+#
+# There are deliberately no `paths:` filters. A Pages deployment replaces
+# the whole site, so a run that skipped the book builds would publish a
+# site without the books. Measured on a clean runner the build is ~80s:
+# Ruby setup 31s, each book 12s, Jekyll 6s. Not worth splitting.
 
 on:
   push:
