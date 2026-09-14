@@ -35,16 +35,34 @@ echo "==> AI book -> out/AI-course-book/"
 echo "==> Statistics book -> out/stat/"
 ( cd books/stat && BASE_URL=/stat myst build --html && python3 scripts/make_redirects.py )
 
-mkdir -p "$OUT/AI-course-book" "$OUT/stat"
-cp -r books/ai/_build/html/. "$OUT/AI-course-book/"
-cp -r books/stat/_build/html/. "$OUT/stat/"
+echo "==> Courses -> out/DataStructure|AlgDesign|ProbSolvers/"
+( cd courses/cs2311 && BASE_URL=/DataStructure myst build --html )
+( cd courses/cs3401 && BASE_URL=/AlgDesign     myst build --html )
+( cd courses/cs602  && BASE_URL=/ProbSolvers   myst build --html )
+python3 tools/make_course_redirects.py
+
+mkdir -p "$OUT/AI-course-book" "$OUT/stat" \
+         "$OUT/DataStructure" "$OUT/AlgDesign" "$OUT/ProbSolvers"
+cp -r books/ai/_build/html/.      "$OUT/AI-course-book/"
+cp -r books/stat/_build/html/.    "$OUT/stat/"
+# Courses are copied over the Jekyll output, not instead of it: the two
+# reveal.js decks still come from Jekyll and live inside these paths.
+cp -r courses/cs2311/_build/html/. "$OUT/DataStructure/"
+cp -r courses/cs3401/_build/html/. "$OUT/AlgDesign/"
+cp -r courses/cs602/_build/html/.  "$OUT/ProbSolvers/"
 
 echo "==> Checking the assembled tree"
 missing=0
 for p in \
   index.html \
   feed.xml \
-  DataStructure/chap1.html \
+  DataStructure/index.html \
+  DataStructure/chap1/index.html \
+  DataStructure/Labs/Lab1.html \
+  DataStructure/labs/lab1/index.html \
+  AlgDesign/chap7/index.html \
+  ProbSolvers/chap1/index.html \
+  ProbSolvers/slideschap2.html \
   AI-course-book/index.html \
   AI-course-book/ch13-integration/index.html \
   stat/index.html \
@@ -59,9 +77,9 @@ echo "==> Built $(find "$OUT" -type f | wc -l) files into out/"
 
 if [ "${1:-}" = "--serve" ]; then
   echo
-  echo "Serving http://localhost:8000/ -- note that course pages need the"
-  echo ".html suffix here (/DataStructure/chap1.html). GitHub Pages adds it"
-  echo "for you; python's http.server does not."
+  echo "Serving http://localhost:8000/ -- note that python's http.server does"
+  echo "not redirect /DataStructure/chap1 to /DataStructure/chap1/ the way"
+  echo "GitHub Pages does. Use the trailing slash locally."
   echo
   cd "$OUT" && exec python3 -m http.server 8000
 fi

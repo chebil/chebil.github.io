@@ -8,10 +8,13 @@ repository by a single workflow.
 
 | Path | Tool | Publishes to |
 |---|---|---|
-| `site/` | Jekyll (minimal-mistakes) | `/` — bio, blog, course pages, slide decks |
+| `site/` | Jekyll (minimal-mistakes) | `/` — bio, blog, `/ai/`, `/labexam`, two reveal.js decks |
 | `books/ai/` | MyST MD | `/AI-course-book/` — *Artificial Intelligence: A Textbook* |
 | `books/stat/` | MyST MD | `/stat/` — *Probability and Statistics for Computer Science* |
-| `tools/` | — | `build-site.sh`, which builds all three |
+| `courses/cs2311/` | MyST MD | `/DataStructure/` — Data Structures |
+| `courses/cs3401/` | MyST MD | `/AlgDesign/` — Algorithm Design |
+| `courses/cs602/` | MyST MD | `/ProbSolvers/` — Design of Problem Solvers |
+| `tools/` | — | `build-site.sh`, which builds all six |
 | `.github/workflows/deploy.yml` | GitHub Actions | builds and publishes the whole thing |
 
 Two sites are **not** here and keep their own repositories:
@@ -30,15 +33,16 @@ Serving at the root matters: production serves from the domain root, so this
 is the only local arrangement where `/stat/` and `/AI-course-book/` resolve
 exactly as they will live.
 
-One caveat when clicking around locally — course pages need the `.html`
-suffix (`/DataStructure/chap1.html`). GitHub Pages adds it for you; Python's
+One caveat when clicking around locally — use trailing slashes
+(`/DataStructure/chap1/`). GitHub Pages 301s the bare form to it; Python's
 `http.server` does not.
 
 ### One piece at a time
 
-    cd site       && bundle exec jekyll serve --livereload
-    cd books/ai   && myst start
-    cd books/stat && myst start
+    cd site           && bundle exec jekyll serve --livereload
+    cd books/ai       && myst start
+    cd books/stat     && myst start
+    cd courses/cs2311 && myst start
 
 `myst start` gives a live-reloading preview. Install it once with
 `npm install -g mystmd`.
@@ -86,3 +90,26 @@ purpose:
   `part1/part2/part3` structure its old URLs used.
 - `books/ai/myst.yml` must **not** set it. That book has always been MyST and
   its live URLs are already flat — adding it would break every one of them.
+
+### Course pages and case
+
+The three courses were Jekyll pages with explicit permalinks until 2026.
+MyST derives each URL from the file path and **lowercases every segment**, so
+`Labs/Lab1.md` publishes at `/DataStructure/labs/lab1/`, not
+`/DataStructure/Labs/Lab1`. Renaming the source directory does not change
+this — the lowercasing is unconditional.
+
+Chapter pages are unaffected, because Pages 301s `/DataStructure/chap1` to
+`/DataStructure/chap1/` by itself. Only the seven lab pages change, and
+`tools/make_course_redirects.py` writes a stub for each. It derives them from
+the toc, so adding a lab with a capitalised name is handled automatically.
+
+Two more things to know when editing course markdown:
+
+- **Never use absolute links.** MyST prefixes `BASE_URL` to anything starting
+  with `/`, including inside raw HTML, so `](/AlgDesign/chap1)` becomes
+  `/AlgDesign/AlgDesign/chap1`. Link within a course by source file
+  (`](chap1.md)`), and to the Jekyll side by full URL
+  (`](https://chebil.github.io/ConvexHull)`).
+- **Keep images inside the course.** A course cannot reach `site/assets/`;
+  put images in its own `images/` directory and reference them relatively.

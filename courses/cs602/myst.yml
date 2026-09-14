@@ -1,0 +1,30 @@
+# CS 602 - Design of Problem Solvers, published at /ProbSolvers/
+# Generated from site/_data/navigation.yml during the Jekyll -> MyST move.
+version: 1
+project:
+  id: b50e37c8-eac1-4f1c-ad15-07b562c09925
+  title: CS 602 - Design of Problem Solvers
+  authors:
+  - name: Dr. Khalil Chebil
+  github: https://github.com/chebil/chebil.github.io
+  toc:
+  - file: index.md
+    title: CS 602 Main Page
+  - file: chap1.md
+    title: Introduction to Logic Problem Solvers
+  - file: chap2.md
+    title: Datasets for Logic Problem Solvers
+  - file: chap3.md
+    title: Queries and Updates for Logic Problem Solvers
+  - file: chap4.md
+    title: Query Evaluation and Optimization
+  - file: chap5.md
+    title: View Definitions and Evaluation
+  - file: lab1.md
+    title: Lab 1
+site:
+  template: book-theme
+  title: Design of Problem Solvers
+  options:
+    logo_text: Dr. Khalil Chebil
+    folders: true
