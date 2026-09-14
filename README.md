@@ -1,8 +1,8 @@
 # chebil.github.io
 
-Everything published at <https://chebil.github.io> — the personal site, the
-blog, the course notes, and two interactive textbooks — built from this one
-repository by a single workflow.
+Everything published at <https://chebil.github.io> — the homepage, two course
+sites, and two interactive textbooks — built from this one repository by a
+single workflow.
 
 ## What lives where
 
@@ -23,6 +23,27 @@ the homepage.
 [BigData](https://github.com/chebil/BigData) also still publishes to
 `/BigData/`, but nothing links to it any more. To take it offline, disable
 Pages on that repository.
+
+### This repository is the source of truth
+
+The two textbooks were separate repositories until 2026 and were brought in
+with `git subtree`, so their full history is here. **Do not edit
+[AI-course-book](https://github.com/chebil/AI-course-book) or
+[stat](https://github.com/chebil/stat) any more.** Pages is already disabled
+on both, so nothing published there reaches the site; a commit made in
+either one is simply lost work.
+
+That has happened once. The AI book was first imported from a stale local
+`main`, and 21 commits were left behind -- the per-chapter presentation
+slides among them. It was only noticed because the slides were visibly
+missing from the site. Recovering it meant a `git subtree pull` and a
+hand-resolved toc conflict.
+
+Archiving both repositories closes that door for good. They were kept live
+as a rollback path during the merge; that window has passed. Until they are
+archived, fetch before assuming a local clone is current:
+
+    git -C ../AI-course-book fetch origin && git -C ../AI-course-book log --oneline -1 origin/main
 
 ## Building
 
