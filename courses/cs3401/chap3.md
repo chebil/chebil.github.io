@@ -13,7 +13,7 @@ title: 3. Brute force and Exhaustive Search
 
 # Implementations
 
-## [The convex Hull problem](https://chebil.github.io/ConvexHull)
+## [The convex Hull problem](convex-hull.md)
 
 <details>
 <summary> The closest pair problem and the convex Hull problem</summary>

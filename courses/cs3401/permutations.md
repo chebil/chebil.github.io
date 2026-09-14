@@ -1,12 +1,5 @@
 ---
-layout: posts
-classes: wide
-title:  "Generating permutations"
-author_profile: true
-tags:
-  - Algorithms
-  - Combinatorics
-  - Recursion
+title: Generating permutations
 ---
 
 In this post, we will discuss the problem of generating all permutations of a given set of elements. A permutation is an arrangement of elements in a specific order. The table below shows all permutations of the set {1, 2, 3}:
@@ -61,6 +54,3 @@ Lets take the example of generating all permutations for 3 elements using the Jo
     |$$\{ \overleftarrow{2}, \overrightarrow{3}, \overleftarrow{1}\}$$|$$3$$|No change|
     |$$\{ \overleftarrow{2}, \overleftarrow{1}, \overrightarrow{3}\}$$|No mobile||
     |-|-|-|
-
-
-

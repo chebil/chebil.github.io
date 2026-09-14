@@ -1,13 +1,7 @@
 ---
-layout: posts
-classes: wide
-title:  "List of projects for CS3401"
-author_profile: true
-tags:
-  - Projects
-  - Student Work
-  - CS3401
+title: List of projects for CS3401
 ---
+
 Use the form link to choose a project : 
 
 [Form Link for male section](https://forms.gle/epTUNa6T51AF1vSp6)

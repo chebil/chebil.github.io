@@ -14,6 +14,6 @@ On the practical sessions, the students will apply these concepts and techniques
 ## Course slides
 <iframe src="https://chebil.github.io/AI-slides" width="100%" height="600px" frameborder="0" allowfullscreen></iframe>
 
-## [Informed Search Algorithms Using Python Libraries](/Searching/)
+## [Informed Search Algorithms Using Python Libraries](/AI-course-book/ch02-search-libraries/)
 
-## [Building a Medical Diagnostic Chatbot with First Order Logic](/DiagnosisFOL/)
+## [Building a Medical Diagnostic Chatbot with First Order Logic](/AI-course-book/ch05-firstorder-diagnosis/)

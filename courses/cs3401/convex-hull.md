@@ -1,16 +1,9 @@
 ---
-layout: posts
-classes: wide
-title:  "The Convex Hull Problem"
-author_profile: true
-tags:
-  - Algorithms
-  - Computational Geometry
-  - Data Structures
+title: The Convex Hull Problem
 ---
 
 The convex hull problem is a problem in computational geometry. It is about finding the smallest convex polygon that contains a given set of points. The convex hull problem has many applications in computer graphics, pattern recognition, and image processing. In this post, we will discuss some algorithms to solve the convex hull problem. 
-![Convex Hull](/assets/images/ConvexHull.png){: .align-center}{:height="50%" width="50%"}
+![Convex Hull](images/ConvexHull.png)
 
 ## 1. The brute force algorithm
 The brute force algorithm is the simplest algorithm to solve the convex hull problem. It works by checking all possible combinations of points to find the convex hull. The algorithm has a time complexity of O(n^3), where n is the number of points. The brute force algorithm is not practical for large datasets, but it is useful for small datasets to verify the correctness of other algorithms.
@@ -25,7 +18,7 @@ for every pair of points (i, j) in the set of points
 end for
 ```
 
-![Brute Force](/assets/images/convAnim.gif){: .align-center}{:height="50%" width="50%"}
+![Brute Force](images/convAnim.gif)
 
 ### 1.2 Lets move to the implementation
 
@@ -60,8 +53,8 @@ int crossProduct(Point a, Point b, Point c){
 ```
 **Explanation:** The cross product of two vectors a and b is defined as the determinant of the matrix formed by the coordinates of the two vectors. The cross product of two vectors a and b is positive if the angle between a and b is less than 180 degrees, negative if the angle is greater than 180 degrees, and zero if the angle is 180 degrees.
 <p float="left">
-<img src="/assets/images/cross.png" width="40%" />
-<img src="/assets/images/conv2.png" width="40%" />
+<img src="images/cross.png" width="40%" />
+<img src="images/conv2.png" width="40%" />
 </p>
 
 > The next step is to implement the brute force algorithm. The brute force algorithm will have a method called convexHull that takes a list of points as input and returns a map that represents the convex hull. The map will have the points of the convex hull as keys and the next point in the convex hull as values.
@@ -110,7 +103,7 @@ Map<Point, Point> convexHull(Point[] points) {
     return result;
 }
 ```
-**The full code with a graphical representation of the convex hull and a randomly generated set of points can be found [here](https://replit.com/@chebilkhalil/ConvexHull?v=1){:target="_blank"}.**
+**The full code with a graphical representation of the convex hull and a randomly generated set of points can be found [here](https://replit.com/@chebilkhalil/ConvexHull?v=1).**
 
 <!-- ## 2. The Divide and Conquer algorithm
 

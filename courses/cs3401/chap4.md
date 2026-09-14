@@ -12,5 +12,5 @@ title: 4. Decrease and conquer
 
 # Implementations
 
-## [Generating Subsets](https://chebil.github.io/subsets)
-## [Generating Permutations](https://chebil.github.io/permutations)
+## [Generating Subsets](subsets.md)
+## [Generating Permutations](permutations.md)
