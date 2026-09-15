@@ -1,0 +1,246 @@
+% ============================================================
+%  CS3401 – Algorithm Design and Analysis
+%  Shared Beamer Theme (input this file in every chapter)
+%  Prince Sattam Bin Abdulaziz University – CCES
+% ============================================================
+
+% ---------- PACKAGES ----------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[normalem]{ulem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{makecell}
+
+\usetikzlibrary{
+  arrows.meta, shapes.geometric, shapes.symbols,
+  positioning, calc, fit, backgrounds,
+  decorations.pathreplacing, decorations.markings,
+  matrix, chains, trees
+}
+\pgfplotsset{compat=1.18}
+
+% ---------- COLOR PALETTE -----------------------------------
+\definecolor{PrimaryDark}{RGB}{10,72,92}
+\definecolor{PrimaryMid}{RGB}{18,114,145}
+\definecolor{PrimaryLight}{RGB}{185,224,238}
+\definecolor{AccentOrange}{RGB}{210,103,22}
+\definecolor{AccentYellow}{RGB}{252,198,40}
+\definecolor{SuccessGreen}{RGB}{32,122,66}
+\definecolor{AlertRed}{RGB}{172,46,46}
+\definecolor{CodeBg}{RGB}{244,246,250}
+\definecolor{DarkText}{RGB}{28,32,40}
+\definecolor{LightRule}{RGB}{210,225,232}
+\tikzset{processstep/.style={draw=PrimaryMid, fill=PrimaryLight!35, rounded corners=2pt,
+  align=center, minimum width=4.2cm, minimum height=0.55cm, font=\small}}
+
+% ---------- BEAMER SETTINGS ---------------------------------
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+
+% Fonts
+\setbeamerfont{normal text}{size=\small}
+\setbeamerfont{title}{series=\bfseries,size=\LARGE}
+\setbeamerfont{subtitle}{series=\normalfont,size=\large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{framesubtitle}{series=\normalfont,size=\small}
+\setbeamerfont{block title}{series=\bfseries,size=\normalsize}
+\setbeamerfont{footline}{size=\tiny}
+\addtobeamertemplate{frame begin}{\small\enlargethispage{1cm}}{}
+\setlength{\tabcolsep}{2pt}
+
+% Colors
+\setbeamercolor{normal text}{fg=DarkText,bg=white}
+\setbeamercolor{frametitle}{bg=PrimaryDark,fg=white}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{subtitle}{fg=PrimaryLight}
+\setbeamercolor{author}{fg=white}
+\setbeamercolor{date}{fg=PrimaryLight}
+\setbeamercolor{institute}{fg=PrimaryLight}
+\setbeamercolor{block title}{bg=PrimaryMid,fg=white}
+\setbeamercolor{block body}{bg=PrimaryLight!35,fg=DarkText}
+\setbeamercolor{block title alerted}{bg=AlertRed,fg=white}
+\setbeamercolor{block body alerted}{bg=AlertRed!12,fg=DarkText}
+\setbeamercolor{block title example}{bg=SuccessGreen,fg=white}
+\setbeamercolor{block body example}{bg=SuccessGreen!12,fg=DarkText}
+\setbeamercolor{itemize item}{fg=PrimaryMid}
+\setbeamercolor{itemize subitem}{fg=AccentOrange}
+\setbeamercolor{enumerate item}{fg=PrimaryMid}
+\setbeamercolor{enumerate subitem}{fg=AccentOrange}
+\setbeamercolor{alerted text}{fg=AlertRed}
+\setbeamercolor{structure}{fg=PrimaryMid}
+\setbeamercolor{section in toc}{fg=PrimaryDark}
+\setbeamercolor{section in toc shaded}{fg=PrimaryDark}
+% override Beamer's transparency-based shading so TOC entries stay fully visible
+\setbeamertemplate{section in toc shaded}{\inserttocsection\par}
+\setbeamercolor{subsection in toc}{fg=PrimaryMid}
+\setbeamercolor{footer rule}{bg=LightRule}
+
+% Item symbols
+\setbeamertemplate{itemize item}{%
+  \scriptsize\raise1.5pt\hbox{\color{PrimaryMid}$\blacktriangleright$}}
+\setbeamertemplate{itemize subitem}{%
+  \scriptsize\raise1pt\hbox{\color{AccentOrange}$\bullet$}}
+\setbeamertemplate{itemize subsubitem}{%
+  \scriptsize\raise1pt\hbox{\color{PrimaryDark}$\circ$}}
+\setbeamertemplate{enumerate item}{%
+  \color{PrimaryMid}\textbf{\insertenumlabel.}}
+
+% Frame title
+\makeatletter
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.4em,dp=0.9em,%
+                         leftskip=1.2em,rightskip=1.2em]{frametitle}
+    \usebeamerfont{frametitle}\insertframetitle\strut
+    \ifx\insertframesubtitle\@empty\else
+      \hspace{0.6em}\textcolor{PrimaryLight!80}{\footnotesize|}\hspace{0.4em}%
+      {\usebeamerfont{framesubtitle}\textcolor{PrimaryLight}\insertframesubtitle}%
+    \fi
+  \end{beamercolorbox}
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.3pt,dp=0pt]{structure}
+  \end{beamercolorbox}
+}
+\makeatother
+
+% Footer
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.4pt,dp=0pt]{footer rule}{}
+  \end{beamercolorbox}
+  \leavevmode
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.60\paperwidth,ht=1.8em,dp=0.6em,leftskip=1em]{normal text}%
+      \textcolor{PrimaryDark}{\tiny\textbf{CS3401} \textendash{} Algorithm Design \& Analysis%
+        \quad\textbar\quad CCES, PSAU}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.40\paperwidth,ht=1.8em,dp=0.6em,rightskip=1em,right]{normal text}%
+      \textcolor{PrimaryDark}{\tiny\insertshorttitle%
+        \quad\textbar\quad\insertframenumber\,/\,\inserttotalframenumber}%
+    \end{beamercolorbox}%
+  }%
+}
+
+% Title page
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.45]
+      ([shift={(2.5cm,-2.5cm)}]current page.north east) circle(5.5cm);
+    \fill[AccentOrange,opacity=0.10]
+      ([shift={(-1.5cm,2.0cm)}]current page.south west) circle(4.2cm);
+    \draw[white,opacity=0.08,line width=40pt]
+      ([shift={(0cm,-0.5cm)}]current page.north west)
+      to[out=-30,in=210]
+      ([shift={(0cm,0.5cm)}]current page.south east);
+  \end{tikzpicture}%
+  \vspace{0.7cm}
+  \begin{center}
+    {\tiny\textcolor{PrimaryLight}{\textbf{CCES} \textendash{}
+      College of Computer Engineering and Sciences}}\\[0.2em]
+    {\tiny\textcolor{PrimaryLight}{Prince Sattam Bin Abdulaziz University}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{\textbf{CS3401 \textendash{} Algorithm Design and Analysis}}}\\[1.5em]
+    \textcolor{PrimaryMid}{\rule{0.55\textwidth}{0.6pt}}\\[0.9em]
+    {\Large\usebeamerfont{title}\textcolor{white}{\inserttitle}}\\[0.4em]
+    {\small\usebeamerfont{subtitle}\textcolor{PrimaryLight}{\insertsubtitle}}\\[0.7em]
+    \textcolor{PrimaryMid}{\rule{0.55\textwidth}{0.6pt}}\\[1.2em]
+    {\footnotesize\textcolor{PrimaryLight}{\insertdate}}
+  \end{center}%
+}
+
+% Auto section-divider slide
+\AtBeginSection[]{%
+  \begin{frame}[plain,noframenumbering]
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+      \fill[PrimaryMid,opacity=0.35]
+        ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+      \node[text=white,opacity=0.06,font=\fontsize{120}{120}\bfseries]
+        at ([shift={(-1cm,0cm)}]current page.center)
+        {\insertsectionnumber};
+    \end{tikzpicture}
+    \vfill
+    \begin{center}
+      {\large\textcolor{AccentYellow}{\textbf{Section \insertsectionnumber}}}\\[0.6em]
+      {\LARGE\textcolor{white}{\textbf{\insertsectionhead}}}
+    \end{center}
+    \vfill
+  \end{frame}%
+}
+
+% ---------- LISTINGS STYLE ----------------------------------
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{CodeBg},
+  keywordstyle=\color{PrimaryMid}\bfseries,
+  commentstyle=\color{SuccessGreen}\itshape,
+  stringstyle=\color{AccentOrange},
+  numberstyle=\tiny\color{gray!70},
+  frame=tb,
+  framerule=0.5pt,
+  rulecolor=\color{PrimaryLight},
+  numbers=left,
+  numbersep=6pt,
+  showstringspaces=false,
+  breaklines=true,
+  tabsize=2,
+  xleftmargin=1.8em,
+  framexleftmargin=1.8em,
+  captionpos=b,
+  language=Java,
+  morekeywords={var,let,const}
+}
+
+% ---------- PSEUDOCODE STYLE --------------------------------
+\algrenewcommand\algorithmicprocedure{\textbf{Algorithm}}
+\algrenewcommand\algorithmicfunction{\textbf{Function}}
+\algrenewcommand\algorithmicif{\textbf{if}}
+\algrenewcommand\algorithmicelse{\textbf{else}}
+\algrenewcommand\algorithmicthen{\textbf{then}}
+\algrenewcommand\algorithmicwhile{\textbf{while}}
+\algrenewcommand\algorithmicfor{\textbf{for}}
+\algrenewcommand\algorithmicforall{\textbf{for all}}
+\algrenewcommand\algorithmicreturn{\textbf{return}}
+\algrenewcommand\algorithmicend{\textbf{end}}
+\algrenewcommand\algorithmicdo{}
+\algrenewcommand\algorithmicrequire{\textbf{Input:}}
+\algrenewcommand\algorithmicensure{\textbf{Output:}}
+
+% ---------- CUSTOM COMMANDS ---------------------------------
+\newcommand{\bigO}[1]{$\mathcal{O}(#1)$}
+\newcommand{\bigTheta}[1]{$\Theta(#1)$}
+\newcommand{\bigOmega}[1]{$\Omega(#1)$}
+\newcommand{\highlight}[1]{\colorbox{AccentYellow!55}{\strut #1}}
+\newcommand{\important}[1]{\textcolor{AlertRed}{\bfseries #1}}
+\newcommand{\keyword}[1]{\textcolor{PrimaryMid}{\bfseries #1}}
+\newcommand{\concept}[1]{\textcolor{AccentOrange}{\bfseries #1}}
+
+% Colored table column types
+\newcolumntype{H}{>{\columncolor{PrimaryDark}\color{white}\bfseries\centering\arraybackslash}m{2.5cm}}
+\newcolumntype{Z}{>{\columncolor{PrimaryLight!40}\centering\arraybackslash}m{2cm}}
+
+% Reference boxes
+\newcommand{\refbox}[1]{%
+  \begin{beamercolorbox}[rounded=true,shadow=false,leftskip=0.5em,rightskip=0.5em,%
+                          ht=1.6em,dp=0.5em]{block title}
+    \small\textit{Reference:} #1
+  \end{beamercolorbox}%
+}
+
+% Inline complexity tag
+\newcommand{\ctag}[1]{%
+  \hfill\tikz[baseline]{\node[fill=AlertRed,text=white,rounded corners=2pt,
+    font=\bfseries\scriptsize,inner sep=2pt,outer sep=0pt]{$\mathcal{O}(#1)$};}%
+}

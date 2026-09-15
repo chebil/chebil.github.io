@@ -1,0 +1,428 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 8 — Experiments
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+\title[Ch.\,8 — Experiments]{Experiments}
+\subtitle{Chapter 8 — One-Way ANOVA, Two-Way ANOVA, and Experimental Design}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-4}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={5-7}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Explain why comparing many groups needs \keyword{ANOVA}, not repeated $t$-tests
+      \item Partition variance and compute the \keyword{$F$-statistic} for one- and two-way designs
+      \item Interpret \keyword{interactions} between two factors
+      \item Apply the \keyword{three R's} of experimental design
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Why ANOVA?}
+% ============================================================
+
+\begin{frame}{The Problem with Multiple $t$-Tests}{Comparing 5 groups needs 10 pairwise tests}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The multiple testing problem}
+        \small With $k$ groups, pairwise $t$-tests require
+        $\binom{k}{2}$ comparisons — each at risk of a false positive.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The solution: ANOVA}
+        \small \keyword{Analysis of Variance} tests \emph{all} groups at
+        once with a single $F$-test: "are any of the means different?"
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{One-Way ANOVA}
+% ============================================================
+
+\begin{frame}{The One-Way ANOVA Model}{One factor, $k$ groups}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Hypotheses}
+        \[ H_0: \mu_1=\mu_2=\cdots=\mu_k \]
+        \[ H_1: \text{at least one } \mu_i \text{ differs} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Example}
+        \small Compare crop yield under $k=4$ fertilizers — one factor
+        (fertilizer type), four levels.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Partitioning Variance}{The core idea behind every ANOVA}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The key relationship}
+        \[ SS_{\text{total}} = SS_{\text{between}} + SS_{\text{within}} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Between vs.\ within}
+        \small
+        \begin{itemize}
+          \item $SS_{\text{between}}$: groups differ from the grand mean
+          \item $SS_{\text{within}}$: individuals differ from their group mean
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \centering
+  \begin{tikzpicture}
+    \draw[PrimaryDark, thick, fill=PrimaryLight!30] (0,0) rectangle (10,0.9)
+      node[midway, font=\small] {$SS_{\text{total}}$};
+    \draw[-{Latex[length=2mm]}, PrimaryMid, thick] (5,-0.1) -- (2.5,-0.9);
+    \draw[-{Latex[length=2mm]}, PrimaryMid, thick] (5,-0.1) -- (7.5,-0.9);
+    \node[draw=PrimaryMid, fill=PrimaryLight!50, rounded corners=2pt, font=\small] at (2.5,-1.4) {$SS_{\text{between}}$};
+    \node[draw=PrimaryMid, fill=AccentYellow!35, rounded corners=2pt, font=\small] at (7.5,-1.4) {$SS_{\text{within}}$};
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{The $F$-Statistic}{Signal (between) vs.\ noise (within)}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Mean squares}
+        \[ MS_B = \frac{SS_B}{k-1}, \qquad MS_W = \frac{SS_W}{N-k} \]
+      \end{block}
+      \begin{exampleblock}{Test statistic}
+        \[ F = \frac{MS_B}{MS_W} \sim F_{k-1,\,N-k} \]
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Logic}
+        \small If $H_0$ is true, between- and within-group variation should
+        be similar ($F\approx 1$). A large $F$ means groups differ more
+        than chance alone would predict.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The ANOVA Table}{The standard summary format}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabular}{@{}lccccc@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Source} & \textcolor{white}{SS} & \textcolor{white}{df} &
+    \textcolor{white}{MS} & \textcolor{white}{$F$} & \textcolor{white}{$p$} \\
+    \midrule
+    Between groups & $SS_B$ & $k-1$ & $SS_B/(k-1)$ & $MS_B/MS_W$ & -- \\
+    \rowcolor{PrimaryLight!25}
+    Within groups & $SS_W$ & $N-k$ & $SS_W/(N-k)$ & & \\
+    Total & $SS_T$ & $N-1$ & & & \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Post-Hoc Tests \& Assumptions}
+% ============================================================
+
+\begin{frame}{Post-Hoc Tests: Which Groups Differ?}{A significant $F$ doesn't say \emph{which} pair}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The problem}
+        \small ANOVA's $F$-test only tells you \emph{some} group differs —
+        not which one(s).
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Tukey's HSD}
+        \small \keyword{Honestly Significant Difference} — compares all
+        pairs while controlling the overall (family-wise) error rate.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Assumptions and Effect Size}{Checking the model, measuring what matters}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Three key assumptions}
+        \small
+        \begin{itemize}
+          \item Independent observations
+          \item Approximately normal residuals within each group
+          \item Equal variance across groups (\keyword{homogeneity})
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Eta-squared $\eta^2$}
+        \[ \eta^2 = \frac{SS_B}{SS_T} \]
+        \small The fraction of total variance explained by group
+        membership — the ANOVA analogue of $R^2$.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Two-Way ANOVA}
+% ============================================================
+
+\begin{frame}{Beyond One Factor}{Two-way ANOVA: two factors at once}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The model}
+        \[ Y_{ij} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ij} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Three hypotheses tested at once}
+        \small
+        \begin{itemize}
+          \item Main effect of factor $A$
+          \item Main effect of factor $B$
+          \item \keyword{Interaction} between $A$ and $B$
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{alertblock}{Why not run two separate one-way ANOVAs?}
+    \small A single two-way design is more efficient \emph{and} it's the
+    only way to detect an interaction between the factors.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Understanding Interactions}{Do the factors' effects depend on each other?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=5.8cm, height=4cm, xlabel={\scriptsize Watering level},
+          ylabel={\scriptsize Yield}, xtick={1,2}, xticklabels={Low,High},
+          tick label style={font=\scriptsize}, axis lines=left,
+          legend style={font=\tiny}]
+          \addplot[PrimaryMid, thick, mark=*] coordinates {(1,3)(2,6)};
+          \addplot[AccentOrange, thick, mark=*, dashed] coordinates {(1,5)(2,8)};
+          \legend{Fert.\ A, Fert.\ B}
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Parallel lines: \textbf{no interaction}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=5.8cm, height=4cm, xlabel={\scriptsize Watering level},
+          ylabel={\scriptsize Yield}, xtick={1,2}, xticklabels={Low,High},
+          tick label style={font=\scriptsize}, axis lines=left,
+          legend style={font=\tiny}]
+          \addplot[PrimaryMid, thick, mark=*] coordinates {(1,7)(2,4)};
+          \addplot[AccentOrange, thick, mark=*, dashed] coordinates {(1,3)(2,8)};
+          \legend{Fert.\ A, Fert.\ B}
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Crossing lines: \textbf{interaction present}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Interactions \& Effect Sizes}
+% ============================================================
+
+\begin{frame}{Interpreting an Interaction}{Read the interaction before the main effects}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Rule of thumb}
+        \small If the interaction is significant, interpret main effects
+        \emph{cautiously} — the effect of one factor depends on the level
+        of the other.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Simple effects analysis}
+        \small Follow up by examining the effect of one factor
+        \emph{separately at each level} of the other.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Balanced Designs \& Partial $\eta^2$}{Keeping the analysis clean}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Balanced design}
+        \small Equal sample size in every cell of the factor combination —
+        simplifies the sum-of-squares decomposition and is easier to
+        interpret.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Partial eta-squared}
+        \[ \eta_p^2 = \frac{SS_{\text{effect}}}{SS_{\text{effect}}+SS_{\text{error}}} \]
+        \small Effect size for one term, controlling for the others.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Experimental Design Principles}
+% ============================================================
+
+\begin{frame}{The Three R's of Experimental Design}{The foundation of trustworthy experiments}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Principle} & \textcolor{white}{Purpose} \\
+    \midrule
+    Randomization & Spread unknown confounds evenly across groups \\
+    \rowcolor{PrimaryLight!25}
+    Replication & Estimate and shrink the effect of random noise \\
+    Blocking & Remove the effect of a known nuisance variable \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{alertblock}{Without randomization}
+    \small Any systematic difference between groups (e.g.\ assigning
+    healthier patients to the new drug) will bias the result.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Blocking: The Randomized Complete Block Design}{Controlling a known source of variation}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The idea}
+        \small Group experimental units into \keyword{blocks} that are
+        similar (e.g.\ by field, by day), then randomize treatments
+        \emph{within} each block.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Why it helps}
+        \small Removes block-to-block variation from the error term,
+        making real treatment effects easier to detect.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Common Experimental Designs}{Matching design to structure}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Design} & \textcolor{white}{When to use} \\
+    \midrule
+    Completely randomized (CRD) & No known nuisance factor \\
+    \rowcolor{PrimaryLight!25}
+    Randomized complete block (RCBD) & One known nuisance factor \\
+    Latin square & Two nuisance factors, limited runs \\
+    \rowcolor{PrimaryLight!25}
+    Factorial & Studying two or more factors (and interactions) together \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{The Golden Rules}{Before you experiment}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Before you experiment}
+        \small
+        \begin{itemize}
+          \item Define hypotheses and effect size of interest in advance
+          \item Randomize treatment assignment
+          \item Plan enough replication for adequate power
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Common mistakes}
+        \small Confounding a treatment with time or location; too few
+        replicates; ignoring a known blocking variable.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Compare many groups}
+        \small ANOVA partitions variance into between- and within-group
+        components and tests with a single $F$-statistic.
+      \end{block}
+      \begin{exampleblock}{Two factors}
+        \small Two-way ANOVA adds \keyword{interactions} — the effect of
+        one factor can depend on another.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Design matters}
+        \small Randomization, replication, and blocking make the
+        \emph{analysis} trustworthy in the first place.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Ch.\,9: \keyword{inferring} the parameters of probability
+        models themselves — MLE and Bayesian inference.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 9 — Inferring Probability Models}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

@@ -1,0 +1,479 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 5 — Useful Probability Distributions
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+\title[Ch.\,5 — Distributions]{Useful Probability Distributions}
+\subtitle{Chapter 5 — Discrete, Continuous, Normal, and Approximations}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-4}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={5-8}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Recognize when to use each \keyword{named distribution}
+      \item Know the \keyword{mean} and \keyword{variance} formula for each
+      \item Understand the \keyword{normal distribution} and the $68$--$95$--$99.7$ rule
+      \item Apply the \keyword{normal approximation} to the binomial, with continuity correction
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Discrete Distributions I}
+% ============================================================
+
+\begin{frame}{Discrete Uniform \& Bernoulli}{The two simplest building blocks}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Discrete uniform (Def.\ 5.1)}
+        \small $X\in\{a,\dots,b\}$, each equally likely:
+        \[ P(X=k) = \frac{1}{b-a+1}, \quad E[X]=\frac{a+b}{2} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Bernoulli (Def.\ 5.2)}
+        \small One trial, success probability $p$:
+        \[ P(X=1)=p,\ P(X=0)=1-p \]
+        \[ E[X]=p, \quad \text{var}(X)=p(1-p) \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[ybar, bar width=0.5cm, width=8cm, height=3cm,
+      xtick=data, tick label style={font=\scriptsize}, axis lines=left, ymin=0]
+      \addplot[fill=PrimaryMid] coordinates {(0,0.3) (1,0.7)};
+    \end{axis}
+  \end{tikzpicture}\\
+  \scriptsize Bernoulli($p{=}0.7$) PMF
+  \end{center}
+\end{frame}
+
+\begin{frame}{The Geometric Distribution}{Waiting for the first success}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Definition 5.3}
+        \small Number of trials until (and including) the first success:
+        \[ P(X=k) = (1-p)^{k-1}p, \; k=1,2,\dots \]
+        \[ E[X] = \frac{1}{p}, \quad \text{var}(X)=\frac{1-p}{p^2} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[ybar, bar width=0.32cm, width=6.6cm, height=4.2cm,
+          xtick=data, tick label style={font=\scriptsize}, axis lines=left, ymin=0]
+          \addplot[fill=PrimaryMid] coordinates
+            {(1,0.3)(2,0.21)(3,0.147)(4,0.103)(5,0.072)(6,0.050)(7,0.035)(8,0.025)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Geometric($p{=}0.3$): probability first success is on trial $k$
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Discrete Distributions II}
+% ============================================================
+
+\begin{frame}{The Binomial Distribution}{Counting successes in $n$ independent trials}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Definition 5.4}
+        \[ P(X=k) = \binom{n}{k}p^k(1-p)^{n-k} \]
+        \[ E[X]=np, \quad \text{var}(X)=np(1-p) \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[ybar, bar width=0.32cm, width=6.6cm, height=4.2cm,
+          xtick=data, tick label style={font=\scriptsize}, axis lines=left, ymin=0]
+          \addplot[fill=PrimaryMid] coordinates
+            {(0,0.001)(1,0.010)(2,0.044)(3,0.117)(4,0.205)(5,0.246)
+             (6,0.205)(7,0.117)(8,0.044)(9,0.010)(10,0.001)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Binomial($n{=}10,p{=}0.5$)
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Multinomial \& Poisson}{More than two categories; counting rare events}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Multinomial (Def.\ 5.5)}
+        \small $n$ trials, $k$ outcome categories with probabilities
+        $p_1,\dots,p_k$:
+        \[ P(n_1,\dots,n_k) = \frac{n!}{n_1!\cdots n_k!}\,p_1^{n_1}\cdots p_k^{n_k} \]
+        \scriptsize e.g.\ counting outcomes over many die rolls.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Poisson (Def.\ 5.6)}
+        \small Counts of rare events in a fixed interval, rate $\lambda$:
+        \[ P(X=k) = \frac{\lambda^k e^{-\lambda}}{k!}, \quad E[X]=\text{var}(X)=\lambda \]
+        \scriptsize e.g.\ server requests per second, typos per page.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Continuous Distributions I}
+% ============================================================
+
+\begin{frame}{The Continuous Uniform Distribution}{Equal density everywhere on an interval}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 5.7}
+        \[ f(x) = \frac{1}{b-a}, \; x\in[a,b] \]
+        \[ E[X] = \frac{a+b}{2}, \quad \text{var}(X) = \frac{(b-a)^2}{12} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.2cm, height=3.6cm, domain=0:5, samples=2,
+          tick label style={font=\scriptsize}, axis lines=left, ymin=0, ymax=0.35]
+          \addplot[PrimaryMid, thick, fill=PrimaryLight!40] coordinates {(1,0.25)(4,0.25)} \closedcycle;
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Exponential Distribution}{Waiting time between rare events}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 5.10}
+        \[ f(x) = \lambda e^{-\lambda x}, \; x\ge 0, \quad E[X]=\frac1\lambda \]
+      \end{block}
+      \begin{alertblock}{Memoryless property}
+        \small \[ P(X > s+t \mid X > s) = P(X>t) \]
+        \small The past wait length does not matter.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.2cm, height=4.2cm, domain=0:5, samples=50,
+          xlabel={\scriptsize $x$}, ylabel={\scriptsize $f(x)$},
+          tick label style={font=\scriptsize}, axis lines=left,
+          legend style={font=\tiny}]
+          \addplot[PrimaryMid, thick] {1*exp(-1*x)};
+          \addplot[AccentOrange, thick, dashed] {0.5*exp(-0.5*x)};
+          \legend{$\lambda{=}1$,$\lambda{=}0.5$}
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Continuous Distributions II}
+% ============================================================
+
+\begin{frame}{The Gamma Distribution}{Waiting for the $\alpha$-th event}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 5.9}
+        \[ f(x) = \frac{\beta^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\beta x}, \; x>0 \]
+        \[ E[X]=\frac{\alpha}{\beta}, \quad \text{var}(X)=\frac{\alpha}{\beta^2} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Sum of exponentials}
+        \small The sum of $\alpha$ iid $\text{Exp}(\beta)$ variables is
+        $\text{Gamma}(\alpha,\beta)$ — generalizes the exponential.
+      \end{exampleblock}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=5.6cm, height=3.2cm, domain=0.01:10, samples=50,
+          tick label style={font=\scriptsize}, axis lines=left,
+          legend style={font=\tiny}]
+          \addplot[PrimaryMid, thick] {x^1*exp(-x)};
+          \addplot[AccentOrange, thick, dashed] {(x^3*exp(-x))/6};
+          \legend{$\alpha{=}2$,$\alpha{=}4$}
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Beta Distribution}{Modeling a probability itself, on $[0,1]$}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 5.8}
+        \[ f(x) = \frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha,\beta)}, \; x\in[0,1] \]
+        \[ E[X]=\frac{\alpha}{\alpha+\beta} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Why it matters}
+        \small Natural prior/posterior for an unknown probability $p$
+        (e.g.\ a coin's bias) — central to \keyword{Bayesian inference}
+        in Chapter 9.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=8.5cm, height=2.9cm, domain=0.001:0.999, samples=60,
+      tick label style={font=\scriptsize}, axis lines=left,
+      legend style={font=\tiny}, legend columns=3]
+      \addplot[PrimaryMid, thick] {x^1*(1-x)^1/0.1667};
+      \addplot[AccentOrange, thick, dashed] {x^4*(1-x)^4/0.0016};
+      \addplot[SuccessGreen, thick, dotted] {x^0.5*(1-x)^0.5/1.5708};
+      \legend{$\alpha{=}\beta{=}2$,$\alpha{=}\beta{=}5$,$\alpha{=}\beta{=}0.5$}
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+% ============================================================
+\section{The Normal Distribution}
+% ============================================================
+
+\begin{frame}{Why the Normal Distribution Matters}{The most important distribution in statistics}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}\small
+        \item Arises naturally as a sum of many small effects
+        \item Fully described by just $\mu$ and $\sigma$
+        \item Foundation of confidence intervals and hypothesis tests
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 5.12}
+        \[ f(x) = \frac{1}{\sigma\sqrt{2\pi}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \]
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Standard Normal \& Standardization}{Every normal is a shifted, scaled standard normal}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 5.11: $Z \sim N(0,1)$}
+        \[ \phi(z) = \frac{1}{\sqrt{2\pi}}e^{-z^2/2} \]
+      \end{block}
+      \begin{exampleblock}{Standardization}
+        \small If $X\sim N(\mu,\sigma^2)$, then $Z=\dfrac{X-\mu}{\sigma}\sim N(0,1)$.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.4cm, height=4.2cm, domain=-4:4, samples=60,
+          tick label style={font=\scriptsize}, axis lines=left,
+          legend style={font=\tiny}]
+          \addplot[PrimaryMid, thick] {exp(-x^2/2)/sqrt(2*pi)};
+          \addplot[AccentOrange, thick, dashed] {exp(-(x-1)^2/(2*2^2))/(2*sqrt(2*pi))};
+          \legend{{$N(0,1)$},{$N(1,4)$}}
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Properties of the Normal}
+% ============================================================
+
+\begin{frame}{The $68$--$95$--$99.7$ Rule}{Almost all the probability lies within 3 std.\ devs.}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \small
+      \begin{itemize}
+        \item $\approx 68\%$ within $\mu \pm 1\sigma$
+        \item $\approx 95\%$ within $\mu \pm 2\sigma$
+        \item $\approx 99.7\%$ within $\mu \pm 3\sigma$
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.6cm, height=4.2cm, domain=-3.5:3.5, samples=60,
+          xtick={-3,-2,-1,0,1,2,3}, tick label style={font=\scriptsize},
+          axis lines=left, ymin=0]
+          \addplot[PrimaryLight!60, fill=PrimaryLight!60, domain=-1:1] {exp(-x^2/2)/sqrt(2*pi)} \closedcycle;
+          \addplot[PrimaryMid, thick, domain=-3.5:3.5] {exp(-x^2/2)/sqrt(2*pi)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Shaded: $\pm 1\sigma \approx 68\%$
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Central Limit Theorem (Informal)}{Why the normal shows up everywhere}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Informal statement}
+        \small The sum (or mean) of many independent random variables —
+        \emph{regardless of their own distribution} — is approximately
+        \keyword{normal} for large $n$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Why it matters}
+        \small Justifies using the normal distribution to approximate
+        binomials, sample means, and measurement errors.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Normal Approximation to the Binomial}
+% ============================================================
+
+\begin{frame}{When Can We Approximate?}{A rule of thumb for large $n$}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Rule of thumb}
+        \small Use $X\sim\text{Bin}(n,p) \approx N(np,\, np(1-p))$ when
+        \[ np \ge 5 \quad \text{and} \quad n(1-p) \ge 5 \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[ybar, bar width=0.22cm, width=6.4cm, height=4.2cm,
+          tick label style={font=\scriptsize}, axis lines=left, ymin=0]
+          \addplot[fill=PrimaryLight!60, draw=PrimaryMid] coordinates
+            {(30,0.02)(35,0.05)(40,0.09)(45,0.12)(50,0.13)(55,0.12)(60,0.09)(65,0.05)(70,0.02)};
+          \addplot[AlertRed, thick, domain=25:75, samples=60] {0.13*exp(-((x-50)^2)/(2*10^2*1))};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Binomial bars vs.\ normal curve overlay
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Continuity Correction}{Bridging discrete steps with a continuous curve}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The issue}
+        \small $X$ is discrete (integer steps); the normal approximation
+        is continuous — naive substitution loses accuracy at boundaries.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The fix}
+        \small Treat $P(X\le k)$ as $P(X \le k+0.5)$ under the normal curve:
+        \[ P(X\le k) \approx \Phi\!\left(\frac{k+0.5-np}{\sqrt{np(1-p)}}\right) \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Worked Example}{100 fair coin flips: at most 45 heads?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small $n=100$, $p=0.5$: $np=50$, $\sqrt{np(1-p)}=5$.
+      \footnotesize
+      \[ P(X\le45) \approx \Phi\!\left(\frac{45.5-50}{5}\right) = \Phi(-0.9) \approx 0.184 \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{When the approximation fails}
+        \small For small $n$ or extreme $p$ (e.g.\ $p=0.01$, $n=20$), $np<5$
+        — use the exact binomial or Poisson approximation instead.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Distribution Cheat Sheet}{Mean and variance at a glance}
+  \small
+  \renewcommand{\arraystretch}{1.25}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X cc@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Distribution} & \textcolor{white}{Use case} &
+    \textcolor{white}{Mean} & \textcolor{white}{Variance} \\
+    \midrule
+    Bernoulli($p$) & Single yes/no trial & $p$ & $p(1-p)$ \\
+    \rowcolor{PrimaryLight!25}
+    Binomial($n,p$) & \# successes in $n$ trials & $np$ & $np(1-p)$ \\
+    Geometric($p$) & Trials to first success & $1/p$ & $(1-p)/p^2$ \\
+    \rowcolor{PrimaryLight!25}
+    Poisson($\lambda$) & Rare events per interval & $\lambda$ & $\lambda$ \\
+    Exponential($\lambda$) & Waiting time & $1/\lambda$ & $1/\lambda^2$ \\
+    \rowcolor{PrimaryLight!25}
+    Normal($\mu,\sigma^2$) & Sums of many effects & $\mu$ & $\sigma^2$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Discrete world}
+        \small Bernoulli $\to$ Binomial (repeats), Geometric (waiting),
+        Poisson (rare counts).
+      \end{block}
+      \begin{exampleblock}{Continuous world}
+        \small Uniform, Exponential (memoryless), Gamma, Beta — and above
+        all, the \keyword{Normal}.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The bridge}
+        \small The normal approximates the binomial for large $n$ — always
+        apply the \keyword{continuity correction}.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Part III: using samples to \keyword{infer} the parameters of
+        these distributions.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 6 — Samples and Populations}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

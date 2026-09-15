@@ -1,0 +1,424 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 9 — Inferring Probability Models
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+\title[Ch.\,9 — Inferring Models]{Inferring Probability Models}
+\subtitle{Chapter 9 — Maximum Likelihood and Bayesian Inference}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-4}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={5-8}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Derive and compute the \keyword{maximum likelihood estimator}
+      \item Apply \keyword{Bayes' theorem} to update beliefs about parameters
+      \item Use \keyword{conjugate priors} for closed-form posteriors
+      \item Compare \keyword{MAP} and MLE, and see Bayesian methods in practice
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Maximum Likelihood Estimation}
+% ============================================================
+
+\begin{frame}{The Core Idea}{Pick the parameter that makes the data most probable}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The likelihood function}
+        \small For iid data $x_1,\dots,x_n$:
+        \[ L(\theta) = \prod_{i=1}^n f(x_i;\theta) \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Log-likelihood}
+        \small Sums are easier than products:
+        \[ \ell(\theta) = \sum_{i=1}^n \log f(x_i;\theta) \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{The MLE}
+    \[ \hat\theta_{\text{MLE}} = \arg\max_\theta \ell(\theta) \]
+  \end{block}
+\end{frame}
+
+\begin{frame}{MLE for the Bernoulli}{The sample proportion, derived from first principles}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small $\ell(p) = \sum_i \big[x_i\log p + (1-x_i)\log(1-p)\big]$.
+      Setting $\ell'(p)=0$:
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Result}
+        \[ \hat p_{\text{MLE}} = \frac{1}{n}\sum_i x_i = \bar x \]
+        \small The MLE for a coin's bias is simply the observed fraction of
+        heads.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{MLE for the Normal and the Poisson}{The same recipe, two more distributions}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Model} & \textcolor{white}{MLE} \\
+    \midrule
+    Normal($\mu,\sigma^2$) & $\hat\mu=\bar x, \quad \hat\sigma^2 = \frac1n\sum_i(x_i-\bar x)^2$ \\
+    \rowcolor{PrimaryLight!25}
+    Poisson($\lambda$) & $\hat\lambda = \bar x$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{exampleblock}{Pattern}
+    \small In each case the MLE is a familiar sample statistic — MLE
+    \emph{justifies} using the sample mean/proportion, it doesn't just
+    assume it.
+  \end{exampleblock}
+\end{frame}
+
+% ============================================================
+\section{Properties of MLEs}
+% ============================================================
+
+\begin{frame}{Four Properties Worth Knowing}{Why statisticians trust the MLE}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Property} & \textcolor{white}{Meaning} \\
+    \midrule
+    Consistency & $\hat\theta \to \theta$ as $n\to\infty$ \\
+    \rowcolor{PrimaryLight!25}
+    Asymptotic normality & $\hat\theta$ is approximately normal for large $n$ \\
+    Efficiency & Achieves the lowest possible variance asymptotically \\
+    \rowcolor{PrimaryLight!25}
+    Invariance & MLE of $g(\theta)$ is $g(\hat\theta)$, for any function $g$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{exampleblock}{Confidence intervals from the MLE}
+    \small Asymptotic normality gives $\hat\theta \pm z^\ast/\sqrt{I(\theta)}$,
+    using the Fisher information $I(\theta)$.
+  \end{exampleblock}
+\end{frame}
+
+% ============================================================
+\section{Bayesian Inference: The Big Idea}
+% ============================================================
+
+\begin{frame}{The Bayesian Philosophy}{Treat the parameter itself as uncertain}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{MLE's view}
+        \small $\theta$ is a fixed, unknown constant — we produce a single
+        best guess.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Bayesian view}
+        \small $\theta$ has a \keyword{probability distribution}
+        reflecting our uncertainty, updated as data arrives.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Bayes' theorem for parameters}
+    \[ p(\theta \mid \text{data}) = \frac{p(\text{data}\mid\theta)\,p(\theta)}{p(\text{data})}
+       \;\propto\; \underbrace{p(\text{data}\mid\theta)}_{\text{likelihood}}\;\underbrace{p(\theta)}_{\text{prior}} \]
+  \end{block}
+\end{frame}
+
+\begin{frame}{Worked Example: Coin Flipping}{Beta prior meets Bernoulli data}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small Prior: $p \sim \text{Beta}(\alpha,\beta)$. Observe $k$ heads in
+      $n$ flips.
+      \[ \text{posterior} \propto p^k(1-p)^{n-k}\cdot p^{\alpha-1}(1-p)^{\beta-1} \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Result}
+        \[ p \mid \text{data} \sim \text{Beta}(\alpha+k,\; \beta+n-k) \]
+        \small Still a Beta — the posterior stays in the same family as the
+        prior.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=9cm, height=3.4cm, domain=0.001:0.999, samples=60,
+      tick label style={font=\scriptsize}, axis lines=left, ymin=0, ymax=6.5,
+      legend style={font=\tiny}, legend columns=3, legend pos=north west]
+      \addplot[PrimaryMid, thick] {x^1*(1-x)^1/0.166667};
+      \addplot[AccentOrange, thick, dashed] {x^8*(1-x)^4/0.0001554};
+      \addplot[AlertRed, thick, dotted] {x^29*(1-x)^13/9.1132e-13};
+      \legend{{Prior},{10 flips},{40 flips}}
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+% ============================================================
+\section{Credible Intervals \& Sequential Updating}
+% ============================================================
+
+\begin{frame}{Credible Intervals}{A direct probability statement}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \small A range $[a,b]$ such that
+        \[ P(a \le \theta \le b \mid \text{data}) = 0.95 \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{vs.\ confidence intervals}
+        \small A credible interval \emph{does} mean "95\% probability
+        $\theta$ is in here" — the interpretation frequentist CIs lack.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Sequential Updating}{Today's posterior is tomorrow's prior}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Bayesian learning}
+        \small After observing batch 1, the posterior becomes the prior
+        for batch 2 — beliefs update smoothly as evidence accumulates.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Posterior predictive}
+        \small Probability the \emph{next} flip is heads, averaging over
+        our uncertainty in $p$:
+        \[ P(\text{next}=H\mid\text{data}) = \frac{\alpha+k}{\alpha+\beta+n} \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Conjugate Priors}
+% ============================================================
+
+\begin{frame}{Conjugate Priors}{When the posterior stays in the prior's family}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Likelihood} & \textcolor{white}{Conjugate prior} & \textcolor{white}{Posterior} \\
+    \midrule
+    Binomial($n,p$) & Beta($\alpha,\beta$) & Beta($\alpha+k,\,\beta+n-k$) \\
+    \rowcolor{PrimaryLight!25}
+    Poisson($\lambda$) & Gamma($\alpha,\beta$) & Gamma($\alpha+\sum x_i,\,\beta+n$) \\
+    Normal (known $\sigma^2$) & Normal($\mu_0,\tau_0^2$) & Normal (precision-weighted) \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{alertblock}{Why it matters}
+    \small Conjugacy gives a \keyword{closed-form} posterior — no numerical
+    integration required.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Normal--Normal: A Precision-Weighted Average}{Combining prior belief with data}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small Prior $N(\mu_0,\tau_0^2)$, data mean $\bar x$ from $n$ points
+      with known $\sigma^2$:
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Posterior mean}
+        \[ \mu_n = \frac{\frac{\mu_0}{\tau_0^2} + \frac{n\bar x}{\sigma^2}}
+                        {\frac{1}{\tau_0^2} + \frac{n}{\sigma^2}} \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Interpretation}
+    \small A weighted average of the prior mean and the data mean, weighted
+    by their respective \keyword{precisions} ($1/\text{variance}$) — more
+    data pulls the estimate toward $\bar x$.
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{MAP Estimation \& the Normal Model}
+% ============================================================
+
+\begin{frame}{Maximum A Posteriori (MAP) Estimation}{A single best guess, informed by the prior}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \small
+        \[ \hat\theta_{\text{MAP}} = \arg\max_\theta p(\theta\mid\text{data})
+           = \arg\max_\theta L(\theta)\,p(\theta) \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{MAP as regularized MLE}
+        \small A Gaussian prior on parameters $\Rightarrow$ MAP $=$ ridge
+        regression; a Laplace prior $\Rightarrow$ MAP $=$ LASSO.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{alertblock}{MAP vs.\ MLE vs.\ posterior mean}
+    \small As $n\to\infty$, the prior's influence vanishes and MAP
+    converges to the MLE. For a symmetric, unimodal posterior, MAP equals
+    the posterior mean.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Bayesian Inference for the Normal}{Why Student's $t$ appears}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Both $\mu$ and $\sigma^2$ unknown}
+        \small The conjugate prior is \keyword{Normal-Gamma}; the marginal
+        posterior for $\mu$ integrates out the uncertainty in $\sigma^2$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The result}
+        \small That marginalization produces a \keyword{Student's
+        $t$-distribution} for $\mu$ — the same distribution that shows up
+        in Chapter 6's confidence intervals.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Applications}
+% ============================================================
+
+\begin{frame}{Bayesian A/B Testing}{A more intuitive answer than a $p$-value}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Frequentist framing}
+        \small "Reject $H_0:p_A=p_B$ at $\alpha=0.05$" — a yes/no verdict.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Bayesian framing}
+        \small $P(p_B > p_A \mid \text{data})$ — a direct probability that
+        variant B is better, easy to explain to stakeholders.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{More Applications}{The same Beta-Binomial machinery, everywhere}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Application} & \textcolor{white}{What's being estimated} \\
+    \midrule
+    Quality control & True defect rate, updated batch by batch \\
+    \rowcolor{PrimaryLight!25}
+    Email spam filtering & Probability a message is spam given word features \\
+    Sequential coin testing & Bias of a coin, refined flip by flip \\
+    \rowcolor{PrimaryLight!25}
+    ML hyperparameter tuning & Best configuration via Bayesian optimization \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{MLE vs.\ Bayesian: When to Use What}{Two complementary toolkits}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Approach} & \textcolor{white}{Strengths} \\
+    \midrule
+    MLE & Simple, objective, works well with plenty of data \\
+    \rowcolor{PrimaryLight!25}
+    Bayesian & Incorporates prior knowledge, natural with small data,
+    gives full distributions, direct probability statements \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Estimate}
+        \small MLE finds the parameter that best explains the data;
+        Bayesian inference produces a full posterior distribution.
+      \end{block}
+      \begin{exampleblock}{Update}
+        \small Conjugate priors (Beta-Binomial, Gamma-Poisson,
+        Normal-Normal) give closed-form posteriors.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Decide}
+        \small MAP blends prior and likelihood into one point estimate —
+        a bridge between the two philosophies.
+      \end{alertblock}
+      \begin{block}{The journey}
+        \small From describing data (Part I) through probability (Part II)
+        to inference (Part III) — the full toolkit of applied statistics.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{End of Course — Good luck!}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

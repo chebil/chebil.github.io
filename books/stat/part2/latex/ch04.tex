@@ -1,0 +1,409 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 4 — Random Variables and Expectations
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+\title[Ch.\,4 — Random Variables]{Random Variables and Expectations}
+\subtitle{Chapter 4 — Distributions, Expectation, and the Weak Law of Large Numbers}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-4}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={5-8}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Define \keyword{random variables} and their \keyword{PMF}/\keyword{CDF}
+      \item Work with \keyword{joint}, \keyword{marginal}, and \keyword{conditional} distributions
+      \item Compute \keyword{expectation}, \keyword{variance}, and \keyword{covariance}
+      \item Use the \keyword{Weak Law of Large Numbers} to justify averaging
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Random Variables \& Distributions}
+% ============================================================
+
+\begin{frame}{Random Variables}{Turning outcomes into numbers}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 4.1}
+        \small A \keyword{discrete random variable} $X$ is a function
+        mapping each outcome $\omega\in\Omega$ to a number $X(\omega)$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Numbers from coins}
+        \small Flip 3 fair coins; let $X = $ number of heads.
+        \[ X \in \{0,1,2,3\} \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{PMF and CDF}{Two equivalent descriptions of a distribution}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 4.2: PMF}
+        \small $p(x) = P(X=x)$, with $\sum_x p(x)=1$.
+      \end{block}
+      \begin{block}{Definition 4.3: CDF}
+        \small $F(x) = P(X \le x) = \sum_{u \le x} p(u)$
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[ybar, bar width=0.55cm, width=6.2cm, height=4.2cm,
+          xtick=data, ylabel={\scriptsize $P(X=x)$}, tick label style={font=\scriptsize},
+          axis lines=left, ymin=0]
+          \addplot[fill=PrimaryMid] coordinates {(0,0.125) (1,0.375) (2,0.375) (3,0.125)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize PMF of $X=$ \#heads in 3 flips
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Joint, Marginal \& Conditional Distributions}
+% ============================================================
+
+\begin{frame}{Joint Distributions}{Two random variables at once}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 4.4}
+        \small $p(x,y) = P(X=x, Y=y)$, jointly describing $X$ and $Y$.
+      \end{block}
+      \begin{block}{Definition 4.6: Marginal}
+        \[ p(x) = \sum_y p(x,y) \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Sums and differences of dice}
+        \small Roll two dice; $S=$ sum, $D=$ difference. Their joint
+        distribution $p(s,d)$ captures every combination.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Independence of Random Variables}{$S$ and $D$: independent or not?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 4.7}
+        \small $X, Y$ are independent iff
+        \[ p(x,y) = p(x)\,p(y) \quad \forall x,y \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Checking $S$ and $D$}
+        \small $P(S=2, D=5)=0$ but $P(S=2)>0$ and $P(D=5)>0$ — so
+        $p(s,d)\ne p(s)p(d)$: \important{not independent}.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Bayes' rule for random variables (Def.\ 4.5)}
+    \small \[ p(x\mid y) = \frac{p(y\mid x)\,p(x)}{p(y)} \]
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Continuous Random Variables}
+% ============================================================
+
+\begin{frame}{Probability Density Functions}{Continuous analogue of the PMF}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Properties of a PDF}
+        \small
+        \begin{itemize}
+          \item $f(x) \ge 0$ for all $x$
+          \item $\displaystyle\int_{-\infty}^{\infty} f(x)\,dx = 1$
+          \item $P(a\le X\le b) = \displaystyle\int_a^b f(x)\,dx$
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.4cm, height=4.2cm, domain=0:1, samples=60,
+          xlabel={\scriptsize $x$}, ylabel={\scriptsize $f(x)$},
+          tick label style={font=\scriptsize}, axis lines=left, ymin=0]
+          \addplot[PrimaryMid, thick, fill=PrimaryLight!40] {6*x*(1-x)} \closedcycle;
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+  \begin{alertblock}{A PDF can exceed 1}
+    \small Unlike a PMF, $f(x)$ is a \emph{density}, not a probability — it
+    can be larger than 1 as long as the total area is 1.
+  \end{alertblock}
+\end{frame}
+
+% ============================================================
+\section{Expectation}
+% ============================================================
+
+\begin{frame}{Expected Value}{The probability-weighted average}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Discrete}
+        \[ E[X] = \sum_x x\,p(x) \]
+      \end{block}
+      \begin{block}{Continuous}
+        \[ E[X] = \int_{-\infty}^{\infty} x\,f(x)\,dx \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{A fair die roll}
+        \[ E[X] = \sum_{i=1}^6 i\cdot\frac16 = 3.5 \]
+      \end{exampleblock}
+      \small Note $E[X]$ need not be a possible outcome.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Properties of Expectation}{Linearity — the single most useful fact in probability}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Linearity}
+        \[ E[aX + bY + c] = aE[X] + bE[Y] + c \]
+      \end{block}
+      \small Holds \emph{whether or not} $X,Y$ are independent.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Products need independence}
+        \small If $X,Y$ independent:
+        \[ E[XY] = E[X]\,E[Y] \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Variance \& Covariance}
+% ============================================================
+
+\begin{frame}{Mean, Variance, and Covariance}{Location, spread, and joint spread}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Quantity} & \textcolor{white}{Formula} \\
+    \midrule
+    Mean & $\mu = E[X]$ \\
+    \rowcolor{PrimaryLight!25}
+    Variance & $\text{var}(X) = E[(X-\mu)^2] = E[X^2]-\mu^2$ \\
+    Covariance & $\text{cov}(X,Y) = E[(X-\mu_X)(Y-\mu_Y)]$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{exampleblock}{Key properties}
+    \small $\text{var}(aX+b) = a^2\text{var}(X)$. \quad If $X,Y$ independent,
+    $\text{var}(X+Y) = \text{var}(X)+\text{var}(Y)$.
+  \end{exampleblock}
+\end{frame}
+
+% ============================================================
+\section{The Weak Law of Large Numbers}
+% ============================================================
+
+\begin{frame}{IID Samples \& the Sample Mean}{Averaging many independent copies}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{IID}
+        \small $X_1,\dots,X_n$ are \keyword{independent and identically
+        distributed} — same distribution, mutually independent.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Sample mean}
+        \[ \bar X_n = \frac1n\sum_{i=1}^n X_i, \qquad E[\bar X_n] = \mu \]
+        \small and $\text{var}(\bar X_n) = \sigma^2/n$ — shrinks with $n$.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Markov's and Chebyshev's Inequalities}{Bounding tail probabilities without knowing the shape}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Markov's inequality}
+        \small For $X \ge 0$ and $a>0$:
+        \[ P(X \ge a) \le \frac{E[X]}{a} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Chebyshev's inequality}
+        \small Apply Markov to $(X-\mu)^2$:
+        \[ P(|X-\mu|\ge a) \le \frac{\text{var}(X)}{a^2} \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Weak Law of Large Numbers}{The sample mean concentrates around $\mu$}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Statement}
+        \small For any $\epsilon>0$,
+        \[ P(|\bar X_n - \mu| \ge \epsilon) \le \frac{\sigma^2}{n\epsilon^2}
+           \;\xrightarrow{n\to\infty}\; 0 \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.6cm, height=4.2cm, xlabel={\scriptsize $n$},
+          ylabel={\scriptsize $P(|\bar X_n-\mu|\ge\epsilon)$ bound},
+          tick label style={font=\scriptsize}, axis lines=left,
+          domain=5:200, samples=50]
+          \addplot[PrimaryMid, thick] {4/x};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Bound shrinks as $n$ grows
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Applications}
+% ============================================================
+
+\begin{frame}{Should You Accept a Bet?}{Expected value as a decision rule}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Simple bet}
+        \small Pay \$1; win \$3 with probability $1/4$, else lose the
+        dollar.
+        \[ E[\text{payoff}] = \tfrac14(3) + \tfrac34(-1) = 0 \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Interpretation}
+        \small A fair bet ($E=0$) is break-even \emph{on average} — but a
+        single play is still risky. Casinos set $E<0$ for the house edge.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Odds, Expectation, and Bookmaking}{How bookmakers guarantee a profit}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Odds vs.\ probability}
+        \small "3-to-1 odds" against an event means implied
+        $P(\text{event}) = 1/(3+1) = 0.25$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The bookmaker's edge}
+        \small Real odds are set so the implied probabilities of all
+        outcomes sum to \emph{more than 1} — guaranteeing negative expected
+        value for the bettor.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Decision Trees}{Structuring a decision under uncertainty}
+  \begin{columns}[T]
+    \begin{column}{0.4\textwidth}
+      \small Example: choosing a medical treatment. Compute the
+      \keyword{expected utility} of each branch and pick the best.
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[
+          level 1/.style={level distance=1.0cm, sibling distance=3.6cm},
+          level 2/.style={level distance=1.3cm, sibling distance=2.0cm},
+          n/.style={rounded corners=2pt, draw=PrimaryMid, fill=PrimaryLight!40, font=\scriptsize, align=center},
+          l/.style={font=\scriptsize, align=center},
+          edge from parent/.style={draw=PrimaryMid, thin}]
+        \node[n] {Choose\\treatment}
+          child {node[n] {Treatment A}
+            child {node[l] {Success 0.8\\Utility 90}}
+            child {node[l] {Failure 0.2\\Utility 10}}
+            edge from parent}
+          child {node[n] {Treatment B}
+            child {node[l] {Success 0.6\\Utility 100}}
+            child {node[l] {Failure 0.4\\Utility 40}}
+            edge from parent};
+      \end{tikzpicture}\\
+      \scriptsize $E[A]=74$, $E[B]=76$ — choose B
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Describe}
+        \small Random variables turn outcomes into numbers; PMFs/PDFs and
+        CDFs describe their distribution.
+      \end{block}
+      \begin{exampleblock}{Summarize}
+        \small $E[X]$ (location), $\text{var}(X)$ (spread),
+        $\text{cov}(X,Y)$ (joint spread) — linearity of $E[\cdot]$ is your
+        best friend.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Why it matters}
+        \small The Weak Law justifies using sample averages to estimate
+        unknown means — the foundation of statistical inference.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Ch.\,5: the most useful named \keyword{probability
+        distributions}.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 5 — Useful Probability Distributions}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

@@ -1,0 +1,383 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 6 — Samples and Populations
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+\title[Ch.\,6 — Samples \& Populations]{Samples and Populations}
+\subtitle{Chapter 6 — The Sample Mean and Confidence Intervals}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-3}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={4-7}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Distinguish a \keyword{population} from a \keyword{sample}
+      \item Show the sample mean is \keyword{unbiased} and quantify its \keyword{standard error}
+      \item Construct \keyword{confidence intervals} with known and unknown variance
+      \item Apply the \keyword{bootstrap} and see CIs used in five real domains
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Populations \& the Sample Mean}
+% ============================================================
+
+\begin{frame}{Populations and Samples}{The urn model}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definitions}
+        \small
+        \begin{itemize}
+          \item \keyword{Population}: the entire set we want to know about
+          \item \keyword{Sample}: the (smaller) subset we actually observe
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The urn model}
+        \small Population $=$ an urn of numbered balls. A sample is drawn
+        (with or without replacement) to estimate the urn's true mean.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Sample Mean as an Estimator}{Unbiasedness}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \[ \bar X = \frac{1}{n}\sum_{i=1}^n X_i \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Unbiasedness}
+        \small
+        \[ E[\bar X] = \mu \]
+        \small On average across many samples, $\bar X$ hits the true
+        population mean $\mu$ exactly.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Variance of the Sample Mean}
+% ============================================================
+
+\begin{frame}{Variance of the Sample Mean}{Why bigger samples are better}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Key result}
+        \[ \text{var}(\bar X) = \frac{\sigma^2}{n} \]
+      \end{block}
+      \begin{exampleblock}{Standard error}
+        \[ \text{SE}(\bar X) = \frac{\sigma}{\sqrt n} \]
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.4cm, height=4.2cm, domain=-4:4, samples=60,
+          tick label style={font=\scriptsize}, axis lines=left,
+          legend style={font=\tiny}]
+          \addplot[PrimaryLight!70, thick] {exp(-x^2/(2*2^2))/(2*sqrt(2*pi))};
+          \addplot[PrimaryMid, thick] {exp(-x^2/(2*1^2))/(1*sqrt(2*pi))};
+          \addplot[AlertRed, thick] {exp(-x^2/(2*0.5^2))/(0.5*sqrt(2*pi))};
+          \legend{{$n{=}4$},{$n{=}16$},{$n{=}64$}}
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Sampling distribution of $\bar X$ tightens as $n$ grows
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Sampling Without Replacement}{The finite population correction}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Finite population correction}
+        \small For a population of size $N$, sample size $n$:
+        \[ \text{var}(\bar X) = \frac{\sigma^2}{n}\cdot\frac{N-n}{N-1} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Rule of thumb}
+        \small If $n/N < 0.05$ (sample is a small fraction of the
+        population), the correction is negligible — sampling with or
+        without replacement behave the same.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Confidence Intervals: The Big Idea}
+% ============================================================
+
+\begin{frame}{The Big Idea}{A range of plausible values, not a single guess}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{General form}
+        \[ \text{estimate} \pm \text{margin of error} \]
+        \[ \bar X \pm z^\ast \cdot \text{SE}(\bar X) \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Common confidence levels}
+        \small
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{@{}cc@{}}
+          \toprule
+          Level & $z^\ast$ \\
+          \midrule
+          90\% & 1.645 \\
+          95\% & 1.960 \\
+          99\% & 2.576 \\
+          \bottomrule
+        \end{tabular}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{alertblock}{Correct interpretation}
+    \small "95\% confidence" means: if we repeated the sampling many
+    times, about 95\% of the resulting intervals would contain $\mu$ —
+    \emph{not} that this particular interval has a 95\% chance of
+    containing it.
+  \end{alertblock}
+\end{frame}
+
+% ============================================================
+\section{Estimating the Standard Error}
+% ============================================================
+
+\begin{frame}{When $\sigma$ Is Unknown}{Use the sample standard deviation}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The problem}
+        \small We rarely know the true population $\sigma$ — we must
+        estimate the standard error from the data itself.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The solution}
+        \small Replace $\sigma$ with the sample std.\ dev.\ $s$:
+        \[ \widehat{\text{SE}} = \frac{s}{\sqrt n} \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Known vs.\ Unknown Variance}{$z$ for known $\sigma$, $t$ for unknown $\sigma$}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Case} & \textcolor{white}{Confidence interval} \\
+    \midrule
+    $\sigma^2$ known & $\bar X \pm z^\ast \dfrac{\sigma}{\sqrt n}$ \\
+    \rowcolor{PrimaryLight!25}
+    $\sigma^2$ unknown (most common) & $\bar X \pm t^\ast_{n-1} \dfrac{s}{\sqrt n}$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{exampleblock}{The $t$-distribution}
+    \small Wider tails than the normal to account for the extra
+    uncertainty in estimating $\sigma$ from a small sample; converges to
+    $N(0,1)$ as $n$ grows.
+  \end{exampleblock}
+\end{frame}
+
+% ============================================================
+\section{The CLT and the Bootstrap}
+% ============================================================
+
+\begin{frame}{Why Confidence Intervals Work}{The Central Limit Theorem, again}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small The CLT guarantees $\bar X$ is approximately normal for
+      \emph{large enough} $n$ — regardless of the population's own shape.
+      This is what justifies using $z^\ast$ or $t^\ast$ multipliers.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{How large is "large enough"?}
+        \small Rule of thumb: $n \ge 30$ is usually safe unless the
+        population is heavily skewed or has extreme outliers.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Bootstrap Method}{Estimating standard error by resampling}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The idea}
+        \small
+        \begin{enumerate}
+          \item Resample $n$ points \emph{with replacement} from the data
+          \item Recompute the statistic (e.g.\ the mean)
+          \item Repeat thousands of times
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Why it's useful}
+        \small Works even when no clean formula for the standard error
+        exists (e.g.\ for the median or a correlation coefficient).
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Applications}
+% ============================================================
+
+\begin{frame}{Five Domains, One Idea}{Confidence intervals quantify uncertainty everywhere}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Domain} & \textcolor{white}{What is estimated} \\
+    \midrule
+    A/B testing (web) & Difference in conversion rate between variants \\
+    \rowcolor{PrimaryLight!25}
+    Quality control (manufacturing) & Mean defect rate / product dimension \\
+    Survey sampling (polling) & Population proportion supporting a candidate \\
+    \rowcolor{PrimaryLight!25}
+    Medical trials & Difference in outcome between drug and placebo \\
+    ML model evaluation & True model accuracy from a held-out test set \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Worked Example: Election Polling}{The margin of error}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small Poll of $n=1000$ voters: $\hat p = 0.52$ support candidate A.
+      \[ \text{SE} = \sqrt{\frac{\hat p(1-\hat p)}{n}} \approx 0.0158 \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{95\% CI}
+        \[ 0.52 \pm 1.96(0.0158) \approx [0.489,\, 0.551] \]
+        \small The race may be a statistical tie — the interval crosses
+        $0.50$.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Practical Considerations}{Width, sample size, and common mistakes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{What shrinks the interval?}
+        \small Larger $n$, lower confidence level, or smaller $\sigma$ —
+        width shrinks as $1/\sqrt n$, so \emph{quadrupling} $n$ only halves
+        the margin.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Common mistakes}
+        \small
+        \begin{itemize}
+          \item Treating the CI as "95\% probability $\mu$ is inside"
+          \item Ignoring non-random sampling bias
+          \item Using $z^\ast$ with small $n$ and unknown $\sigma$
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Key Formulas}{The Chapter 6 toolkit}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Quantity} & \textcolor{white}{Formula} \\
+    \midrule
+    Sample mean & $\bar X = \frac1n\sum_i X_i$, unbiased: $E[\bar X]=\mu$ \\
+    \rowcolor{PrimaryLight!25}
+    Standard error & $\text{SE} = \sigma/\sqrt n$ (or $s/\sqrt n$ if $\sigma$ unknown) \\
+    CI ($\sigma$ known) & $\bar X \pm z^\ast \sigma/\sqrt n$ \\
+    \rowcolor{PrimaryLight!25}
+    CI ($\sigma$ unknown) & $\bar X \pm t^\ast_{n-1}\, s/\sqrt n$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Estimate}
+        \small The sample mean is unbiased; its spread shrinks as
+        $1/\sqrt n$.
+      \end{block}
+      \begin{exampleblock}{Quantify uncertainty}
+        \small Confidence intervals turn a point estimate into a range
+        with a known long-run coverage rate.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Don't confuse}
+        \small "95\% CI" $\ne$ "95\% probability $\mu$ is in this
+        interval" — confidence is about the \emph{procedure}.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Ch.\,7: turning intervals into formal
+        \keyword{hypothesis tests} and $p$-values.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 7 — The Significance of Evidence}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

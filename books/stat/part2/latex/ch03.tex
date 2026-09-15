@@ -1,0 +1,483 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 3 — Basic Ideas in Probability
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+\title[Ch.\,3 — Probability Basics]{Basic Ideas in Probability}
+\subtitle{Chapter 3 — Experiments, Events, Independence, and Conditioning}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-3}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={4-6}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Build \keyword{sample spaces} and compute probabilities by counting
+      \item Manipulate \keyword{events} with set operations and combinatorics
+      \item Test for \keyword{independence} and avoid the gambler's fallacy
+      \item Apply \keyword{conditional probability} and \keyword{Bayes' rule}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Experiments \& Sample Spaces}
+% ============================================================
+
+\begin{frame}{What Is an Experiment?}{A repeatable procedure with an uncertain outcome}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 3.1: Sample space}
+        \small The \keyword{sample space} $\Omega$ is the set of \emph{all}
+        possible outcomes of an experiment.
+      \end{block}
+      \begin{itemize}\small
+        \item Flip a coin: $\Omega=\{H,T\}$
+        \item Roll a die: $\Omega=\{1,2,3,4,5,6\}$
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Worked Example: Find the Lady}
+        \small Three cards, one queen, shuffled face down. Outcome $=$ which
+        position hides the queen.
+        \[ \Omega = \{1, 2, 3\} \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Probability of Outcomes}{Assigning weights that must add to one}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Formal definition}
+        \small A probability assigns $P(a) \ge 0$ to each $a \in \Omega$ with
+        \[ \sum_{a \in \Omega} P(a) = 1 \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{A biased coin}
+        \small $P(H) = 0.7$, $P(T) = 0.3$ is a valid assignment — outcomes
+        need not be equally likely.
+      \end{exampleblock}
+      \begin{alertblock}{Equally likely outcomes}
+        \small A \keyword{fair} die has $P(i) = 1/6$ for each face.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Law of Large Numbers, in Action}{Long-run frequency converges to probability}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \small As the number of trials $N$ grows, the observed frequency of an
+      outcome converges to its true probability $P(a)$.
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.8cm, height=4.2cm, xlabel={\scriptsize Number of flips $N$},
+          ylabel={\scriptsize Fraction heads}, tick label style={font=\scriptsize},
+          axis lines=left, ymin=0, ymax=1]
+          \addplot[PrimaryMid, thick] coordinates
+            {(1,1)(5,0.6)(10,0.7)(20,0.55)(50,0.58)(100,0.52)(200,0.51)(500,0.503)(1000,0.499)};
+          \addplot[AlertRed, dashed, thick] coordinates {(1,0.5)(1000,0.5)};
+        \end{axis}
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Computing Probabilities by Counting}{Two dice: 36 equally likely pairs}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Equally likely outcomes}
+        \small If all $|\Omega|$ outcomes are equally likely,
+        \[ P(a) = \frac{1}{|\Omega|} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Two fair dice}
+        \small $|\Omega| = 6\times6 = 36$ ordered pairs.
+        \[ P(\text{sum}=7) = \frac{6}{36} = \frac{1}{6} \]
+        \small (6 pairs sum to 7: $(1,6),(2,5),\dots,(6,1)$)
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Events \& Counting}
+% ============================================================
+
+\begin{frame}{Events}{A set of outcomes we care about}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 3.2: Event}
+        \small An \keyword{event} $E$ is any subset of $\Omega$;
+        it "occurs" if the outcome lies in $E$.
+      \end{block}
+      \begin{exampleblock}{Odd numbers, fair die}
+        \small $E = \{1,3,5\}$, $P(E) = 3/6 = 1/2$
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Basic properties}
+        \small
+        \begin{itemize}
+          \item $0 \le P(E) \le 1$
+          \item $P(\Omega) = 1$
+          \item Disjoint $E_1, E_2$: $P(E_1 \cup E_2) = P(E_1)+P(E_2)$
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Set Operations on Events}{The size analogy}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \fill[PrimaryLight!45] (0,0) circle (1.3cm);
+        \fill[AccentYellow!45] (1.0,0) circle (1.3cm);
+        \draw[PrimaryMid,thick] (0,0) circle (1.3cm);
+        \draw[AccentOrange,thick] (1.0,0) circle (1.3cm);
+        \node at (-0.55,0) {\footnotesize $A$};
+        \node at (1.55,0) {\footnotesize $B$};
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{General addition rule}
+        \[ P(A\cup B) = P(A)+P(B)-P(A\cap B) \]
+      \end{block}
+      \begin{exampleblock}{Complement}
+        \[ P(A^c) = 1 - P(A) \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Permutations \& Combinations}{Counting without listing}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X c@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Concept} & \textcolor{white}{Meaning} & \textcolor{white}{Formula} \\
+    \midrule
+    Permutation & Ordered arrangement of $k$ from $n$ & $\dfrac{n!}{(n-k)!}$ \\
+    \rowcolor{PrimaryLight!25}
+    Combination & Unordered choice of $k$ from $n$ & $\dbinom{n}{k}=\dfrac{n!}{k!(n-k)!}$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{exampleblock}{Card hands}
+    \small Ordered 5-card hands: $52\cdot51\cdot50\cdot49\cdot48$. \quad
+    Unordered (poker) hands: $\binom{52}{5} = 2{,}598{,}960$.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The Birthday Problem}{A famously counter-intuitive result}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Question}
+        \small With $n$ people, what is the probability that \emph{at least
+        two} share a birthday?
+      \end{block}
+      \begin{exampleblock}{Trick: use the complement}
+        \small $P(\text{share}) = 1 - P(\text{all different})$
+        \[ P(\text{all different}) = \prod_{i=0}^{n-1}\frac{365-i}{365} \]
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.6cm, height=4.4cm, xlabel={\scriptsize $n$ people},
+          ylabel={\scriptsize $P(\text{share birthday})$}, tick label style={font=\scriptsize},
+          axis lines=left, ymin=0, ymax=1]
+          \addplot[PrimaryMid, thick, mark=*, mark size=1pt] coordinates
+            {(5,0.03)(10,0.12)(15,0.25)(20,0.41)(23,0.507)(30,0.71)(40,0.89)(50,0.97)(60,0.994)};
+          \draw[AlertRed, dashed] (axis cs:23,0) -- (axis cs:23,0.507);
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Only $23$ people needed to pass $50\%$!
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Independence}
+% ============================================================
+
+\begin{frame}{Independent Events}{Knowing one tells you nothing about the other}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 3.3}
+        \small $A$ and $B$ are \keyword{independent} iff
+        \[ P(A \cap B) = P(A)\,P(B) \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Fair dice}
+        \small Roll two dice. "First die is 6" and "second die is 6" are
+        independent: $P(\text{both}) = \tfrac16\cdot\tfrac16 = \tfrac1{36}$.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Gambler's Fallacy}{Independent trials have no memory}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The fallacy}
+        \small "The coin landed heads five times in a row — tails is
+        \emph{due} now." False: each flip is independent.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The truth}
+        \small $P(\text{tails on flip } 6) = 0.5$ regardless of past flips —
+        the coin has no memory.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Case Study: Airline Overbooking}{Using independence to model no-shows}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Setup}
+        \small A flight sells $n$ tickets for $c$ seats. Each passenger
+        independently shows up with probability $p$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Oversold probability}
+        \small Number who show up $\sim \text{Binomial}(n,p)$.
+        \[ P(\text{oversold}) = P(X > c) \]
+        \small Airlines pick $n$ so this stays acceptably small.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Conditional Probability}
+% ============================================================
+
+\begin{frame}{Conditional Probability}{Updating belief given new information}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition 3.4}
+        \[ P(A \mid B) = \frac{P(A \cap B)}{P(B)}, \quad P(B) > 0 \]
+      \end{block}
+      \small The \keyword{size metaphor}: restrict the sample space to $B$,
+      then ask what fraction of it is also in $A$.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Non-independent events}
+        \small Draw one card. $A=$ "face card", $B=$ "heart".
+        \[ P(A\mid B) = \frac{3/52}{13/52} = \frac{3}{13} \ne P(A) \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Three Key Formulas}{Multiplication rule, total probability, Bayes' rule}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Rule} & \textcolor{white}{Formula} \\
+    \midrule
+    Multiplication & $P(A\cap B) = P(A\mid B)\,P(B)$ \\
+    \rowcolor{PrimaryLight!25}
+    Total probability & $P(B) = \sum_i P(B\mid A_i)\,P(A_i)$ for a partition $\{A_i\}$ \\
+    Bayes' rule & $P(A\mid B) = \dfrac{P(B\mid A)\,P(A)}{P(B)}$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Worked Example: Car Factories}{Applying total probability and Bayes' rule}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small Factory A makes 60\% of cars, 2\% defective. Factory B makes
+      40\%, 5\% defective. A random car is defective — which factory made
+      it?
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Solution}
+        \small $P(D) = 0.6(0.02)+0.4(0.05) = 0.032$
+        \[ P(A\mid D) = \frac{0.6\cdot0.02}{0.032} = 0.375 \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Detecting Rare Events Is Hard}{Why "99\% accurate" is not the same as "99\% reliable"}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Setup}
+        \small Disease prevalence $1\%$. Test sensitivity $99\%$,
+        specificity $99\%$. You test positive — what is $P(\text{disease}\mid+)$?
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Bayes' rule at work}
+        \small $P(+) = 0.99(0.01) + 0.01(0.99) = 0.0198$
+        \[ P(D\mid+) = \frac{0.99\cdot0.01}{0.0198} \approx 0.50 \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{alertblock}{Key insight}
+    \small When the base rate is low, most positives are \important{false
+    positives} — even with a highly accurate test.
+  \end{alertblock}
+\end{frame}
+
+% ============================================================
+\section{Famous Paradoxes}
+% ============================================================
+
+\begin{frame}{Warning Example: The Prosecutor's Fallacy}{Confusing $P(E\mid \text{innocent})$ with $P(\text{innocent}\mid E)$}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The Sally Clark case}
+        \small A rare event (two infant deaths) was presented as strong
+        evidence of guilt using only $P(E\mid\text{innocent})$, ignoring
+        the \keyword{base rate} of guilt vs.\ innocence.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The correct question}
+        \small What matters is $P(\text{innocent}\mid E)$, obtained via
+        Bayes' rule — \emph{not} the reverse conditional.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Monty Hall Problem}{Switch or stay?}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{block}{The game}
+        \small 3 doors, 1 car. You pick a door; the host, who knows where
+        the car is, opens \emph{another} door with a goat. Should you
+        switch?
+      \end{block}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{exampleblock}{The answer depends on the host's rule}
+        \small If the host \emph{always} opens a goat door:
+        \renewcommand{\arraystretch}{1.3}
+        \begin{center}
+        \begin{tabular}{@{}lc@{}}
+          \toprule
+          Strategy & $P(\text{win})$ \\
+          \midrule
+          Stay & $1/3$ \\
+          \rowcolor{PrimaryLight!25}
+          Switch & $2/3$ \\
+          \bottomrule
+        \end{tabular}
+        \end{center}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Formula Sheet}{The core toolkit of Chapter 3}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Concept} & \textcolor{white}{Formula} \\
+    \midrule
+    Equally likely & $P(a) = 1/|\Omega|$ \\
+    \rowcolor{PrimaryLight!25}
+    Complement & $P(A^c) = 1-P(A)$ \\
+    Union & $P(A\cup B) = P(A)+P(B)-P(A\cap B)$ \\
+    \rowcolor{PrimaryLight!25}
+    Independence & $P(A\cap B) = P(A)P(B)$ \\
+    Conditional & $P(A\mid B) = P(A\cap B)/P(B)$ \\
+    \rowcolor{PrimaryLight!25}
+    Bayes' rule & $P(A\mid B) = P(B\mid A)P(A)/P(B)$ \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Model}
+        \small Sample spaces, events, and probability assignments give a
+        precise language for uncertainty.
+      \end{block}
+      \begin{exampleblock}{Reason}
+        \small Independence simplifies computation; conditioning updates
+        beliefs with evidence.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Watch out for}
+        \small The gambler's fallacy, the prosecutor's fallacy, and
+        confusing $P(A\mid B)$ with $P(B\mid A)$.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Ch.\,4: \keyword{Random variables} turn outcomes into
+        numbers we can average.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 4 — Random Variables and Expectations}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

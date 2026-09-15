@@ -1,0 +1,520 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 2 — Looking at Relationships
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+% ---------- SLIDE METADATA ----------------------------------
+\title[Ch.\,2 — Relationships]{Looking at Relationships}
+\subtitle{Chapter 2 — Scatter Plots, Correlation, and Prediction}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-4}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={5-7}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Visualize relationships with \keyword{scatter plots}, contingency tables, and heat maps
+      \item Compute and interpret the \keyword{correlation coefficient} $r$
+      \item Build the \keyword{best linear predictor} from $r$ and estimate its error
+      \item Recognize \keyword{spurious correlation} and confounding variables
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Visualizing 2D Data}
+% ============================================================
+
+\begin{frame}{Categorical Data: Contingency Tables}{Cross-tabulating two categorical variables}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \small
+      \renewcommand{\arraystretch}{1.3}
+      \begin{tabular}{@{}l cc@{}}
+        \toprule
+        \rowcolor{PrimaryDark}
+        \textcolor{white}{} & \textcolor{white}{0--1 goals} & \textcolor{white}{2+ goals} \\
+        \midrule
+        Male & 18 & 27 \\
+        \rowcolor{PrimaryLight!25}
+        Female & 22 & 19 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \begin{exampleblock}{Reading a contingency table}
+        \small Each cell is a joint count. Compare \keyword{row} or
+        \keyword{column} proportions to spot association between gender and
+        goals scored.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{alertblock}{Avoid pie charts \& 3D bar charts}
+    \small They distort area/angle perception and make comparison hard —
+    prefer stacked bars or heat maps.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Scatter Plots}{The default view for two numeric variables}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{block}{How to read one}
+        \small Each point is one data item $(x_i, y_i)$.
+        \begin{itemize}\small
+          \item Upward trend $\Rightarrow$ positive relationship
+          \item Downward trend $\Rightarrow$ negative relationship
+          \item Cloud with no trend $\Rightarrow$ no linear relationship
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \begin{axis}[width=6.6cm, height=4.4cm, xlabel={\scriptsize Height (cm)},
+          ylabel={\scriptsize Weight (kg)}, tick label style={font=\scriptsize},
+          axis lines=left]
+          \addplot[only marks, mark=*, mark size=1.3pt, PrimaryMid] coordinates
+            {(160,55)(163,58)(165,60)(168,62)(170,65)(172,68)(175,70)(178,74)
+             (180,77)(182,80)(185,83)(167,64)(174,69)(177,71)(163,57)};
+        \end{axis}
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Time Series \& Standardizing}{Order matters; scale can mislead}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Time series}
+        \small Values indexed by time (burglaries per month, lynx pelts
+        traded per year). Plot with a connected line to expose trend and
+        seasonality.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Why standardize first?}
+        \small Two series on different scales (e.g.\ dollars vs.\ counts)
+        look incomparable until converted to \keyword{standard coordinates}
+        $\hat x = (x-\bar x)/\sigma$.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[width=10cm, height=3.2cm, xlabel={\scriptsize Year},
+      tick label style={font=\scriptsize}, axis lines=left,
+      legend style={font=\tiny}, legend pos=outer north east]
+      \addplot[PrimaryMid, thick] coordinates {(1,0.2)(2,0.8)(3,1.5)(4,0.6)(5,-0.3)(6,-1.1)(7,-0.4)(8,0.9)};
+      \addplot[AccentOrange, thick, dashed] coordinates {(1,-0.4)(2,0.1)(3,0.9)(4,1.4)(5,0.7)(6,-0.6)(7,-1.2)(8,0.2)};
+      \legend{Series A (std.), Series B (std.)}
+    \end{axis}
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{The Correlation Coefficient}
+% ============================================================
+
+\begin{frame}{Defining Correlation}{Quantifying a linear relationship}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \small For standardized data $\{(\hat x_i,\hat y_i)\}$:
+        \[ r = \text{corr}(\{(x,y)\}) = \frac{1}{N}\sum_{i=1}^N \hat x_i \hat y_i \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Properties}
+        \small
+        \begin{itemize}
+          \item $-1 \le r \le 1$
+          \item Symmetric: $\text{corr}(x,y) = \text{corr}(y,x)$
+          \item Unaffected by translation or positive scaling
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Interpreting the Sign and Magnitude}{Direction, then strength}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}c >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Value of $r$} & \textcolor{white}{Interpretation} \\
+    \midrule
+    $r = +1$ & Perfect positive relationship ($\hat y = \hat x$) \\
+    \rowcolor{PrimaryLight!25}
+    $|r| \ge 0.7$ & Strong correlation \\
+    $0.3 \le |r| < 0.7$ & Moderate correlation \\
+    \rowcolor{PrimaryLight!25}
+    $|r| < 0.3$ & Weak correlation \\
+    $r = 0$ & No \emph{linear} relationship \\
+    \rowcolor{PrimaryLight!25}
+    $r = -1$ & Perfect negative relationship ($\hat y = -\hat x$) \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{alertblock}{These are guidelines}
+    \small Interpretation always depends on the domain — $r=0.3$ can be
+    remarkable in social science, unremarkable in physics.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Correlation Patterns}{What different values of $r$ look like}
+  \begin{columns}[T]
+    \begin{column}{0.33\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=3.9cm, height=3.4cm, xtick=\empty, ytick=\empty,
+          axis lines=left]
+          \addplot[only marks, mark=*, mark size=1pt, PrimaryMid] coordinates
+            {(1,1.1)(2,2.0)(3,2.9)(4,4.1)(5,4.9)(2.5,2.6)(3.5,3.4)(1.5,1.6)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize $r \approx +0.95$
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=3.9cm, height=3.4cm, xtick=\empty, ytick=\empty,
+          axis lines=left]
+          \addplot[only marks, mark=*, mark size=1pt, AccentOrange] coordinates
+            {(1,3.1)(2,2.4)(2.5,3.5)(3,1.8)(3.5,2.9)(4,1.1)(1.5,3.6)(4.5,2.0)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize $r \approx 0$
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=3.9cm, height=3.4cm, xtick=\empty, ytick=\empty,
+          axis lines=left]
+          \addplot[only marks, mark=*, mark size=1pt, AlertRed] coordinates
+            {(1,4.9)(2,4.0)(3,3.0)(4,2.1)(5,1.0)(2.5,3.5)(3.5,2.5)(1.5,4.4)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize $r \approx -0.95$
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Predicting from Correlation}
+% ============================================================
+
+\begin{frame}{The Best Linear Predictor}{Deriving the least-squares line in standard coordinates}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small
+      Predict $\hat y_i^p = a\hat x_i + b$. Requiring $\text{mean}(u)=0$ for
+      error $u=\hat y - \hat y^p$ forces $b=0$. Minimizing
+      $\text{var}(u) = 1 - 2ar + a^2$ over $a$ gives:
+      \[ \frac{d}{da}(1-2ar+a^2) = -2r+2a = 0 \;\Rightarrow\; a = r \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Result}
+        \small In standard coordinates:
+        \[ \hat y^p = r\,\hat x \]
+        \small In original coordinates:
+        \[ y^p = \bar y + r\,\frac{\sigma_y}{\sigma_x}(x-\bar x) \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{How Good Is the Prediction?}{Error shrinks as $|r|$ grows}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{RMSE of the prediction}
+        \[ \text{RMSE} = \sigma_y\sqrt{1-r^2} \]
+      \end{block}
+      \begin{exampleblock}{Rule of thumb}
+        \small If $x$ is $k$ std.\ devs.\ from its mean, $y$ is predicted to
+        be $r\cdot k$ std.\ devs.\ from its mean.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.2cm, height=4.2cm, xlabel={\scriptsize $|r|$},
+          ylabel={\scriptsize RMSE $/\ \sigma_y$}, tick label style={font=\scriptsize},
+          axis lines=left, domain=0:1, samples=40, ymin=0]
+          \addplot[PrimaryMid, thick] {sqrt(1-x^2)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Perfect correlation ($|r|{=}1$) $\Rightarrow$ zero error
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Correlation Is Not Causation}
+% ============================================================
+
+\begin{frame}{Spurious Correlation}{Ice cream sales and drowning deaths}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The naive observation}
+        \small Ice cream sales and drowning deaths rise and fall together
+        across the year, $r$ is large and positive.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The real explanation}
+        \small A \keyword{lurking variable} — hot summer weather — drives
+        both \emph{more swimming} and \emph{more ice cream}.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{center}
+  \begin{tikzpicture}[node distance=1.1cm and 1.6cm,
+      n/.style={rounded corners=2pt, draw=PrimaryMid, fill=PrimaryLight!40, font=\scriptsize, align=center, minimum height=0.6cm}]
+    \node[n, fill=PrimaryDark, text=white] (z) {Hot weather};
+    \node[n, below left=of z] (x) {Ice cream sales};
+    \node[n, below right=of z] (y) {Drowning deaths};
+    \draw[-{Latex[length=2mm]}, PrimaryMid, thick] (z) -- (x);
+    \draw[-{Latex[length=2mm]}, PrimaryMid, thick] (z) -- (y);
+    \draw[<->, AlertRed, dashed, thick] (x) -- node[below,font=\scriptsize]{spurious $r$} (y);
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Confounding Variables}{Shoe size and reading ability}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The naive observation}
+        \small Across all schoolchildren, shoe size correlates strongly with
+        reading test scores.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The confound: age}
+        \small Older children have \emph{both} bigger feet and better
+        reading skills. Age is the true driver of both.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Three explanations for any observed $r$}
+    \small
+    \begin{enumerate}
+      \item $X$ causes $Y$
+      \item $Y$ causes $X$
+      \item A hidden variable $Z$ causes both $X$ and $Y$
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Case Study: Wild Horse Herds}
+% ============================================================
+
+\begin{frame}{Case Study — Sterile Males in Wild Horse Herds}{A correlation that reversed sign}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The problem}
+        \small Does introducing sterile males reduce foal births? A naive
+        correlation between \% sterile males and births per year was
+        computed \emph{across all herds and years}.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Surprising result}
+        \small The naive correlation came out \important{positive} — more
+        sterile males, \emph{more} births?
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{exampleblock}{The key insight: time as a lurking variable}
+    \small Herd size and the sterile-male program both grew over
+    \keyword{time}. Correlating \emph{within} each year (controlling for
+    time) reveals the expected \important{negative} relationship.
+  \end{exampleblock}
+\end{frame}
+
+% ============================================================
+\section{Pitfalls \& Alternatives}
+% ============================================================
+
+\begin{frame}{Three Pitfalls of Correlation}{Where $r$ can badly mislead you}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Pitfall} & \textcolor{white}{What goes wrong} \\
+    \midrule
+    Non-linear relationships & $r\approx 0$ even for a strong curved pattern \\
+    \rowcolor{PrimaryLight!25}
+    Outliers & A single point can swing $r$ dramatically \\
+    Scaling / grouping & Combining subgroups can flip the sign (Simpson-like effect) \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{alertblock}{Golden rule}
+    \small Always plot the scatter plot before trusting a single number.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Spearman's Rank Correlation}{A robust alternative to Pearson's $r$}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Idea}
+        \small Replace each value by its \keyword{rank}, then compute
+        Pearson correlation on the ranks.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Why it's robust}
+        \small
+        \begin{itemize}
+          \item Detects any \keyword{monotonic} relationship, not just linear
+          \item Outliers only shift a rank by one place
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Correlation Matrix \& Heat Maps}{Scaling to many variables}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}[x=1.15cm,y=1.15cm,
+          cell/.style={minimum size=1.05cm, draw=white, font=\scriptsize}]
+        % column headers
+        \node[font=\scriptsize\bfseries] at (0,0.8) {Height};
+        \node[font=\scriptsize\bfseries] at (1,0.8) {Weight};
+        \node[font=\scriptsize\bfseries] at (2,0.8) {Age};
+        \node[font=\scriptsize\bfseries] at (3,0.8) {Income};
+        % row headers
+        \node[font=\scriptsize\bfseries, anchor=east] at (-0.65,0) {Height};
+        \node[font=\scriptsize\bfseries, anchor=east] at (-0.65,-1) {Weight};
+        \node[font=\scriptsize\bfseries, anchor=east] at (-0.65,-2) {Age};
+        \node[font=\scriptsize\bfseries, anchor=east] at (-0.65,-3) {Income};
+        % row: Height
+        \node[cell, fill=PrimaryMid!100!white, text=white] at (0,0) {1.0};
+        \node[cell, fill=PrimaryMid!78!white]  at (1,0) {0.86};
+        \node[cell, fill=PrimaryMid!18!white]  at (2,0) {0.10};
+        \node[cell, fill=PrimaryMid!8!white]   at (3,0) {0.04};
+        % row: Weight
+        \node[cell, fill=PrimaryMid!78!white]  at (0,-1) {0.86};
+        \node[cell, fill=PrimaryMid!100!white, text=white] at (1,-1) {1.0};
+        \node[cell, fill=PrimaryMid!22!white]  at (2,-1) {0.14};
+        \node[cell, fill=PrimaryMid!30!white]  at (3,-1) {0.20};
+        % row: Age
+        \node[cell, fill=PrimaryMid!18!white]  at (0,-2) {0.10};
+        \node[cell, fill=PrimaryMid!22!white]  at (1,-2) {0.14};
+        \node[cell, fill=PrimaryMid!100!white, text=white] at (2,-2) {1.0};
+        \node[cell, fill=PrimaryMid!55!white]  at (3,-2) {0.48};
+        % row: Income
+        \node[cell, fill=PrimaryMid!8!white]   at (0,-3) {0.04};
+        \node[cell, fill=PrimaryMid!30!white]  at (1,-3) {0.20};
+        \node[cell, fill=PrimaryMid!55!white]  at (2,-3) {0.48};
+        \node[cell, fill=PrimaryMid!100!white, text=white] at (3,-3) {1.0};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{exampleblock}{Reading a heat map}
+        \small Darker cells $=$ stronger correlation (in magnitude).
+        Diagonal is always $1.0$ (a variable with itself).
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Quick Reference}{When to use what}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Situation} & \textcolor{white}{Tool} \\
+    \midrule
+    Two categorical variables & Contingency table, stacked bar, heat map \\
+    \rowcolor{PrimaryLight!25}
+    Two numeric variables, linear & Scatter plot $+$ Pearson $r$ \\
+    Two numeric variables, monotonic & Spearman's rank correlation \\
+    \rowcolor{PrimaryLight!25}
+    Value indexed by time & Time series plot \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Visualize}
+        \small Scatter plots first, always — correlation is only a number.
+      \end{block}
+      \begin{exampleblock}{Quantify \& predict}
+        \small $r$ measures linear association; the best linear predictor
+        is $y^p = \bar y + r\frac{\sigma_y}{\sigma_x}(x-\bar x)$.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Never forget}
+        \small Correlation $\neq$ causation — always ask about \keyword{lurking}
+        and \keyword{confounding} variables.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Part II builds the \keyword{probability theory} needed to
+        formalize these ideas.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 3 — Basic Ideas in Probability}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

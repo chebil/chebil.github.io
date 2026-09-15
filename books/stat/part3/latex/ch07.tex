@@ -1,0 +1,478 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 7 — The Significance of Evidence
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+\title[Ch.\,7 — Significance]{The Significance of Evidence}
+\subtitle{Chapter 7 — Hypothesis Tests, $t$-Tests, and P-Value Hacking}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-4}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={5-6}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Explain the logic of \keyword{hypothesis testing} and \keyword{$p$-values}
+      \item Choose and apply the right \keyword{$t$-test} for comparing means
+      \item Use \keyword{F-tests} and \keyword{$\chi^2$ tests} for variances and fit
+      \item Recognize and avoid \keyword{$p$-hacking}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{The Logic of Hypothesis Testing}
+% ============================================================
+
+\begin{frame}{The Setup}{Innocent until proven guilty}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The framework}
+        \small
+        \begin{itemize}
+          \item $H_0$ (\keyword{null}): "nothing interesting is happening"
+          \item $H_1$ (\keyword{alternative}): the effect we suspect
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The logic}
+        \small Assume $H_0$ is true. If the observed data would be
+        \emph{very unlikely} under that assumption, reject $H_0$ in favor
+        of $H_1$.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{P-Values: The Core Concept}{How surprising is the data, if $H_0$ is true?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \small The $p$-value is the probability, \emph{assuming $H_0$},
+        of seeing a result as extreme or more extreme than what was
+        observed.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Common misconception}
+        \small The $p$-value is \important{not} "the probability $H_0$ is
+        true," and $1-p$ is \important{not} "the probability $H_1$ is
+        true."
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Significance Levels}{The $\alpha$ threshold and the decision rule}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Decision rule}
+        \small Fix $\alpha$ (often $0.05$) \emph{before} looking at the
+        data:
+        \[ \text{reject } H_0 \iff p < \alpha \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=6.2cm, height=4cm, domain=-4:4, samples=60,
+          tick label style={font=\scriptsize}, axis lines=left, ymin=0]
+          \addplot[PrimaryMid, thick] {exp(-x^2/2)/sqrt(2*pi)};
+          \addplot[AlertRed, fill=AlertRed!30, domain=1.96:4] {exp(-x^2/2)/sqrt(2*pi)} \closedcycle;
+          \addplot[AlertRed, fill=AlertRed!30, domain=-4:-1.96] {exp(-x^2/2)/sqrt(2*pi)} \closedcycle;
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Rejection region for a two-tailed test, $\alpha{=}0.05$
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{One-Tailed vs.\ Two-Tailed Tests}{Which direction are you asking about?}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Type} & \textcolor{white}{Question} \\
+    \midrule
+    Two-tailed & Is the parameter \emph{different} from a value (either direction)? \\
+    \rowcolor{PrimaryLight!25}
+    One-tailed & Is the parameter \emph{greater than} (or \emph{less than}) a value? \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \begin{alertblock}{Choose before, not after}
+    \small The direction must be decided \emph{before} seeing the data —
+    choosing it afterward inflates your effective $\alpha$.
+  \end{alertblock}
+\end{frame}
+
+% ============================================================
+\section{Errors, Power, and Confidence}
+% ============================================================
+
+\begin{frame}{Types of Errors}{Two ways to be wrong}
+  \small
+  \renewcommand{\arraystretch}{1.4}
+  \begin{center}
+  \begin{tabular}{@{}l cc@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{} & \textcolor{white}{$H_0$ true} & \textcolor{white}{$H_0$ false} \\
+    \midrule
+    Reject $H_0$ & \cellcolor{AlertRed!25}Type I error ($\alpha$) & \cellcolor{SuccessGreen!25}Correct (power) \\
+    \rowcolor{PrimaryLight!20}
+    Fail to reject & Correct & Type II error ($\beta$) \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{exampleblock}{Power}
+    \small $\text{Power} = 1-\beta$: the probability of correctly detecting
+    a real effect. Increases with larger $n$, larger effect size, or
+    larger $\alpha$.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Worked Example: Coin Fairness Test}{Applying the full recipe}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small $H_0: p=0.5$. Flip $n=100$ times, observe $62$ heads.
+      \[ z = \frac{0.62-0.5}{\sqrt{0.5(0.5)/100}} = 2.4 \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Conclusion}
+        \small Two-tailed $p\text{-value} \approx 0.016 < 0.05$ — reject
+        $H_0$: the coin looks biased.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{CIs and tests are two views of the same coin}
+    \small Rejecting $H_0:\mu=\mu_0$ at level $\alpha$ $\iff$ the
+    $(1-\alpha)$ confidence interval for $\mu$ excludes $\mu_0$.
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Comparing Two Means: $t$-Tests}
+% ============================================================
+
+\begin{frame}{The Two-Sample Problem}{Do two groups have different means?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Hypotheses}
+        \[ H_0: \mu_1=\mu_2 \qquad H_1: \mu_1 \ne \mu_2 \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Which test?}
+        \small The right test depends on whether variances are equal, and
+        whether the samples are paired.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Pooled $t$-Test (Equal Variances)}{Combine both samples' spread}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Pooled variance}
+        \[ s_p^2 = \frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Test statistic}
+        \[ t = \frac{\bar X_1 - \bar X_2}{s_p\sqrt{1/n_1+1/n_2}} \]
+        \small with $n_1+n_2-2$ degrees of freedom.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Welch's $t$-Test (Unequal Variances)}{The safer default}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Test statistic}
+        \[ t = \frac{\bar X_1-\bar X_2}{\sqrt{s_1^2/n_1 + s_2^2/n_2}} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Degrees of freedom}
+        \small Welch\textendash Satterthwaite approximation — usually
+        non-integer. Use this test \emph{by default}: it costs little when
+        variances are equal and protects you when they are not.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Paired $t$-Test}{When observations come in natural pairs}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Key idea}
+        \small Reduce to a \emph{one-sample} test on the differences
+        $d_i = X_{1i}-X_{2i}$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Test statistic}
+        \[ t = \frac{\bar d}{s_d/\sqrt n}, \quad n-1 \text{ d.f.} \]
+        \small e.g.\ before/after measurements on the \emph{same} subjects.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Choosing the Right Test}{A quick decision guide}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Situation} & \textcolor{white}{Test} \\
+    \midrule
+    Same subjects, before/after & Paired $t$-test \\
+    \rowcolor{PrimaryLight!25}
+    Independent groups, similar spread & Pooled $t$-test \\
+    Independent groups, different spread & Welch's $t$-test (safe default) \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Effect Size: Cohen's $d$}{Statistical significance is not the whole story}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \[ d = \frac{\bar X_1 - \bar X_2}{s_p} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Interpretation}
+        \small
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{@{}cl@{}}
+          \toprule
+          $|d|$ & Size \\
+          \midrule
+          $0.2$ & Small \\
+          $0.5$ & Medium \\
+          $0.8$ & Large \\
+          \bottomrule
+        \end{tabular}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \begin{alertblock}{Why it matters}
+    \small A huge sample can make a \emph{tiny, unimportant} difference
+    "significant" — always report effect size alongside $p$.
+  \end{alertblock}
+\end{frame}
+
+% ============================================================
+\section{Other Useful Tests}
+% ============================================================
+
+\begin{frame}{F-Tests for Variances}{Are two groups equally variable?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The $F$-statistic}
+        \[ F = \frac{s_1^2}{s_2^2} \sim F_{n_1-1,\,n_2-1} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Decision rule}
+        \small Reject "equal variances" if $F$ is far from 1 (too large or
+        too small) relative to the $F$-distribution's critical values.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{$\chi^2$ Goodness-of-Fit Test}{Does the data match a model?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The statistic}
+        \[ \chi^2 = \sum_{i} \frac{(O_i - E_i)^2}{E_i} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Also used for independence}
+        \small The same statistic tests whether two categorical variables
+        in a contingency table are independent.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \begin{alertblock}{Requirement}
+    \small Expected counts $E_i$ should generally be $\ge 5$ per cell for
+    the $\chi^2$ approximation to be valid.
+  \end{alertblock}
+\end{frame}
+
+% ============================================================
+\section{P-Value Hacking}
+% ============================================================
+
+\begin{frame}{The Jelly Bean Problem}{Why testing 20 things finds "significance" by chance}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The setup}
+        \small Test 20 jelly bean colors for a link to acne, each at
+        $\alpha=0.05$. None actually matter.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The math}
+        \footnotesize
+        \[ P(\text{at least one hit}) = 1-(1-0.05)^{20} \approx 0.64 \]
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{The multiple comparisons problem}
+    \small The more tests you run, the more likely \emph{some} will look
+    significant by pure chance — correct with methods like Bonferroni.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Common Forms of P-Hacking}{Researcher degrees of freedom}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Form} & \textcolor{white}{What it looks like} \\
+    \midrule
+    Multiple comparisons & Testing many outcomes, reporting only the "hit" \\
+    \rowcolor{PrimaryLight!25}
+    Optional stopping & Peeking at data, stopping as soon as $p<0.05$ \\
+    Researcher d.o.f.\ & Trying many analysis choices, keeping the best one \\
+    \rowcolor{PrimaryLight!25}
+    HARKing & Hypothesizing After Results are Known, dressed as a priori \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{The ASA Statement on P-Values}{What a $p$-value is not}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Not measures of}
+        \small
+        \begin{itemize}
+          \item The probability $H_0$ is true
+          \item The size or importance of an effect
+          \item A sole basis for a scientific conclusion
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Best practices}
+        \small Pre-register hypotheses, report effect sizes and CIs,
+        correct for multiple testing, and value \keyword{replication}.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Alternatives \& Supplements}{Widening the evidence base}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Approach} & \textcolor{white}{What it adds} \\
+    \midrule
+    Confidence intervals & A range, not just a yes/no verdict \\
+    \rowcolor{PrimaryLight!25}
+    Bayesian methods & Direct probability statements about hypotheses \\
+    Effect sizes & Practical, not just statistical, significance \\
+    \rowcolor{PrimaryLight!25}
+    Replication & The strongest evidence of all \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{The Hypothesis Testing Recipe}{Six steps, every time}
+  \begin{enumerate}\small
+    \item State $H_0$ and $H_1$ \emph{before} seeing the data
+    \item Choose $\alpha$ in advance
+    \item Pick the appropriate test statistic
+    \item Compute the test statistic and its $p$-value
+    \item Compare $p$ to $\alpha$; decide
+    \item Report the effect size alongside the decision
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Test}
+        \small $p$-values quantify surprise under $H_0$; $t$-, $F$-, and
+        $\chi^2$-tests cover means, variances, and fit.
+      \end{block}
+      \begin{exampleblock}{Report}
+        \small Always pair a $p$-value with an \keyword{effect size} and,
+        ideally, a confidence interval.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Avoid}
+        \small $p$-hacking: peeking, multiple untracked comparisons, and
+        HARKing all inflate false discoveries.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Ch.\,8: designing \keyword{experiments} with ANOVA to
+        compare more than two groups at once.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 8 — Experiments}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}

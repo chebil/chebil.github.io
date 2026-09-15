@@ -1,0 +1,648 @@
+% ============================================================
+%  Probability and Statistics for Computer Science
+%  Chapter 1 — First Tools for Looking at Data
+%  Offline Beamer slides (uses shared theme.tex + branding.tex)
+% ============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\input{theme.tex}
+\input{branding.tex}
+
+% ---------- SLIDE METADATA ----------------------------------
+\title[Ch.\,1 — First Tools for Data]{First Tools for Looking at Data}
+\subtitle{Chapter 1 — Datasets, Visualization, and Summary Statistics}
+\author{Dr.\ Khalil Chebil}
+\date{Probability \& Statistics for Computer Science}
+
+\begin{document}
+
+% ============================================================
+%  TITLE
+% ============================================================
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+% ============================================================
+%  OUTLINE
+% ============================================================
+\begin{frame}{Chapter Outline}{What we will cover}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={1-4}]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \tableofcontents[sections={5-7}]
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{Learning Objectives}
+    \begin{itemize}
+      \item Classify data as \keyword{categorical}, \keyword{ordinal}, \keyword{discrete}, or \keyword{continuous}
+      \item Build and read \keyword{bar charts} and \keyword{histograms}
+      \item Compute \keyword{mean}, \keyword{median}, \keyword{variance}, and \keyword{IQR}
+      \item Use \keyword{standard coordinates} and \keyword{box plots} to compare datasets
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{What Is a Dataset?}
+% ============================================================
+
+\begin{frame}{What Is a Dataset?}{A collection of measurements, described as $d$-tuples}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{Definition}
+        \small A \keyword{dataset} $\{x\}$ is a collection of $N$ items;
+        each item is a \keyword{$d$-tuple} of measurements,
+        $x_i = (x_i^1, x_i^2, \dots, x_i^d)$.
+      \end{block}
+      \begin{itemize}\small
+        \item $N$ — number of items (rows)
+        \item $d$ — number of attributes (columns)
+        \item Each attribute is a \keyword{dimension} of the tuple
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{Students dataset ($d=3$)}
+        \small
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{@{}lcc@{}}
+          \toprule
+          \textbf{Name} & \textbf{Age} & \textbf{GPA} \\
+          \midrule
+          Alice & 21 & 3.7 \\
+          Bob   & 23 & 3.2 \\
+          Cara  & 22 & 3.9 \\
+          \bottomrule
+        \end{tabular}
+      \end{exampleblock}
+      \centering\scriptsize $N = 3$ items, $d = 3$ attributes each
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Types of Data}{Choosing the right tool starts with the right type}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Type} & \textcolor{white}{Meaning} & \textcolor{white}{Examples} \\
+    \midrule
+    Categorical & Labels, no order & Country, blood type, gender \\
+    \rowcolor{PrimaryLight!25}
+    Ordinal & Labels, natural order & Letter grade, satisfaction (low/med/high) \\
+    Discrete & Countable numeric values & \# of siblings, \# of goals scored \\
+    \rowcolor{PrimaryLight!25}
+    Continuous & Any value in a range & Height, temperature, time \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+  \vspace{0.3em}
+  \begin{alertblock}{Why it matters}
+    \small The type of data determines which summaries and plots make sense —
+    a mean of postal codes is meaningless, but a mean of temperatures is not.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Set Operations on Datasets}{Datasets behave like sets of items}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}\small
+        \item \keyword{Union} $\{x\}\cup\{y\}$ — items in either
+        \item \keyword{Intersection} $\{x\}\cap\{y\}$ — items in both
+        \item \keyword{Difference} $\{x\}\setminus\{y\}$ — in $\{x\}$ only
+        \item \keyword{Complement} $\{x\}^c$ — relative to universe $\Omega$
+        \item \keyword{Disjoint} — $\{x\}\cap\{y\} = \emptyset$
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \fill[PrimaryLight!45] (0,0) circle (1.3cm);
+        \fill[AccentYellow!45] (1.0,0) circle (1.3cm);
+        \draw[PrimaryMid,thick] (0,0) circle (1.3cm);
+        \draw[AccentOrange,thick] (1.0,0) circle (1.3cm);
+        \node at (-0.55,0) {\footnotesize $\{x\}$};
+        \node at (1.55,0) {\footnotesize $\{y\}$};
+        \node[font=\scriptsize] at (0.5,0) {$\{x\}\cap\{y\}$};
+        \draw[dashed,DarkText] (-1.9,-1.7) rectangle (2.9,1.7);
+        \node[font=\scriptsize] at (2.3,-1.4) {$\Omega$};
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Visualizing Data}
+% ============================================================
+
+\begin{frame}{Bar Charts}{Comparing counts across categories}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Definition}
+        \small A bar chart shows the \keyword{frequency} of each category
+        as a bar; bar \emph{height} $=$ count (or proportion).
+      \end{block}
+      \begin{exampleblock}{Use when}
+        \small Data is \keyword{categorical} or \keyword{ordinal} — order and
+        gaps between bars carry no numeric meaning.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \begin{axis}[
+          ybar, bar width=0.5cm, width=6.4cm, height=4.2cm,
+          symbolic x coords={0,1,2,3,4+},
+          xtick=data, ylabel={\scriptsize Frequency}, ymin=0,
+          nodes near coords, every node near coord/.append style={font=\tiny},
+          tick label style={font=\scriptsize}, axis lines=left,
+          bar shift=0pt]
+          \addplot[fill=PrimaryMid] coordinates {(0,8) (1,15) (2,22) (3,10) (4+,5)};
+        \end{axis}
+      \end{tikzpicture}\\
+      \scriptsize Goals scored per match (season)
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Histograms}{The workhorse plot for numeric data}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Definition}
+        \small Split the range into \keyword{bins}; bar height $=$ count of
+        values falling in that bin.
+      \end{block}
+      \begin{alertblock}{Choosing bin count}
+        \small
+        \begin{itemize}
+          \item Too few bins $\Rightarrow$ hides structure
+          \item Too many bins $\Rightarrow$ noisy, sparse
+          \item Rule of thumb: $\sqrt{N}$ or Sturges' rule
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \begin{axis}[ybar interval, width=6.4cm, height=4.2cm,
+          xlabel={\scriptsize Height (cm)}, ylabel={\scriptsize Count},
+          tick label style={font=\scriptsize}, axis lines=left, ymin=0]
+          \addplot[fill=PrimaryMid, draw=PrimaryDark] coordinates
+            {(150,2) (155,6) (160,14) (165,24) (170,27) (175,19) (180,9) (185,3) (190,0)};
+        \end{axis}
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Conditional Histograms}{Splitting by a categorical variable reveals structure}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \begin{axis}[width=7cm, height=4.4cm, xlabel={\scriptsize Body temperature (\textdegree F)},
+          ylabel={\scriptsize Density}, tick label style={font=\scriptsize},
+          axis lines=left, legend style={font=\tiny}, legend pos=north east]
+          \addplot[PrimaryMid, thick, smooth] coordinates
+            {(96,0.02)(97,0.15)(97.5,0.35)(98,0.42)(98.6,0.30)(99,0.12)(100,0.02)};
+          \addplot[AccentOrange, thick, smooth, dashed] coordinates
+            {(96.5,0.02)(97.5,0.13)(98,0.30)(98.6,0.40)(99,0.32)(99.5,0.14)(100.5,0.02)};
+          \legend{Group A, Group B}
+        \end{axis}
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{exampleblock}{Why compare conditionally?}
+        \small
+        \begin{itemize}
+          \item Reveals \keyword{subgroup} differences hidden in the pooled data
+          \item Same range, different \keyword{shape} or \keyword{center}
+          \item Key insight: \emph{overlap} vs.\ \emph{separation}
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Measures of Central Tendency}
+% ============================================================
+
+\begin{frame}{The Mean}{The balance point of the data}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \[ \text{mean}(\{x\}) = \bar{x} = \frac{1}{N}\sum_{i=1}^{N} x_i \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Properties}
+        \small
+        \begin{itemize}
+          \item Translation: $\text{mean}(\{x+c\}) = \bar{x}+c$
+          \item Scaling: $\text{mean}(\{kx\}) = k\bar{x}$
+          \item Minimizes $\sum_i (x_i - v)^2$ over $v$
+          \item \important{Sensitive} to outliers
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Computing Mean \& Std.\ Dev.\ Online}{Update estimates as data streams in}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      After seeing $k$ items, let $\hat\mu_k$, $\hat\sigma_k$ be the running
+      estimates. On seeing $x_{k+1}$:
+      \begin{block}{Mean update}
+        \[ \hat\mu_{k+1} = \frac{k\,\hat\mu_k + x_{k+1}}{k+1} \]
+      \end{block}
+      \begin{block}{Std.\ dev.\ update}
+        \[ \hat\sigma_{k+1} = \sqrt{\frac{k\,\hat\sigma_k^2 + (x_{k+1}-\hat\mu_{k+1})^2}{k+1}} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{Why it matters}
+        \small
+        \begin{itemize}
+          \item No need to store all $N$ values
+          \item Constant memory, constant work per item
+          \item Ideal for \keyword{streaming} sensor / log data
+        \end{itemize}
+      \end{exampleblock}
+      \centering\scriptsize $\mathcal{O}(1)$ time and space per update
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Median}{The middle value, robust to outliers}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \small Sort $\{x\}$; the median is the middle value
+        ($N$ odd) or the average of the two middle values ($N$ even).
+      \end{block}
+      \begin{itemize}\small
+        \item \keyword{Robust}: unaffected by extreme outliers
+        \item Splits data into two equal halves
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Median vs.\ mean with outliers}
+        \small Salaries: $\{30, 32, 35, 33, 500\}$ (in \$k)
+        \begin{align*}
+          \text{mean} &= 126 \\
+          \text{median} &= 33
+        \end{align*}
+        \small The median better reflects a \keyword{typical} salary.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Measures of Spread}
+% ============================================================
+
+\begin{frame}{Variance \& Standard Deviation}{How far, on average, from the mean?}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \[ \text{var}(\{x\}) = \sigma^2 = \frac{1}{N}\sum_{i=1}^N (x_i - \bar x)^2 \]
+        \[ \text{std}(\{x\}) = \sigma = \sqrt{\text{var}(\{x\})} \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Properties}
+        \small
+        \begin{itemize}
+          \item Translation invariant: $\text{std}(\{x+c\})=\sigma$
+          \item Scaling: $\text{std}(\{kx\}) = |k|\,\sigma$
+          \item Same \keyword{units} as the data (unlike variance)
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Percentiles, Quartiles \& the IQR}{Describing spread without assuming a shape}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Percentiles \& quartiles}
+        \small
+        \begin{itemize}
+          \item $\text{percentile}(\{x\},k)$: value below which $k\%$ of data lie
+          \item $Q1 = \text{percentile}(\{x\},25)$
+          \item $Q2 = \text{percentile}(\{x\},50) = $ median
+          \item $Q3 = \text{percentile}(\{x\},75)$
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Interquartile range}
+        \[ \text{IQR}(\{x\}) = Q3 - Q1 \]
+        \small Robust measure of the spread of the \keyword{middle 50\%}.
+        \begin{itemize}\small
+          \item Translation invariant: $\text{IQR}(\{x+c\})=\text{IQR}(\{x\})$
+          \item Scaling: $\text{IQR}(\{kx\}) = |k|\,\text{IQR}(\{x\})$
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Detecting Outliers with the IQR}{The rule behind every box-plot whisker}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{alertblock}{The $1.5\times$IQR rule}
+        \small An item $x_i$ is an outlier if
+        \[ x_i < Q1 - 1.5\,\text{IQR} \]
+        \[ \text{or} \quad x_i > Q3 + 1.5\,\text{IQR} \]
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{center}
+      \resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}[x=1.05cm]
+        \draw[-{Latex[length=2mm]}, PrimaryDark, thick] (0,0) -- (9.5,0);
+        \draw[AlertRed, thick] (0.3,-0.15) -- (0.3,0.15);
+        \draw[PrimaryMid, thick] (1.8,-0.2) -- (1.8,0.2)
+          node[above, font=\scriptsize] {$Q1{-}1.5\text{IQR}$};
+        \fill[PrimaryLight!55] (3,-0.35) rectangle (6,0.35);
+        \draw[PrimaryDark, thick] (4.5,-0.35) -- (4.5,0.35);
+        \draw[PrimaryMid, thick] (7.2,-0.2) -- (7.2,0.2)
+          node[above, font=\scriptsize] {$Q3{+}1.5\text{IQR}$};
+        \draw[AlertRed, thick] (9,-0.15) -- (9,0.15);
+        \node[AlertRed, font=\scriptsize] at (0.3,-0.5) {outlier};
+        \node[AlertRed, font=\scriptsize] at (9,-0.5) {outlier};
+        \node[font=\scriptsize] at (4.5,0.65) {median};
+      \end{tikzpicture}}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Standard Coordinates \& Box Plots}
+% ============================================================
+
+\begin{frame}{Standard Coordinates (Z-Scores)}{Comparing values across different scales}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Definition}
+        \[ \hat{x}_i = \frac{x_i - \bar{x}}{\sigma} \]
+      \end{block}
+      \begin{itemize}\small
+        \item $\text{mean}(\{\hat x\}) = 0$ \emph{always}
+        \item $\text{std}(\{\hat x\}) = 1$ \emph{always}
+        \item \keyword{Unitless} — comparable across measurements
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Reading a z-score}
+        \small
+        \renewcommand{\arraystretch}{1.25}
+        \begin{tabular}{@{}cl@{}}
+          \toprule
+          $\hat x$ & Interpretation \\
+          \midrule
+          $0$ & exactly at the mean \\
+          $+1$ & 1 s.d.\ above mean \\
+          $-2$ & 2 s.d.\ below mean \\
+          \bottomrule
+        \end{tabular}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Anatomy of a Box Plot}{Five numbers, one picture}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[y=1cm]
+        \draw[PrimaryDark, thick] (0,0) -- (0,4);
+        \draw[PrimaryMid, thick] (-0.4,3.6) -- (0.4,3.6);
+        \draw[PrimaryMid, thick] (-0.4,3.6) -- (-0.4,2.4) -- (0.4,2.4) -- (0.4,3.6);
+        \fill[PrimaryLight!55] (-0.5,1.4) rectangle (0.5,2.4);
+        \draw[PrimaryDark, thick] (-0.5,1.4) rectangle (0.5,2.4);
+        \draw[AlertRed, very thick] (-0.5,1.9) -- (0.5,1.9);
+        \draw[PrimaryMid, thick] (-0.4,0.4) -- (0.4,0.4);
+        \draw[PrimaryMid, thick] (-0.4,0.4) -- (-0.4,1.4) -- (0.4,1.4) -- (0.4,0.4);
+        \node[right, font=\scriptsize] at (0.55,3.6) {max (within $1.5$IQR)};
+        \node[right, font=\scriptsize] at (0.55,2.4) {$Q3$};
+        \node[right, font=\scriptsize] at (0.55,1.9) {median};
+        \node[right, font=\scriptsize] at (0.55,1.4) {$Q1$};
+        \node[right, font=\scriptsize] at (0.55,0.4) {min (within $1.5$IQR)};
+        \fill[AlertRed] (0,4.3) circle (2pt) node[right, font=\scriptsize] {outlier};
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Components}
+        \small
+        \begin{itemize}
+          \item Box: $Q1$ to $Q3$ (the IQR)
+          \item Line inside box: median
+          \item Whiskers: extend to most extreme point within $1.5\,\text{IQR}$
+          \item Dots: outliers beyond the whiskers
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Using Summaries Sensibly}{Which number to report, and how}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Mean vs.\ median}
+        \small
+        \begin{itemize}
+          \item Symmetric, no outliers $\Rightarrow$ mean is fine
+          \item Skewed or outlier-prone $\Rightarrow$ prefer median
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Reporting precision}
+        \small
+        \begin{itemize}
+          \item Don't report more digits than the data supports
+          \item Categorical data: report \keyword{mode}, not mean
+          \item Always pair a \keyword{location} with a \keyword{spread}
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Case Study: Australian Pizzas}
+% ============================================================
+
+\begin{frame}{Case Study — Whose Pizza Is Bigger?}{EagleBoys claims a bigger pizza than Dominos}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{The question}
+        \small An advertising claim: EagleBoys' pizzas are bigger than
+        Dominos'. Is it true, and by how much?
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{The dataset}
+        \small Diameters (cm) measured from a sample of pizzas ordered from
+        each chain — a numeric, continuous, two-\keyword{group} comparison.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{alertblock}{Method}
+    \small Step 1: compute summary statistics for each brand. Step 2:
+    visualize with histograms / box plots. Step 3: interpret \emph{with
+    caveats}.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Comparing the Two Brands}{Summary statistics side by side}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \small
+      \renewcommand{\arraystretch}{1.3}
+      \begin{tabular}{@{}lcc@{}}
+        \toprule
+        \rowcolor{PrimaryDark}
+        \textcolor{white}{Statistic} & \textcolor{white}{EagleBoys} & \textcolor{white}{Dominos} \\
+        \midrule
+        Mean (cm) & 29.4 & 27.8 \\
+        \rowcolor{PrimaryLight!25}
+        Median (cm) & 29.5 & 27.9 \\
+        Std.\ dev.\ & 1.1 & 1.3 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \begin{center}
+      \begin{tikzpicture}
+        \begin{axis}[width=6.6cm, height=4.2cm, xlabel={\scriptsize Diameter (cm)},
+          ylabel={\scriptsize Density}, tick label style={font=\scriptsize},
+          axis lines=left, legend style={font=\tiny}, legend pos=north west]
+          \addplot[PrimaryMid, thick, smooth] coordinates
+            {(26,0.05)(27.5,0.25)(28.5,0.45)(29.4,0.55)(30.3,0.40)(31.5,0.15)(33,0.03)};
+          \addplot[AccentOrange, thick, smooth, dashed] coordinates
+            {(24.5,0.05)(26,0.28)(27,0.48)(27.8,0.52)(28.7,0.35)(29.8,0.14)(31,0.03)};
+          \legend{EagleBoys, Dominos}
+        \end{axis}
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Conclusions}{Evidence, caveats, and the answer}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{exampleblock}{Evidence for EagleBoys' claim}
+        \small
+        \begin{itemize}
+          \item Higher mean \emph{and} median diameter
+          \item Distributions barely overlap
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Important caveats}
+        \small
+        \begin{itemize}
+          \item Small sample — is the difference \keyword{significant}?
+          \item Sampling bias: which stores, which day?
+          \item Bigger diameter $\neq$ more \emph{value} (price, toppings)
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  \vfill
+  \begin{block}{The answer}
+    \small On this sample, EagleBoys' pizzas \emph{are} measurably larger —
+    but a rigorous claim needs the hypothesis-testing tools of Part III.
+  \end{block}
+\end{frame}
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+\begin{frame}{Location vs.\ Scale Parameters}{The two questions every summary answers}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries}l l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \rowcolor{PrimaryDark}
+    \textcolor{white}{Question} & \textcolor{white}{Statistic} & \textcolor{white}{Robust to outliers?} \\
+    \midrule
+    Where is the data? (location) & Mean & No \\
+    \rowcolor{PrimaryLight!25}
+     & Median & Yes \\
+    How spread out? (scale) & Std.\ dev.\ $\sigma$ & No \\
+    \rowcolor{PrimaryLight!25}
+     & IQR & Yes \\
+    \bottomrule
+  \end{tabularx}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Chapter Summary}{Key takeaways}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Describe}
+        \small
+        \begin{itemize}
+          \item Data types drive the choice of summary and plot
+          \item Bar charts for categories, histograms for numbers
+        \end{itemize}
+      \end{block}
+      \begin{exampleblock}{Summarize}
+        \small Mean/median for location, std.\ dev./IQR for spread,
+        z-scores to compare across scales.
+      \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{Watch out for}
+        \small Outliers can distort the mean and variance — always pair a
+        numeric summary with a \keyword{plot}.
+      \end{alertblock}
+      \begin{block}{Looking ahead}
+        \small Ch.\,2: \keyword{Relationships} between two variables —
+        scatter plots and correlation.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+{\setbeamertemplate{footline}{}
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[PrimaryDark](current page.north west) rectangle (current page.south east);
+    \fill[PrimaryMid,opacity=0.35]
+      ([shift={(0cm,-1.5cm)}]current page.north) circle(6.5cm);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\LARGE\textcolor{white}{\textbf{Thank you!}}}\\[0.6em]
+    {\small\textcolor{PrimaryLight}{Questions \& Discussion}}\\[1.2em]
+    {\footnotesize\textcolor{AccentYellow}{Next: Chapter 2 — Looking at Relationships}}
+  \end{center}
+  \vfill
+\end{frame}}
+
+\end{document}
