@@ -11,7 +11,7 @@ Computing the exponentiation of a number is a classic problem in computer scienc
 2. [Logarithmic implementation](#logarithmic-implementation)
 
 ## Linear implementation
-There is many ways to implement the exponentiation algorithm. The most common way is to use a loop to multiply the base number by itself the number of times specified by the exponent. This implementation has a time complexity of $$O(n)$$ where $$n$$ is the exponent.
+There is many ways to implement the exponentiation algorithm. The most common way is to use a loop to multiply the base number by itself the number of times specified by the exponent. This implementation has a time complexity of $O(n)$ where $n$ is the exponent.
 
 ```java
 public static long power(int x, int n) {
@@ -22,7 +22,7 @@ public static long power(int x, int n) {
     return result;
 }
 ```
-Another way to implement the exponentiation algorithm is to use recursion according to the following formula: $$ x^n = x \times x^{n-1}$$. This implementation has a time complexity of $$O(n)$$ where $$n$$ is the exponent.
+Another way to implement the exponentiation algorithm is to use recursion according to the following formula: $ x^n = x \times x^{n-1}$. This implementation has a time complexity of $O(n)$ where $n$ is the exponent.
 
 ```java
 public static long power(int x, int n) {
@@ -33,7 +33,7 @@ public static long power(int x, int n) {
     }
 }
 ``` 
-We can also follow the following formula: $$ x^n = x^{n/2} \times x^{n/2}$$ if $$n$$ is even and $$ x^n = x \times x^{n/2} \times x^{n/2}$$ if $$n$$ is odd. This implementation has a time complexity of $$O(n)$$ where $$n$$ is the exponent because it has to calculate the power of $$x$$ for each half of the exponent.
+We can also follow the following formula: $ x^n = x^{n/2} \times x^{n/2}$ if $n$ is even and $ x^n = x \times x^{n/2} \times x^{n/2}$ if $n$ is odd. This implementation has a time complexity of $O(n)$ where $n$ is the exponent because it has to calculate the power of $x$ for each half of the exponent.
 
 ```java
 public static long power(int x, int n) {
@@ -49,7 +49,7 @@ public static long power(int x, int n) {
 }
 ``` 
 ## Logarithmic implementation
-The recursive implementation can be optimized by using the following formula: $$ x^n = (x^{n/2})^2$$ if $$n$$ is even and $$ x^n = x \times (x^{n/2})^2$$ if $$n$$ is odd. This implementation has a time complexity of $$O(logn)$$ where $$n$$ is the exponent.
+The recursive implementation can be optimized by using the following formula: $ x^n = (x^{n/2})^2$ if $n$ is even and $ x^n = x \times (x^{n/2})^2$ if $n$ is odd. This implementation has a time complexity of $O(logn)$ where $n$ is the exponent.
 
 ```java
 public static long power(int x, int n) {
